@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoVideoRecorder", "DemoVideoRecorder\DemoVideoRecorder.csproj", "{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Asha|Any CPU = Asha|Any CPU
+		Asha|x86 = Asha|x86
+		CD_ROM|Any CPU = CD_ROM|Any CPU
+		CD_ROM|x86 = CD_ROM|x86
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		DVD-5|Any CPU = DVD-5|Any CPU
+		DVD-5|x86 = DVD-5|x86
+		Proto|Any CPU = Proto|Any CPU
+		Proto|x86 = Proto|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+		SingleImage|Any CPU = SingleImage|Any CPU
+		SingleImage|x86 = SingleImage|x86
+		x86|Any CPU = x86|Any CPU
+		x86|x86 = x86|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Asha|Any CPU.ActiveCfg = Release|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Asha|Any CPU.Build.0 = Release|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Asha|x86.ActiveCfg = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Asha|x86.Build.0 = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.CD_ROM|Any CPU.ActiveCfg = Debug|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.CD_ROM|Any CPU.Build.0 = Debug|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.CD_ROM|x86.ActiveCfg = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.CD_ROM|x86.Build.0 = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Debug|x86.ActiveCfg = Debug|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Debug|x86.Build.0 = Debug|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.DVD-5|x86.ActiveCfg = Debug|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.DVD-5|x86.Build.0 = Debug|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Proto|Any CPU.ActiveCfg = Release|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Proto|Any CPU.Build.0 = Release|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Proto|x86.ActiveCfg = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Proto|x86.Build.0 = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Release|x86.ActiveCfg = Release|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.Release|x86.Build.0 = Release|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.SingleImage|Any CPU.ActiveCfg = Debug|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.SingleImage|Any CPU.Build.0 = Debug|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.SingleImage|x86.ActiveCfg = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.SingleImage|x86.Build.0 = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.x86|Any CPU.ActiveCfg = x86|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.x86|Any CPU.Build.0 = x86|Any CPU
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.x86|x86.ActiveCfg = x86|x86
+		{8112D8F2-2F58-4D8B-92E4-7FEC3B6DD289}.x86|x86.Build.0 = x86|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
