@@ -35,11 +35,11 @@
             this.MenuItem_exit = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_tools = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_check = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_ShipmentsList = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_wheighing = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_aboutUs = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.MenuItem_ShipmentsList = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -100,6 +100,13 @@
             this.MenuItem_check.Text = "بررسی دستگاه ها";
             this.MenuItem_check.Click += new System.EventHandler(this.MenuItem_check_Click);
             // 
+            // MenuItem_ShipmentsList
+            // 
+            this.MenuItem_ShipmentsList.Name = "MenuItem_ShipmentsList";
+            this.MenuItem_ShipmentsList.Size = new System.Drawing.Size(159, 24);
+            this.MenuItem_ShipmentsList.Text = "لیست محموله ها";
+            this.MenuItem_ShipmentsList.Click += new System.EventHandler(this.MenuItem_ShipmentsList_Click);
+            // 
             // MenuItem_wheighing
             // 
             this.MenuItem_wheighing.Name = "MenuItem_wheighing";
@@ -135,13 +142,6 @@
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // MenuItem_ShipmentsList
-            // 
-            this.MenuItem_ShipmentsList.Name = "MenuItem_ShipmentsList";
-            this.MenuItem_ShipmentsList.Size = new System.Drawing.Size(159, 24);
-            this.MenuItem_ShipmentsList.Text = "لیست محموله ها";
-            this.MenuItem_ShipmentsList.Click += new System.EventHandler(this.MenuItem_ShipmentsList_Click);
-            // 
             // App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 19F);
@@ -150,7 +150,7 @@
             this.ClientSize = new System.Drawing.Size(1101, 453);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
-            this.Font = new System.Drawing.Font("IRANSans", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            this.Font = new System.Drawing.Font("IRANSans(FaNum)", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -17,10 +19,21 @@ namespace _03_Onvif_Network_Video_Recorder
         private List<string> _connectionStringList;
         private List<IpCameraHandler> ModelList;
         private List<PictureBox> _indicatorList;
+        private SerialPort _serialPort;
         public Weighing()
         {
             InitializeComponent();
             this.Load += Configuration_Load;
+            this.FormClosing += Weighing_FormClosing;
+        }
+
+        void Weighing_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach(var camera in ModelList)
+            {
+                if (camera.Camera.State != CameraState.Disconnected)
+                    camera.Camera.Disconnect();
+            }
         }
 
         private void Configuration_Load(object sender, EventArgs e)
@@ -31,8 +44,44 @@ namespace _03_Onvif_Network_Video_Recorder
             CreateIPCameraHandlers();
             CreateIndicators();
             CreateConnectionStrings();
+            CreateSerialPort();
             ConnectIpCam();
         }
+
+        private void CreateSerialPort()
+        {
+            _serialPort = new SerialPort();
+            _serialPort.PortName = Settings.Default.BascolPort;
+            _serialPort.BaudRate = 2400;
+            _serialPort.DataBits = 8;
+            _serialPort.Parity = System.IO.Ports.Parity.None;
+            _serialPort.Handshake = System.IO.Ports.Handshake.None;
+            _serialPort.StopBits = System.IO.Ports.StopBits.One;
+            _serialPort.RtsEnable = true;
+            _serialPort.Encoding = Encoding.ASCII;
+
+            _serialPort.DataReceived +=
+                new SerialDataReceivedEventHandler(_serialPort_DataReceived);
+        }
+
+        private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            int dataLength = _serialPort.BytesToRead;
+            byte[] data = new byte[dataLength];
+            int nbrDataRead = _serialPort.Read(data, 0, dataLength);
+            if (nbrDataRead == 0)
+                return;
+
+            // Send data to whom ever interested
+            if (NewSerialDataRecieved != null)
+                NewSerialDataRecieved(this, new SerialDataReceivedEventArgs(data));
+        }
+
+        private void NewSerialDataRecieved(Weighing weighing, SerialDataReceivedEventArgs serialDataReceivedEventArgs)
+        {
+            throw new NotImplementedException();
+        }
+
         private void CreateIndicators()
         {
             _indicatorList.Clear();
@@ -45,7 +94,10 @@ namespace _03_Onvif_Network_Video_Recorder
         {
             if (IsHandleCreated)
             {
-                BeginInvoke(action);
+                if (InvokeRequired)
+                {
+                    BeginInvoke(action);
+                }
             }
         }
         private void CreateIPCameraHandlers()
@@ -95,8 +147,6 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 IpCameraHandler cc = sender as IpCameraHandler;
                 var cameraAddress = cc.Camera.CameraAddress.Split(':');
-                //if (cc.Camera != null)
-                //    Log.Write(cc.Camera.Host + " -- Camera state: " + e.State);
                 switch (e.State)
                 {
                     case CameraState.Connected:
@@ -115,6 +165,25 @@ namespace _03_Onvif_Network_Video_Recorder
                         else if (cameraAddress[0] == Settings.Default.CameraIP4)
                         {
                             _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+                        }
+                        break;
+
+                    case CameraState.Disconnected:
+                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        {
+                            _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+                        }
+                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        {
+                            _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+                        }
+                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        {
+                            _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+                        }
+                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        {
+                            _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                         }
                         break;
 
@@ -227,39 +296,76 @@ namespace _03_Onvif_Network_Video_Recorder
                                 break;
                         }
                     }
-                    //SqlCommand sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                    //                                   "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnector);
-                    //sqlCommand.Parameters.AddWithValue("@date", date);
-                    //sqlCommand.Parameters.AddWithValue("@Image", image);
-                    //sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                    //sqlCommand.ExecuteNonQuery();
-                    //sqlCommand.Dispose();
-
-                    //sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnector);
-                    //SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                    //DataTable BinaryTable = new DataTable();
-                    //sqlAdapter.Fill(BinaryTable);
-                    //sqlCommand.Dispose();
-
-                    //if (radioButton_Sales.Checked)
-                    //{
-                    //    sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                    //                                       "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnector);
-                    //}
-                    //else if (radioButton_Purchase.Checked)
-                    //{
-                    //    sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                    //                                       "VALUES (2987, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnector);
-                    //}
-                    //sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
-                    //sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                    //sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                    //sqlCommand.ExecuteNonQuery();
-                    //sqlCommand.Dispose();
-
-                    //Log.Write("Saving Picture Completed");
                 }
             }
+
+            if (string.IsNullOrEmpty(txtWeight1.Text))
+            {
+                txtWeight1.Text = GetWeight();
+                txtDate1.Text = GetDate();
+                txtTime1.Text = GetTime();
+            }
+            else
+            {
+                txtWeight2.Text = GetWeight();
+                txtDate2.Text = GetDate();
+                txtTime2.Text = GetTime();
+            }
+        }
+
+        private string GetWeight()
+        {
+            WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
+
+            _serialPort.Open();
+            byte[] v = new byte[8];
+            int tryCount = 0;
+
+            if (_serialPort.BytesToRead <= 0)
+            {
+                WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+            }
+            else
+            {
+                while (_serialPort.BytesToRead > 0 && tryCount < 10)
+                {
+
+                    var output = _serialPort.Read(v, 0, 7);
+
+                    if (output > 0)
+                    {
+                        try
+                        {
+                            int intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
+                            WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+                            tryCount = 10;
+                        }
+                        catch (FormatException exp)
+                        {
+                            WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+                            tryCount++;
+                        }
+                    }
+                    else
+                        tryCount++;
+                }
+            }
+
+            _serialPort.Close();
+            return "12000";
+        }
+
+        private string GetTime()
+        {
+            return string.Format("{0}:{1}", DateTime.Now.Hour, DateTime.Now.Minute);
+        }
+
+        private string GetDate()
+        {
+            string GregorianDate = DateTime.Now.ToString();
+            DateTime d = DateTime.Parse(GregorianDate);
+            PersianCalendar pc = new PersianCalendar();
+            return string.Format("{0}/{1}/{2}", pc.GetYear(d), pc.GetMonth(d), pc.GetDayOfMonth(d));
         }
 
         private void CreateConnectionStrings()
@@ -278,7 +384,6 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 if (ModelList[i] == null) return;
                 ModelList[i].ConnectOnvifCamera(_connectionStringList[i]);
-                //_videoViewerList[i].Start();
 
                 i++;
             }
@@ -287,7 +392,6 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 if (_indicatorList[i] == null) return;
                 _indicatorList[i].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
-                //_videoViewerList[i].Start();
 
                 i++;
             }

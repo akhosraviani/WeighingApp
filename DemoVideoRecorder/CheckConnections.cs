@@ -169,7 +169,17 @@ namespace _03_Onvif_Network_Video_Recorder
             serialPort.RtsEnable = true;
             serialPort.Encoding = Encoding.ASCII;
 
-            serialPort.Open();
+            try
+            {
+                serialPort.Open();
+            }
+            catch(Exception e)
+            {
+                lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort;
+                imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+                return;
+            }
+
             byte[] v = new byte[8];
             int tryCount = 0;
 
