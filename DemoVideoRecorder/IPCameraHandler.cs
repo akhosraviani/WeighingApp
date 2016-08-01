@@ -199,7 +199,7 @@ namespace _03_Onvif_Network_Video_Recorder
             }
         }
 
-        public byte[] CreateSnapShot(string path)
+        public System.Drawing.Image CreateSnapShot(string path)
         {
             if (Camera == null) return null;
             var date = DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
@@ -217,7 +217,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
             var snapShotImage = snapshot.ToImage();
             //snapShotImage.Save(currentpath, System.Drawing.Imaging.ImageFormat.Jpeg);
-            return imageToByteArray(snapShotImage);
+            return snapShotImage;
         }
 
         public void StartVideoCapture(string path)

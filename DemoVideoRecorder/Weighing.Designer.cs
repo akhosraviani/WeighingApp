@@ -77,6 +77,7 @@
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
             this.label38 = new System.Windows.Forms.Label();
             this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
+            this.txtTest2 = new System.Windows.Forms.TextBox();
             this.lblDatabaseStatus = new System.Windows.Forms.Label();
             this.lblWeighingMachineStatus = new System.Windows.Forms.Label();
             this.lblCameraStatus1 = new System.Windows.Forms.Label();
@@ -89,6 +90,9 @@
             this.lblCameraStatus2 = new System.Windows.Forms.Label();
             this.lblCameraStatus3 = new System.Windows.Forms.Label();
             this.lblCameraStatus4 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.txtTest1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -116,10 +120,6 @@
             this.imgCamera2 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.imgCamera1 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.txtTest1 = new System.Windows.Forms.TextBox();
-            this.txtTest2 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgShipmentDetail)).BeginInit();
@@ -705,6 +705,7 @@
             this.btnSaveData.TabIndex = 1;
             this.btnSaveData.Text = "تایید و ثبت نهایی";
             this.btnSaveData.UseVisualStyleBackColor = false;
+            this.btnSaveData.Click += new System.EventHandler(this.btnSaveData_Click);
             // 
             // groupBox5
             // 
@@ -816,6 +817,15 @@
             this.tableLayoutPanel14.Size = new System.Drawing.Size(428, 109);
             this.tableLayoutPanel14.TabIndex = 49;
             // 
+            // txtTest2
+            // 
+            this.txtTest2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtTest2.Location = new System.Drawing.Point(185, 84);
+            this.txtTest2.Name = "txtTest2";
+            this.txtTest2.Size = new System.Drawing.Size(26, 27);
+            this.txtTest2.TabIndex = 55;
+            this.txtTest2.Text = "تست";
+            // 
             // lblDatabaseStatus
             // 
             this.lblDatabaseStatus.AutoSize = true;
@@ -824,7 +834,7 @@
             this.lblDatabaseStatus.Name = "lblDatabaseStatus";
             this.lblDatabaseStatus.Size = new System.Drawing.Size(176, 27);
             this.lblDatabaseStatus.TabIndex = 51;
-            this.lblDatabaseStatus.Text = "برقراری اتصال به دیتابیس";
+            this.lblDatabaseStatus.Text = "پایگاه داده";
             this.lblDatabaseStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblWeighingMachineStatus
@@ -835,7 +845,7 @@
             this.lblWeighingMachineStatus.Name = "lblWeighingMachineStatus";
             this.lblWeighingMachineStatus.Size = new System.Drawing.Size(176, 27);
             this.lblWeighingMachineStatus.TabIndex = 50;
-            this.lblWeighingMachineStatus.Text = "تثبیت وزن باسکول";
+            this.lblWeighingMachineStatus.Text = "باسکول";
             this.lblWeighingMachineStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblCameraStatus1
@@ -959,6 +969,37 @@
             this.lblCameraStatus4.TabIndex = 49;
             this.lblCameraStatus4.Text = "دوربین 4";
             this.lblCameraStatus4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button1.Location = new System.Drawing.Point(3, 57);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(176, 21);
+            this.button1.TabIndex = 52;
+            this.button1.Text = "برقراری اتصال";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button2.Location = new System.Drawing.Point(3, 84);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(176, 22);
+            this.button2.TabIndex = 53;
+            this.button2.Text = "قطع اتصال";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // txtTest1
+            // 
+            this.txtTest1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtTest1.Location = new System.Drawing.Point(185, 57);
+            this.txtTest1.Name = "txtTest1";
+            this.txtTest1.Size = new System.Drawing.Size(26, 27);
+            this.txtTest1.TabIndex = 54;
+            this.txtTest1.Text = "تست";
             // 
             // tableLayoutPanel3
             // 
@@ -1297,46 +1338,6 @@
             this.imgCamera1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.imgCamera1.TabIndex = 0;
             this.imgCamera1.TabStop = false;
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button1.Location = new System.Drawing.Point(3, 57);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(176, 21);
-            this.button1.TabIndex = 52;
-            this.button1.Text = "برقراری اتصال";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button2.Location = new System.Drawing.Point(3, 84);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(176, 22);
-            this.button2.TabIndex = 53;
-            this.button2.Text = "قطع اتصال";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // txtTest1
-            // 
-            this.txtTest1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtTest1.Location = new System.Drawing.Point(185, 57);
-            this.txtTest1.Name = "txtTest1";
-            this.txtTest1.Size = new System.Drawing.Size(26, 27);
-            this.txtTest1.TabIndex = 54;
-            this.txtTest1.Text = "تست";
-            // 
-            // txtTest2
-            // 
-            this.txtTest2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtTest2.Location = new System.Drawing.Point(185, 84);
-            this.txtTest2.Name = "txtTest2";
-            this.txtTest2.Size = new System.Drawing.Size(26, 27);
-            this.txtTest2.TabIndex = 55;
-            this.txtTest2.Text = "تست";
             // 
             // Weighing
             // 

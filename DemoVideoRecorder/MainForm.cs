@@ -283,8 +283,8 @@ namespace _03_Onvif_Network_Video_Recorder
                 if(item == null || item.Camera == null) continue;
                 var date = item.Camera.Host.ToString() + "-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
                        DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                var image = item.CreateSnapShot(path);
-
+                //var image = item.CreateSnapShot(path);
+                byte[] image = null;
                 if (image != null)
                 {
                     Log.Write("Saving Picture " + item.Camera.Host + " To Database");
