@@ -20,6 +20,7 @@ namespace _03_Onvif_Network_Video_Recorder
         private List<IpCameraHandler> ModelList;
         private List<PictureBox> _indicatorList;
         private SerialPort _serialPort;
+        private string _shipmentState;
         public Weighing()
         {
             InitializeComponent();
@@ -31,9 +32,11 @@ namespace _03_Onvif_Network_Video_Recorder
         {
             foreach(var camera in ModelList)
             {
-                if (camera.Camera.State != CameraState.Disconnected)
+                if (camera.Camera != null && camera.Camera.State != CameraState.Disconnected)
                     camera.Camera.Disconnect();
             }
+            if(_serialPort.IsOpen)
+                _serialPort.Close();
         }
 
         private void Configuration_Load(object sender, EventArgs e)
@@ -45,18 +48,18 @@ namespace _03_Onvif_Network_Video_Recorder
             CreateIndicators();
             CreateConnectionStrings();
             CreateSerialPort();
-            ConnectIpCam();
         }
 
         private void CreateSerialPort()
         {
+            WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
             _serialPort = new SerialPort();
             _serialPort.PortName = Settings.Default.BascolPort;
             _serialPort.BaudRate = 2400;
             _serialPort.DataBits = 8;
-            _serialPort.Parity = System.IO.Ports.Parity.None;
-            _serialPort.Handshake = System.IO.Ports.Handshake.None;
-            _serialPort.StopBits = System.IO.Ports.StopBits.One;
+            _serialPort.Parity = Parity.None;
+            _serialPort.Handshake = Handshake.None;
+            _serialPort.StopBits = StopBits.One;
             _serialPort.RtsEnable = true;
             _serialPort.Encoding = Encoding.ASCII;
 
@@ -73,13 +76,7 @@ namespace _03_Onvif_Network_Video_Recorder
                 return;
 
             // Send data to whom ever interested
-            if (NewSerialDataRecieved != null)
-                NewSerialDataRecieved(this, new SerialDataReceivedEventArgs(data));
-        }
-
-        private void NewSerialDataRecieved(Weighing weighing, SerialDataReceivedEventArgs serialDataReceivedEventArgs)
-        {
-            throw new NotImplementedException();
+            txtTest1.Text = Convert.ToBase64String(data);
         }
 
         private void CreateIndicators()
@@ -207,15 +204,17 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void btnShipmentSearch_Click(object sender, EventArgs e)
         {
+            DatabaseIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
             using (SqlConnection con = new SqlConnection("Data Source=tcp:127.0.0.1;initial catalog=AshaMES_PASCO_V03;persist security info=True;user id=sa;password=@sh@3rp;MultipleActiveResultSets=True;"))
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT  SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode AS TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber AS LicenseNumber, SDSO_Shipment.Guid " +
+                DatabaseIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+                using (SqlCommand cmd = new SqlCommand("SELECT SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode AS TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber AS LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus " +
                                                         "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
                                                         "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
                                                         "ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN SDSO_Customer " +
-                                                        "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE SDSO_Shipment.Code LIKE '%" + txtShipmentCode.Text + "%'"
+                                                        "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code LIKE '%" + txtShipmentCode.Text + "%'"
                                                         , con))
-                {
+                {   
                     con.Open();
                     DataTable _shipmentTable = new DataTable();
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -228,6 +227,7 @@ namespace _03_Onvif_Network_Video_Recorder
                         lblCar.Text = _shipmentTable.Rows[0].ItemArray[3].ToString();
                         lblDriver.Text = _shipmentTable.Rows[0].ItemArray[4].ToString();
                         lblDriverLicence.Text = _shipmentTable.Rows[0].ItemArray[5].ToString();
+                        _shipmentState = _shipmentTable.Rows[0].ItemArray[7].ToString();
                     }
                     else
                     {
@@ -243,7 +243,9 @@ namespace _03_Onvif_Network_Video_Recorder
 
             using (SqlConnection con = new SqlConnection("Data Source=tcp:127.0.0.1;initial catalog=AshaMES_PASCO_V03;persist security info=True;user id=sa;password=@sh@3rp;MultipleActiveResultSets=True;"))
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], ShipmentAuthorizeCode as [مجوز حمل], ProductCode as [کد کالا], Quantity as مقدار, UnitOfMeasureCode as [واحد اندازه گیری] FROM SDSO_Shipment INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode WHERE Code = '" + txtShipmentCode.Text + "'"
+                using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل] FROM SDSO_Shipment " +
+                    "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
+                    "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code Like '" + txtShipmentCode.Text + "'"
                                                         , con))
                 {
                     con.Open();
@@ -256,6 +258,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     }
                 }
             }
+            DatabaseIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
         }
 
         private void txtShipmentCode_KeyDown(object sender, KeyEventArgs e)
@@ -299,13 +302,13 @@ namespace _03_Onvif_Network_Video_Recorder
                 }
             }
 
-            if (string.IsNullOrEmpty(txtWeight1.Text))
+            if (_shipmentState == "Shp_FirstWeighing")
             {
                 txtWeight1.Text = GetWeight();
                 txtDate1.Text = GetDate();
                 txtTime1.Text = GetTime();
             }
-            else
+            else if (_shipmentState == "Shp_SecondWeighing")
             {
                 txtWeight2.Text = GetWeight();
                 txtDate2.Text = GetDate();
@@ -317,8 +320,22 @@ namespace _03_Onvif_Network_Video_Recorder
         {
             WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
 
-            _serialPort.Open();
+            if (!_serialPort.IsOpen)
+            {
+                try
+                {
+                    _serialPort.Open();
+                    WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+                }
+                catch (Exception e)
+                {
+                    WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+                    return "0";
+                }
+            }
+
             byte[] v = new byte[8];
+            int intResult = 0;
             int tryCount = 0;
 
             if (_serialPort.BytesToRead <= 0)
@@ -336,7 +353,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     {
                         try
                         {
-                            int intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
+                            intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
                             WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                             tryCount = 10;
                         }
@@ -351,13 +368,13 @@ namespace _03_Onvif_Network_Video_Recorder
                 }
             }
 
-            _serialPort.Close();
-            return "12000";
+            
+            return intResult.ToString();
         }
 
         private string GetTime()
         {
-            return string.Format("{0}:{1}", DateTime.Now.Hour, DateTime.Now.Minute);
+            return string.Format("{0}:{1}:{2}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
         }
 
         private string GetDate()
@@ -382,17 +399,53 @@ namespace _03_Onvif_Network_Video_Recorder
             var i = 0;
             while (i < ModelList.Count)
             {
-                if (ModelList[i] == null) return;
+                if (ModelList[i] == null && ModelList[i].Camera.State == CameraState.Connected) return;
                 ModelList[i].ConnectOnvifCamera(_connectionStringList[i]);
-
                 i++;
             }
-            i = 0;
-            while (i < _indicatorList.Count)
-            {
-                if (_indicatorList[i] == null) return;
-                _indicatorList[i].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ConnectIpCam();
+            ConnectWeighingMachine();
+        }
+
+        private void ConnectWeighingMachine()
+        {
+            if (!_serialPort.IsOpen)
+            {
+                try
+                {
+                    _serialPort.Open();
+                    WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+                }
+                catch (Exception e)
+                {
+                    WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DisconnectIpCam();
+            DisconnectWeighingMachine();
+        }
+
+        private void DisconnectWeighingMachine()
+        {
+            if (_serialPort.IsOpen())
+                _serialPort.Close();
+        }
+
+        private void DisconnectIpCam()
+        {
+            var i = 0;
+            while (i < ModelList.Count)
+            {
+                if ((ModelList[i] == null || ModelList[i].Camera == null) && ModelList[i].Camera.State == CameraState.Disconnected) return;
+                ModelList[i].Camera.Disconnect();
                 i++;
             }
         }

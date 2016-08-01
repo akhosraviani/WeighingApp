@@ -116,6 +116,10 @@
             this.imgCamera2 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.imgCamera1 = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.txtTest1 = new System.Windows.Forms.TextBox();
+            this.txtTest2 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgShipmentDetail)).BeginInit();
@@ -187,10 +191,15 @@
             // 
             // dgShipmentDetail
             // 
+            this.dgShipmentDetail.AllowUserToAddRows = false;
+            this.dgShipmentDetail.AllowUserToDeleteRows = false;
+            this.dgShipmentDetail.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgShipmentDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgShipmentDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgShipmentDetail.Location = new System.Drawing.Point(4, 4);
             this.dgShipmentDetail.Name = "dgShipmentDetail";
+            this.dgShipmentDetail.ReadOnly = true;
+            this.dgShipmentDetail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgShipmentDetail.Size = new System.Drawing.Size(654, 103);
             this.dgShipmentDetail.TabIndex = 0;
             // 
@@ -731,13 +740,13 @@
             this.rdbConfig2.Name = "rdbConfig2";
             this.rdbConfig2.Size = new System.Drawing.Size(94, 22);
             this.rdbConfig2.TabIndex = 0;
-            this.rdbConfig2.TabStop = true;
             this.rdbConfig2.Text = "تنظیمات 2";
             this.rdbConfig2.UseVisualStyleBackColor = true;
             // 
             // rdbConfig1
             // 
             this.rdbConfig1.AutoSize = true;
+            this.rdbConfig1.Checked = true;
             this.rdbConfig1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rdbConfig1.Location = new System.Drawing.Point(103, 3);
             this.rdbConfig1.Name = "rdbConfig1";
@@ -780,6 +789,7 @@
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 32F));
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel14.Controls.Add(this.txtTest2, 2, 3);
             this.tableLayoutPanel14.Controls.Add(this.lblDatabaseStatus, 3, 1);
             this.tableLayoutPanel14.Controls.Add(this.lblWeighingMachineStatus, 3, 0);
             this.tableLayoutPanel14.Controls.Add(this.lblCameraStatus1, 1, 0);
@@ -792,6 +802,9 @@
             this.tableLayoutPanel14.Controls.Add(this.lblCameraStatus2, 1, 1);
             this.tableLayoutPanel14.Controls.Add(this.lblCameraStatus3, 1, 2);
             this.tableLayoutPanel14.Controls.Add(this.lblCameraStatus4, 1, 3);
+            this.tableLayoutPanel14.Controls.Add(this.button1, 3, 2);
+            this.tableLayoutPanel14.Controls.Add(this.button2, 3, 3);
+            this.tableLayoutPanel14.Controls.Add(this.txtTest1, 2, 2);
             this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel14.Location = new System.Drawing.Point(3, 26);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
@@ -1285,6 +1298,46 @@
             this.imgCamera1.TabIndex = 0;
             this.imgCamera1.TabStop = false;
             // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button1.Location = new System.Drawing.Point(3, 57);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(176, 21);
+            this.button1.TabIndex = 52;
+            this.button1.Text = "برقراری اتصال";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button2.Location = new System.Drawing.Point(3, 84);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(176, 22);
+            this.button2.TabIndex = 53;
+            this.button2.Text = "قطع اتصال";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // txtTest1
+            // 
+            this.txtTest1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtTest1.Location = new System.Drawing.Point(185, 57);
+            this.txtTest1.Name = "txtTest1";
+            this.txtTest1.Size = new System.Drawing.Size(26, 27);
+            this.txtTest1.TabIndex = 54;
+            this.txtTest1.Text = "تست";
+            // 
+            // txtTest2
+            // 
+            this.txtTest2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtTest2.Location = new System.Drawing.Point(185, 84);
+            this.txtTest2.Name = "txtTest2";
+            this.txtTest2.Size = new System.Drawing.Size(26, 27);
+            this.txtTest2.TabIndex = 55;
+            this.txtTest2.Text = "تست";
+            // 
             // Weighing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 19F);
@@ -1428,6 +1481,10 @@
         private System.Windows.Forms.Label lblCameraStatus3;
         private System.Windows.Forms.Label lblCameraStatus4;
         private System.Windows.Forms.Button btnShipmentSearch;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox txtTest2;
+        private System.Windows.Forms.TextBox txtTest1;
 
 
     }
