@@ -206,10 +206,8 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void btnShipmentSearch_Click(object sender, EventArgs e)
         {
-            DatabaseIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
             using (SqlConnection con = new SqlConnection("Data Source=tcp:127.0.0.1;initial catalog=AshaMES_PASCO_V03;persist security info=True;user id=sa;password=@sh@3rp;MultipleActiveResultSets=True;"))
             {
-                DatabaseIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                 using (SqlCommand cmd = new SqlCommand("SELECT SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode AS TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber AS LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus " +
                                                         "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
                                                         "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
@@ -219,6 +217,7 @@ namespace _03_Onvif_Network_Video_Recorder
                 {   
                     con.Open();
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    _shipmentTable.Clear();
                     da.Fill(_shipmentTable);
                     if (_shipmentTable.Rows.Count > 0)
                     {
@@ -259,7 +258,6 @@ namespace _03_Onvif_Network_Video_Recorder
                     }
                 }
             }
-            DatabaseIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
         }
 
         private void txtShipmentCode_KeyDown(object sender, KeyEventArgs e)
