@@ -190,11 +190,23 @@
     <Compile Include="ShipmentListForm.Designer.cs">
       <DependentUpon>ShipmentListForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Weighing.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Weighing.Designer.cs">
       <DependentUpon>Weighing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WeighingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WeighingForm.Designer.cs">
+      <DependentUpon>WeighingForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="App.resx">
       <DependentUpon>App.cs</DependentUpon>
@@ -215,8 +227,14 @@
     <EmbeddedResource Include="ShipmentListForm.resx">
       <DependentUpon>ShipmentListForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Weighing.resx">
       <DependentUpon>Weighing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WeighingForm.resx">
+      <DependentUpon>WeighingForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -251,7 +269,9 @@
     <EmbeddedResource Include="Resources\IRANSans.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Resources\IRANSans%28FaNum%29.ttf" />
     <None Include="Resources\red.png" />
+    <None Include="Resources\Boot.jpg" />
     <Content Include="Weighing.ico" />
     <Content Include="Images\yellow.png" />
   </ItemGroup>

@@ -63,6 +63,16 @@ namespace _03_Onvif_Network_Video_Recorder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Boot {
+            get {
+                object obj = ResourceManager.GetObject("Boot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap green {
             get {
                 object obj = ResourceManager.GetObject("green", resourceCulture);
@@ -81,12 +91,32 @@ namespace _03_Onvif_Network_Video_Recorder.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] IRANSans_FaNum_ {
+            get {
+                object obj = ResourceManager.GetObject("IRANSans_FaNum_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap red {
             get {
                 object obj = ResourceManager.GetObject("red", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Weighing {
+            get {
+                object obj = ResourceManager.GetObject("Weighing", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
