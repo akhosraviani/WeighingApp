@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("03_Onvif_Network_Video_Recorder")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("توزین اشا")]
+[assembly: AssemblyDescription("نرم افزار توزین اشا توسط شرکت اندیش پرداز اشا و به درخواست شرکت فولاد پاسارگاد تهیه شده است")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("03_Onvif_Network_Video_Recorder")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCompany("شرکت اندیش پرداز اشا")]
+[assembly: AssemblyProduct("نرم افزار توزین اشا")]
+[assembly: AssemblyCopyright("کلیه حقوق این نرم افزار متعلق به شرکت اندیش پرداز اشا می‌باشد")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
