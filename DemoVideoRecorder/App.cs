@@ -49,10 +49,7 @@ namespace _03_Onvif_Network_Video_Recorder
         void App_Load(object sender, EventArgs e)
         {
             // Set window state
-            if (Settings.Default.AppWindowState != null)
-            {
-                this.WindowState = Settings.Default.AppWindowState;
-            }
+            this.WindowState = Settings.Default.AppWindowState;
 
             // Set window location
             if (Settings.Default.AppWindowLocation != null)

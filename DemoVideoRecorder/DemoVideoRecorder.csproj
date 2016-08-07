@@ -248,7 +248,9 @@
   <ItemGroup>
     <Content Include="Images\green.png" />
     <Content Include="Images\red.png" />
-    <EmbeddedResource Include="Resources\IRANSans.ttf" />
+    <EmbeddedResource Include="Resources\IRANSans.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="Resources\red.png" />
     <Content Include="Weighing.ico" />
     <Content Include="Images\yellow.png" />

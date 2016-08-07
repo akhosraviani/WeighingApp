@@ -173,7 +173,7 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 serialPort.Open();
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort;
                 imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
@@ -205,7 +205,7 @@ namespace _03_Onvif_Network_Video_Recorder
                             imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                             tryCount = 10;
                         }
-                        catch (FormatException exp)
+                        catch (FormatException)
                         {
                             lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort;
                             imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);

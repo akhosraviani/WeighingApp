@@ -277,7 +277,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void button_CaptureImage(object sender, EventArgs e)
         {
-            string path = "C:\\";
+            //string path = "C:\\";
             foreach(var item in ModelList)
             {
                 if(item == null || item.Camera == null) continue;
@@ -458,7 +458,7 @@ namespace _03_Onvif_Network_Video_Recorder
                             results.Add(intResult);
                             tryCount++;
                         }
-                        catch (FormatException exp)
+                        catch (FormatException)
                         {
                             tryCount++;
                         }
@@ -481,7 +481,7 @@ namespace _03_Onvif_Network_Video_Recorder
                             results.Add(intResult);
                             tryCount++;
                         }
-                        catch (FormatException exp)
+                        catch (FormatException)
                         {
                             tryCount++;
                         }

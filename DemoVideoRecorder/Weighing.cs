@@ -21,7 +21,7 @@ namespace _03_Onvif_Network_Video_Recorder
         private List<PictureBox> _indicatorList;
         private SerialPort _serialPort;
         private SqlConnection _dbConnection;
-        private string _shipmentState;
+        private string _shipmentState = "Shp_FirstWeighing";
         private DataTable _shipmentTable;
         public Weighing()
         {
@@ -71,14 +71,52 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            int dataLength = _serialPort.BytesToRead;
-            byte[] data = new byte[dataLength];
-            int nbrDataRead = _serialPort.Read(data, 0, dataLength);
-            if (nbrDataRead == 0)
-                return;
+            byte[] v = new byte[8];
+            int intResult = 0;
+            int tryCount = 0;
 
-            // Send data to whom ever interested
-            txtTest1.Text = Convert.ToBase64String(data);
+            if (_serialPort.BytesToRead <= 0)
+            {
+                //WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+            }
+            else
+            {
+                while (_serialPort.BytesToRead > 0 && tryCount < 10)
+                {
+
+                    var output = _serialPort.Read(v, 0, 7);
+
+                    if (output > 0)
+                    {
+                        try
+                        {
+                            intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
+                            //WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+                            tryCount = 10;
+                        }
+                        catch (FormatException)
+                        {
+                            //WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+                            tryCount++;
+                        }
+                    }
+                    else
+                        tryCount++;
+                }
+            }
+
+            if (_shipmentState == "Shp_FirstWeighing")
+            {
+                txtWeight1.Text = intResult.ToString();
+                txtDate1.Text = GetDate();
+                txtTime1.Text = GetTime();
+            }
+            else if (_shipmentState == "Shp_SecondWeighing")
+            {
+                txtWeight2.Text = intResult.ToString();
+                txtDate2.Text = GetDate();
+                txtTime2.Text = GetTime();
+            }
         }
 
         private void CreateIndicators()
@@ -328,7 +366,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     _serialPort.Open();
                     WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                     return "0";
@@ -358,7 +396,7 @@ namespace _03_Onvif_Network_Video_Recorder
                             WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                             tryCount = 10;
                         }
-                        catch (FormatException exp)
+                        catch (FormatException)
                         {
                             WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                             tryCount++;
@@ -430,7 +468,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     _dbConnection.Open();
                     DatabaseIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     DatabaseIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                 }
@@ -446,7 +484,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     _serialPort.Open();
                     WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     WeighingMachineIndicator.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                 }
