@@ -157,13 +157,20 @@ namespace _03_Onvif_Network_Video_Recorder
                 txtWeight1.Text = intResult.ToString();
                 txtDate1.Text = GetDate();
                 txtTime1.Text = GetTime();
+                txtMachine1.Text = GetMachine();
             }
             else if (_shipmentState == "Shp_SecondWeighing")
             {
                 txtWeight2.Text = intResult.ToString();
                 txtDate2.Text = GetDate();
                 txtTime2.Text = GetTime();
+                txtMachine2.Text = GetMachine();
             }
+        }
+
+        private string GetMachine()
+        {
+            return "1";
         }
 
         private void CreateIndicators()
@@ -178,10 +185,7 @@ namespace _03_Onvif_Network_Video_Recorder
         {
             if (IsHandleCreated)
             {
-                if (InvokeRequired)
-                {
-                    BeginInvoke(action);
-                }
+                BeginInvoke(action);
             }
         }
         private void CreateIPCameraHandlers()
@@ -409,19 +413,25 @@ namespace _03_Onvif_Network_Video_Recorder
             var connection =
                 System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
             if (_dbConnection == null)
-                _dbConnection = new SqlConnection("Data Source=tcp:127.0.0.1;initial catalog=AshaMES_PASCO_V03;persist security info=True;user id=sa;password=@sh@3rp;MultipleActiveResultSets=True;");
+                _dbConnection = new SqlConnection(connection);
             if (_dbConnection.State != ConnectionState.Open)
             {
                 try
                 {
                     _dbConnection.Open();
-                    DatabaseIndicator.Text = "فعال";
-                    DatabaseIndicator.ForeColor = Color.Green;
+                    InvokeGuiThread(() =>
+                        {
+                            DatabaseIndicator.Text = "فعال";
+                            DatabaseIndicator.ForeColor = Color.Green;
+                        });
                 }
                 catch (Exception)
                 {
-                    DatabaseIndicator.Text = "غیرفعال";
-                    DatabaseIndicator.ForeColor = Color.Red;
+                    InvokeGuiThread(() =>
+                        {
+                            DatabaseIndicator.Text = "غیرفعال";
+                            DatabaseIndicator.ForeColor = Color.Red;
+                        });
                 }
             }
         }
@@ -522,12 +532,14 @@ namespace _03_Onvif_Network_Video_Recorder
                 txtWeight1.Text = GetWeight();
                 txtDate1.Text = GetDate();
                 txtTime1.Text = GetTime();
+                txtMachine1.Text = GetMachine();
             }
             else if (_shipmentState == "Shp_SecondWeighing")
             {
                 txtWeight2.Text = GetWeight();
                 txtDate2.Text = GetDate();
                 txtTime2.Text = GetTime();
+                txtMachine2.Text = GetMachine();
             }
         }
 
@@ -570,33 +582,57 @@ namespace _03_Onvif_Network_Video_Recorder
                     sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
+
+                    //sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET ", _dbConnection);
+                    //sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
+                    //sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
+                    //sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                    //sqlCommand.ExecuteNonQuery();
+                    //sqlCommand.Dispose();
                 }
             }
         }
 
         private void btnShipmentSearch_Click(object sender, EventArgs e)
         {
-            using (SqlConnection con = new SqlConnection("Data Source=tcp:127.0.0.1;initial catalog=AshaMES_PASCO_V03;persist security info=True;user id=sa;password=@sh@3rp;MultipleActiveResultSets=True;"))
+            if (_dbConnection == null || _dbConnection.State != ConnectionState.Open)
+                ConnectDatabase();
+
+            if (_dbConnection.State == ConnectionState.Open)
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode AS TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber AS LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus " +
-                                                        "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
-                                                        "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
-                                                        "ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN SDSO_Customer " +
-                                                        "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code LIKE '%" + txtShipmentCode.Text + "%'"
-                                                        , con))
+                using (SqlCommand cmd = new SqlCommand("SELECT        SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, " +
+                                                       "                          WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus, " +
+                                                       "                          WFFC_Contact.Title AS TransportCompany, SISys_Location.Title AS City, SDSO_Shipment.TruckWeight, SDSO_Shipment.LoadedTruckWeight, " +
+                                                       "                          SDSO_Shipment.NetWeight, SDSO_Shipment.EstimatedWeight, SDSO_Shipment.EndTime, SDSO_Shipment.StartTime " +
+                                                       " FROM            WMLog_Driver RIGHT OUTER JOIN" +
+                                                       "                          SDSO_Shipment INNER JOIN" +
+                                                       "                          WFFC_Contact ON SDSO_Shipment.TransportCompanyCode = WFFC_Contact.Code LEFT OUTER JOIN" +
+                                                       "                          SISys_Location INNER JOIN" +
+                                                       "                          WFFC_Contact AS WFFC_Contact_1 ON SISys_Location.Code = WFFC_Contact_1.GeograghyLocationCode LEFT OUTER JOIN" +
+                                                       "                          SDSO_Customer ON WFFC_Contact_1.Code = SDSO_Customer.CustomerCode ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode ON " +
+                                                       "                          WMLog_Driver.DriverCode = SDSO_Shipment.DriverCode LEFT OUTER JOIN" +
+                                                       "                          WMLog_Vehicle ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code" +
+                                                       " WHERE        (SDSO_Shipment.FormStatusCode LIKE '%Weighing%') AND SDSO_Shipment.Code LIKE '%" + txtShipmentCode.Text + "%'"
+                                                        , _dbConnection))
                 {
-                    con.Open();
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     _shipmentTable.Clear();
                     da.Fill(_shipmentTable);
                     if (_shipmentTable.Rows.Count > 0)
                     {
-                        lblSource.Text = _shipmentTable.Rows[0].ItemArray[0].ToString();
+                        lblSender.Text = _shipmentTable.Rows[0].ItemArray[8].ToString();
+                        lblSaler.Text = _shipmentTable.Rows[0].ItemArray[2].ToString();
                         lblBillOfLading.Text = _shipmentTable.Rows[0].ItemArray[1].ToString();
-                        lblDestination.Text = _shipmentTable.Rows[0].ItemArray[2].ToString();
+                        lblDestination.Text = _shipmentTable.Rows[0].ItemArray[9].ToString();
                         lblCar.Text = _shipmentTable.Rows[0].ItemArray[3].ToString();
                         lblDriver.Text = _shipmentTable.Rows[0].ItemArray[4].ToString();
                         lblDriverLicence.Text = _shipmentTable.Rows[0].ItemArray[5].ToString();
+                        txtWeight1.Text = _shipmentTable.Rows[0].ItemArray[10].ToString();
+                        txtWeight2.Text = _shipmentTable.Rows[0].ItemArray[11].ToString();
+                        txtDate1.Text = _shipmentTable.Rows[0].ItemArray[15].ToString();
+                        txtDate2.Text = _shipmentTable.Rows[0].ItemArray[14].ToString();
+                        txtTime1.Text = _shipmentTable.Rows[0].ItemArray[15].ToString();
+                        txtTime2.Text = _shipmentTable.Rows[0].ItemArray[14].ToString();
                         _shipmentState = _shipmentTable.Rows[0].ItemArray[7].ToString();
                     }
                     else
@@ -609,16 +645,12 @@ namespace _03_Onvif_Network_Video_Recorder
                         lblDriverLicence.Text = "";
                     }
                 }
-            }
 
-            using (SqlConnection con = new SqlConnection("Data Source=tcp:127.0.0.1;initial catalog=AshaMES_PASCO_V03;persist security info=True;user id=sa;password=@sh@3rp;MultipleActiveResultSets=True;"))
-            {
                 using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل] FROM SDSO_Shipment " +
                     "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
                     "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code Like '" + txtShipmentCode.Text + "'"
-                                                        , con))
+                                                        , _dbConnection))
                 {
-                    con.Open();
                     DataTable shipmentDetailTable = new DataTable();
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     da.Fill(shipmentDetailTable);
@@ -660,6 +692,12 @@ namespace _03_Onvif_Network_Video_Recorder
             CameraViewer viewer = new CameraViewer();
             viewer.PreviewImage = ((PictureBox)((ContextMenuStrip)(((ToolStripMenuItem)sender).Owner)).SourceControl).Image;
             viewer.Show();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ShipmentListForm shipments = new ShipmentListForm();
+            shipments.Show();
         }
     }
 }
