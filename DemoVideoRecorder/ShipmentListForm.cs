@@ -16,6 +16,7 @@ namespace _03_Onvif_Network_Video_Recorder
         private SqlCommand _dbCommand;
         private SqlDataAdapter _dbAdapter;
         private DataTable _shipmentTable;
+        public string shipmentCode;
         public ShipmentListForm()
         {
             InitializeComponent();
@@ -28,14 +29,20 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void doSearch(string p)
         {
-            _dbConnector = new SqlConnection("Data Source=tcp:127.0.0.1;initial catalog=AshaMES_PASCO_V03;persist security info=True;user id=sa;password=@sh@3rp;MultipleActiveResultSets=True;" );
-            _dbConnector.Open();
+            var connection =
+                System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
+            if (_dbConnector == null)
+                _dbConnector = new SqlConnection(connection);
+            if (_dbConnector.State != ConnectionState.Open)
+            {
+                _dbConnector.Open();
+            }
 
-            _dbCommand = new SqlCommand("SELECT  SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode AS TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber AS LicenseNumber, SDSO_Shipment.Guid " +
+            _dbCommand = new SqlCommand("SELECT SDSO_Shipment.Code AS ShipmentCode, SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode AS TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber AS LicenseNumber, SDSO_Shipment.Guid " +
                                             "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
                                             "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
                                             "ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN SDSO_Customer " +
-                                            "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE SDSO_Shipment.Code LIKE '%" + txtSearch.Text + "%'");
+                                            "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE SDSO_Shipment.FormStatusCode LIKE '%Weighing%' AND SDSO_Shipment.Code LIKE '%" + txtSearch.Text + "%'");
             _dbCommand.Connection = _dbConnector;
             _dbAdapter = new SqlDataAdapter(_dbCommand);
             _shipmentTable = new DataTable();
@@ -74,18 +81,9 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            App app = ((App)this.MdiParent);
-            app.toolStripStatusLabel1.Text = "در حال راه اندازی فرم توزین...";
-            app.statusStrip1.Refresh();
-            Cursor.Current = Cursors.WaitCursor;
-
-            MainForm weighingForm = new MainForm();
-            weighingForm.MdiParent = this.MdiParent;
-            weighingForm.Show();
-
-            app.toolStripStatusLabel1.Text = "";
-            app.statusStrip1.Refresh();
-            Cursor.Current = Cursors.Default;
+            this.shipmentCode = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.Close();
         }
     }
 }

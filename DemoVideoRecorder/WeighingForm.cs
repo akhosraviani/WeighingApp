@@ -210,26 +210,26 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 IpCameraHandler cc = sender as IpCameraHandler;
                 var cameraAddress = cc.Camera.CameraAddress.Split(':');
-                if (cameraAddress[0] == Settings.Default.CameraIP1)
-                {
-                    _indicatorList[0].Text = "غیرفعال";
-                    _indicatorList[0].ForeColor = Color.Red;
-                }
-                else if (cameraAddress[0] == Settings.Default.CameraIP2)
-                {
-                    _indicatorList[1].Text = "غیرفعال";
-                    _indicatorList[1].ForeColor = Color.Red;
-                }
-                else if (cameraAddress[0] == Settings.Default.CameraIP3)
-                {
-                    _indicatorList[2].Text = "غیرفعال";
-                    _indicatorList[2].ForeColor = Color.Red;
-                }
-                else if (cameraAddress[0] == Settings.Default.CameraIP4)
-                {
-                    _indicatorList[3].Text = "غیرفعال";
-                    _indicatorList[3].ForeColor = Color.Red;
-                }
+                //if (cameraAddress[0] == Settings.Default.CameraIP1)
+                //{
+                //    _indicatorList[0].Text = "خطا";
+                //    _indicatorList[0].ForeColor = Color.OrangeRed;
+                //}
+                //else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                //{
+                //    _indicatorList[1].Text = "خطا";
+                //    _indicatorList[1].ForeColor = Color.OrangeRed;
+                //}
+                //else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                //{
+                //    _indicatorList[2].Text = "خطا";
+                //    _indicatorList[2].ForeColor = Color.OrangeRed;
+                //}
+                //else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                //{
+                //    _indicatorList[3].Text = "خطا";
+                //    _indicatorList[3].ForeColor = Color.OrangeRed;
+                //}
             });
         }
 
@@ -552,6 +552,7 @@ namespace _03_Onvif_Network_Video_Recorder
                 return;
             }
             Image[] images = { imgCamera1.Image, imgCamera2.Image, imgCamera3.Image, imgCamera4.Image };
+            SqlCommand sqlCommand;
 
             foreach (var item in images)
             {
@@ -561,7 +562,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
                 if (image != null)
                 {
-                    SqlCommand sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
+                    sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
                                                                "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
                     sqlCommand.Parameters.AddWithValue("@date", date);
                     sqlCommand.Parameters.AddWithValue("@Image", image);
@@ -582,15 +583,18 @@ namespace _03_Onvif_Network_Video_Recorder
                     sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
-
-                    //sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET ", _dbConnection);
-                    //sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
-                    //sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                    //sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                    //sqlCommand.ExecuteNonQuery();
-                    //sqlCommand.Dispose();
                 }
             }
+
+            sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, LoadedTruckWeight=@LoadedTruckWeight, StartTime=@StartTime, EndTime=@EndTime " +
+                            "WHERE Guid = @MainGuid", _dbConnection);
+            sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
+            sqlCommand.Parameters.AddWithValue("@TruckWeight", txtWeight1.Text);
+            sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
+            sqlCommand.Parameters.AddWithValue("@StartTime", DateTime.Now.ToString());
+            sqlCommand.Parameters.AddWithValue("@EndTime", DateTime.Now.ToString());
+            sqlCommand.ExecuteNonQuery();
+            sqlCommand.Dispose();
         }
 
         private void btnShipmentSearch_Click(object sender, EventArgs e)
@@ -603,7 +607,9 @@ namespace _03_Onvif_Network_Video_Recorder
                 using (SqlCommand cmd = new SqlCommand("SELECT        SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, " +
                                                        "                          WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus, " +
                                                        "                          WFFC_Contact.Title AS TransportCompany, SISys_Location.Title AS City, SDSO_Shipment.TruckWeight, SDSO_Shipment.LoadedTruckWeight, " +
-                                                       "                          SDSO_Shipment.NetWeight, SDSO_Shipment.EstimatedWeight, SDSO_Shipment.EndTime, SDSO_Shipment.StartTime " +
+                                                       "                          SDSO_Shipment.NetWeight, SDSO_Shipment.EstimatedWeight, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 10) AS EndDate, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 10) AS StartDate, " +
+                                                       "                          RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 8) AS EndTime, RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 8) AS StartTime, " +
+                                                       "                          FirstWeighingMachineCode, SecondWeighingMachineCode " +
                                                        " FROM            WMLog_Driver RIGHT OUTER JOIN" +
                                                        "                          SDSO_Shipment INNER JOIN" +
                                                        "                          WFFC_Contact ON SDSO_Shipment.TransportCompanyCode = WFFC_Contact.Code LEFT OUTER JOIN" +
@@ -627,28 +633,29 @@ namespace _03_Onvif_Network_Video_Recorder
                         lblCar.Text = _shipmentTable.Rows[0].ItemArray[3].ToString();
                         lblDriver.Text = _shipmentTable.Rows[0].ItemArray[4].ToString();
                         lblDriverLicence.Text = _shipmentTable.Rows[0].ItemArray[5].ToString();
-                        txtWeight1.Text = _shipmentTable.Rows[0].ItemArray[10].ToString();
-                        txtWeight2.Text = _shipmentTable.Rows[0].ItemArray[11].ToString();
+                        txtWeight1.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[10]);
+                        txtWeight2.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[11]);
                         txtDate1.Text = _shipmentTable.Rows[0].ItemArray[15].ToString();
                         txtDate2.Text = _shipmentTable.Rows[0].ItemArray[14].ToString();
-                        txtTime1.Text = _shipmentTable.Rows[0].ItemArray[15].ToString();
-                        txtTime2.Text = _shipmentTable.Rows[0].ItemArray[14].ToString();
+                        txtTime1.Text = _shipmentTable.Rows[0].ItemArray[17].ToString();
+                        txtTime2.Text = _shipmentTable.Rows[0].ItemArray[16].ToString();
+                        txtMachine1.Text = _shipmentTable.Rows[0].ItemArray[18].ToString();
+                        txtMachine2.Text = _shipmentTable.Rows[0].ItemArray[19].ToString();
                         _shipmentState = _shipmentTable.Rows[0].ItemArray[7].ToString();
                     }
                     else
                     {
-                        lblSource.Text = "";
-                        lblDriver.Text = "";
-                        lblBillOfLading.Text = "";
-                        lblDestination.Text = "";
-                        lblCar.Text = "";
-                        lblDriverLicence.Text = "";
+                        lblDriver.Text = "---";
+                        lblBillOfLading.Text = "---";
+                        lblDestination.Text = "---";
+                        lblCar.Text = "---";
+                        lblDriverLicence.Text = "---";
                     }
                 }
 
                 using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل] FROM SDSO_Shipment " +
                     "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
-                    "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code Like '" + txtShipmentCode.Text + "'"
+                    "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code Like '%" + txtShipmentCode.Text + "%'"
                                                         , _dbConnection))
                 {
                     DataTable shipmentDetailTable = new DataTable();
@@ -697,7 +704,10 @@ namespace _03_Onvif_Network_Video_Recorder
         private void button3_Click(object sender, EventArgs e)
         {
             ShipmentListForm shipments = new ShipmentListForm();
-            shipments.Show();
+            if(shipments.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                this.txtShipmentCode.Text = shipments.shipmentCode;
+            }
         }
     }
 }

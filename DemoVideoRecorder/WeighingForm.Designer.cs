@@ -35,6 +35,7 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtShipmentCode = new System.Windows.Forms.TextBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.btnShipmentSearch = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
@@ -68,11 +69,6 @@
             this.lblWaitingMachines2 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dgShipmentDetail = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -94,7 +90,6 @@
             this.label15 = new System.Windows.Forms.Label();
             this.txtTime2 = new System.Windows.Forms.TextBox();
             this.txtDate2 = new System.Windows.Forms.TextBox();
-            this.txtMachine2 = new System.Windows.Forms.TextBox();
             this.txtTime1 = new System.Windows.Forms.TextBox();
             this.txtDate1 = new System.Windows.Forms.TextBox();
             this.txtWeight1 = new System.Windows.Forms.TextBox();
@@ -103,6 +98,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.txtMachine1 = new System.Windows.Forms.TextBox();
+            this.txtMachine2 = new System.Windows.Forms.TextBox();
+            this.txtWeight2 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
             this.btnSaveData = new System.Windows.Forms.Button();
@@ -127,10 +126,6 @@
             this.تنظیماتToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.تنظیمات1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.تنظیمات2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button3 = new System.Windows.Forms.Button();
-            this.label19 = new System.Windows.Forms.Label();
-            this.txtMachine1 = new System.Windows.Forms.TextBox();
-            this.txtWeight2 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -205,7 +200,7 @@
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.36874F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.83334F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.85714F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 36F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
             this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.txtShipmentCode, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.button3, 3, 0);
@@ -233,16 +228,27 @@
             // 
             this.txtShipmentCode.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtShipmentCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtShipmentCode.Location = new System.Drawing.Point(138, 5);
+            this.txtShipmentCode.Location = new System.Drawing.Point(139, 5);
             this.txtShipmentCode.Name = "txtShipmentCode";
             this.txtShipmentCode.Size = new System.Drawing.Size(364, 20);
             this.txtShipmentCode.TabIndex = 1;
             this.txtShipmentCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtShipmentCode_KeyDown);
             // 
+            // button3
+            // 
+            this.button3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button3.Location = new System.Drawing.Point(4, 6);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(32, 18);
+            this.button3.TabIndex = 5;
+            this.button3.Text = "...";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // btnShipmentSearch
             // 
             this.btnShipmentSearch.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnShipmentSearch.Location = new System.Drawing.Point(45, 6);
+            this.btnShipmentSearch.Location = new System.Drawing.Point(46, 6);
             this.btnShipmentSearch.Name = "btnShipmentSearch";
             this.btnShipmentSearch.Size = new System.Drawing.Size(81, 18);
             this.btnShipmentSearch.TabIndex = 4;
@@ -644,12 +650,6 @@
             this.dgShipmentDetail.AllowUserToDeleteRows = false;
             this.dgShipmentDetail.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgShipmentDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgShipmentDetail.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3,
-            this.Column4,
-            this.Column5});
             this.dgShipmentDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgShipmentDetail.Location = new System.Drawing.Point(3, 15);
             this.dgShipmentDetail.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -658,46 +658,6 @@
             this.dgShipmentDetail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgShipmentDetail.Size = new System.Drawing.Size(562, 264);
             this.dgShipmentDetail.TabIndex = 1;
-            // 
-            // Column1
-            // 
-            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column1.FillWeight = 55.83756F;
-            this.Column1.HeaderText = "ردیف";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            // 
-            // Column2
-            // 
-            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column2.FillWeight = 111.0406F;
-            this.Column2.HeaderText = "بارکد";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column3.FillWeight = 111.0406F;
-            this.Column3.HeaderText = "کد کالا";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            // 
-            // Column4
-            // 
-            this.Column4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column4.FillWeight = 111.0406F;
-            this.Column4.HeaderText = "نام کالا";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            // 
-            // Column5
-            // 
-            this.Column5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column5.FillWeight = 111.0406F;
-            this.Column5.HeaderText = "مجوز حمل";
-            this.Column5.Name = "Column5";
-            this.Column5.ReadOnly = true;
             // 
             // tableLayoutPanel3
             // 
@@ -925,7 +885,7 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.26087F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.65217F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.6087F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 103F));
             this.tableLayoutPanel5.Controls.Add(this.label15, 0, 2);
             this.tableLayoutPanel5.Controls.Add(this.txtTime2, 3, 2);
             this.tableLayoutPanel5.Controls.Add(this.txtDate2, 2, 2);
@@ -957,9 +917,9 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label15.Location = new System.Drawing.Point(481, 46);
+            this.label15.Location = new System.Drawing.Point(482, 46);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(79, 27);
+            this.label15.Size = new System.Drawing.Size(78, 27);
             this.label15.TabIndex = 46;
             this.label15.Text = "توزین ثانویه:";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -968,7 +928,7 @@
             // 
             this.txtTime2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTime2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtTime2.Location = new System.Drawing.Point(106, 49);
+            this.txtTime2.Location = new System.Drawing.Point(108, 49);
             this.txtTime2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTime2.Name = "txtTime2";
             this.txtTime2.ReadOnly = true;
@@ -979,29 +939,18 @@
             // 
             this.txtDate2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtDate2.Location = new System.Drawing.Point(210, 49);
+            this.txtDate2.Location = new System.Drawing.Point(212, 49);
             this.txtDate2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDate2.Name = "txtDate2";
             this.txtDate2.ReadOnly = true;
-            this.txtDate2.Size = new System.Drawing.Size(135, 20);
+            this.txtDate2.Size = new System.Drawing.Size(134, 20);
             this.txtDate2.TabIndex = 10;
-            // 
-            // txtMachine2
-            // 
-            this.txtMachine2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtMachine2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtMachine2.Location = new System.Drawing.Point(3, 49);
-            this.txtMachine2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtMachine2.Name = "txtMachine2";
-            this.txtMachine2.ReadOnly = true;
-            this.txtMachine2.Size = new System.Drawing.Size(97, 20);
-            this.txtMachine2.TabIndex = 9;
             // 
             // txtTime1
             // 
             this.txtTime1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTime1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtTime1.Location = new System.Drawing.Point(106, 23);
+            this.txtTime1.Location = new System.Drawing.Point(108, 23);
             this.txtTime1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTime1.Name = "txtTime1";
             this.txtTime1.ReadOnly = true;
@@ -1012,18 +961,18 @@
             // 
             this.txtDate1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtDate1.Location = new System.Drawing.Point(210, 23);
+            this.txtDate1.Location = new System.Drawing.Point(212, 23);
             this.txtDate1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDate1.Name = "txtDate1";
             this.txtDate1.ReadOnly = true;
-            this.txtDate1.Size = new System.Drawing.Size(135, 20);
+            this.txtDate1.Size = new System.Drawing.Size(134, 20);
             this.txtDate1.TabIndex = 6;
             // 
             // txtWeight1
             // 
             this.txtWeight1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtWeight1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeight1.Location = new System.Drawing.Point(351, 23);
+            this.txtWeight1.Location = new System.Drawing.Point(352, 23);
             this.txtWeight1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtWeight1.Name = "txtWeight1";
             this.txtWeight1.ReadOnly = true;
@@ -1034,7 +983,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(106, 0);
+            this.label5.Location = new System.Drawing.Point(108, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 21);
             this.label5.TabIndex = 3;
@@ -1045,9 +994,9 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(210, 0);
+            this.label4.Location = new System.Drawing.Point(212, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(135, 21);
+            this.label4.Size = new System.Drawing.Size(134, 21);
             this.label4.TabIndex = 2;
             this.label4.Text = "تاریخ";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1056,7 +1005,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(351, 0);
+            this.label3.Location = new System.Drawing.Point(352, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(124, 21);
             this.label3.TabIndex = 1;
@@ -1067,9 +1016,9 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Location = new System.Drawing.Point(481, 0);
+            this.label7.Location = new System.Drawing.Point(482, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(79, 21);
+            this.label7.Size = new System.Drawing.Size(78, 21);
             this.label7.TabIndex = 0;
             this.label7.Text = "مرحله";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1078,12 +1027,56 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label12.Location = new System.Drawing.Point(481, 21);
+            this.label12.Location = new System.Drawing.Point(482, 21);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(79, 25);
+            this.label12.Size = new System.Drawing.Size(78, 25);
             this.label12.TabIndex = 45;
             this.label12.Text = "توزین اولیه:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label19.Location = new System.Drawing.Point(3, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(99, 21);
+            this.label19.TabIndex = 47;
+            this.label19.Text = "شماره باسکول";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // txtMachine1
+            // 
+            this.txtMachine1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.txtMachine1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+            this.txtMachine1.Location = new System.Drawing.Point(4, 23);
+            this.txtMachine1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtMachine1.Name = "txtMachine1";
+            this.txtMachine1.ReadOnly = true;
+            this.txtMachine1.Size = new System.Drawing.Size(97, 20);
+            this.txtMachine1.TabIndex = 48;
+            // 
+            // txtMachine2
+            // 
+            this.txtMachine2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.txtMachine2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+            this.txtMachine2.Location = new System.Drawing.Point(4, 49);
+            this.txtMachine2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtMachine2.Name = "txtMachine2";
+            this.txtMachine2.ReadOnly = true;
+            this.txtMachine2.Size = new System.Drawing.Size(97, 20);
+            this.txtMachine2.TabIndex = 9;
+            // 
+            // txtWeight2
+            // 
+            this.txtWeight2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.txtWeight2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+            this.txtWeight2.Location = new System.Drawing.Point(354, 49);
+            this.txtWeight2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtWeight2.Name = "txtWeight2";
+            this.txtWeight2.ReadOnly = true;
+            this.txtWeight2.Size = new System.Drawing.Size(120, 20);
+            this.txtWeight2.TabIndex = 49;
             // 
             // tableLayoutPanel6
             // 
@@ -1394,50 +1387,6 @@
             this.تنظیمات2ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.تنظیمات2ToolStripMenuItem.Text = "تنظیمات 2";
             // 
-            // button3
-            // 
-            this.button3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button3.Location = new System.Drawing.Point(3, 6);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(32, 18);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "...";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label19.Location = new System.Drawing.Point(3, 0);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(97, 21);
-            this.label19.TabIndex = 47;
-            this.label19.Text = "شماره باسکول";
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // txtMachine1
-            // 
-            this.txtMachine1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtMachine1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtMachine1.Location = new System.Drawing.Point(3, 23);
-            this.txtMachine1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtMachine1.Name = "txtMachine1";
-            this.txtMachine1.ReadOnly = true;
-            this.txtMachine1.Size = new System.Drawing.Size(97, 20);
-            this.txtMachine1.TabIndex = 48;
-            // 
-            // txtWeight2
-            // 
-            this.txtWeight2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtWeight2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeight2.Location = new System.Drawing.Point(353, 49);
-            this.txtWeight2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtWeight2.Name = "txtWeight2";
-            this.txtWeight2.ReadOnly = true;
-            this.txtWeight2.Size = new System.Drawing.Size(120, 20);
-            this.txtWeight2.TabIndex = 49;
-            // 
             // WeighingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1587,11 +1536,6 @@
         private System.Windows.Forms.Label cameraIndicator4;
         private System.Windows.Forms.Label cameraIndicator3;
         private System.Windows.Forms.Label cameraIndicator2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem بزرگنماییToolStripMenuItem;
         private System.Windows.Forms.Label label12;
