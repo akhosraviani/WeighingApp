@@ -170,7 +170,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private string GetMachine()
         {
-            return "1";
+            return "7740001001";
         }
 
         private void CreateIndicators()
@@ -586,15 +586,28 @@ namespace _03_Onvif_Network_Video_Recorder
                 }
             }
 
-            sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, LoadedTruckWeight=@LoadedTruckWeight, StartTime=@StartTime, EndTime=@EndTime " +
-                            "WHERE Guid = @MainGuid", _dbConnection);
-            sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
-            sqlCommand.Parameters.AddWithValue("@TruckWeight", txtWeight1.Text);
-            sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
-            sqlCommand.Parameters.AddWithValue("@StartTime", DateTime.Now.ToString());
-            sqlCommand.Parameters.AddWithValue("@EndTime", DateTime.Now.ToString());
-            sqlCommand.ExecuteNonQuery();
-            sqlCommand.Dispose();
+            if (_shipmentState == "Shp_FirstWeighing")
+            {
+                sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, StartTime=@StartTime " +
+                            "WHERE Code = @ShipmentCode", _dbConnection);
+                sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
+                sqlCommand.Parameters.AddWithValue("@TruckWeight", txtWeight1.Text);
+                sqlCommand.Parameters.AddWithValue("@StartTime", DateTime.Now.ToString());
+                sqlCommand.ExecuteNonQuery();
+                sqlCommand.Dispose();
+            }
+            else if (_shipmentState == "Shp_SecondWeighing")
+            {
+                sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, EndTime=@EndTime " +
+                            "WHERE Code = @ShipmentCode", _dbConnection);
+                sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
+                sqlCommand.Parameters.AddWithValue("@NetWeight", Convert.ToInt32(txtWeight2.Text) - Convert.ToInt32(txtWeight1.Text));
+                sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
+                sqlCommand.Parameters.AddWithValue("@EndTime", DateTime.Now);
+                sqlCommand.ExecuteNonQuery();
+                sqlCommand.Dispose();
+            }
+            
         }
 
         private void btnShipmentSearch_Click(object sender, EventArgs e)
@@ -609,7 +622,7 @@ namespace _03_Onvif_Network_Video_Recorder
                                                        "                          WFFC_Contact.Title AS TransportCompany, SISys_Location.Title AS City, SDSO_Shipment.TruckWeight, SDSO_Shipment.LoadedTruckWeight, " +
                                                        "                          SDSO_Shipment.NetWeight, SDSO_Shipment.EstimatedWeight, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 10) AS EndDate, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 10) AS StartDate, " +
                                                        "                          RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 8) AS EndTime, RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 8) AS StartTime, " +
-                                                       "                          FirstWeighingMachineCode, SecondWeighingMachineCode " +
+                                                       "                          FirstWeighingMachineCode, SecondWeighingMachineCode, SDSO_Shipment.Code " +
                                                        " FROM            WMLog_Driver RIGHT OUTER JOIN" +
                                                        "                          SDSO_Shipment INNER JOIN" +
                                                        "                          WFFC_Contact ON SDSO_Shipment.TransportCompanyCode = WFFC_Contact.Code LEFT OUTER JOIN" +
