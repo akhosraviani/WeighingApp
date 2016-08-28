@@ -11,28 +11,77 @@
     <Setting Name="AppWindowState" Type="System.Windows.Forms.FormWindowState" Scope="User">
       <Value Profile="(Default)">Maximized</Value>
     </Setting>
-    <Setting Name="CameraIP1" Type="System.String" Scope="User">
+    <Setting Name="CameraIP11" Type="System.String" Scope="User">
       <Value Profile="(Default)">172.20.200.1</Value>
     </Setting>
-    <Setting Name="CameraIP2" Type="System.String" Scope="User">
+    <Setting Name="CameraIP12" Type="System.String" Scope="User">
       <Value Profile="(Default)">172.20.200.2</Value>
     </Setting>
-    <Setting Name="CameraIP3" Type="System.String" Scope="User">
+    <Setting Name="CameraIP13" Type="System.String" Scope="User">
       <Value Profile="(Default)">172.20.200.9</Value>
     </Setting>
-    <Setting Name="CameraIP4" Type="System.String" Scope="User">
+    <Setting Name="CameraIP14" Type="System.String" Scope="User">
       <Value Profile="(Default)">172.20.200.10</Value>
     </Setting>
-    <Setting Name="BascolPort" Type="System.String" Scope="User">
+    <Setting Name="BascolPort1" Type="System.String" Scope="User">
       <Value Profile="(Default)">COM3</Value>
     </Setting>
-    <Setting Name="AshaConnectionString" Type="(Connection string)" Scope="Application">
-      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=AshaMES_PASCO_V03;Persist Security Info=True;User ID=sa;Password=@sh@3rp&lt;/ConnectionString&gt;
-  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
-&lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=AshaMES_PASCO_V03;Persist Security Info=True;User ID=sa;Password=@sh@3rp</Value>
+    <Setting Name="CameraIP21" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.3</Value>
+    </Setting>
+    <Setting Name="CameraIP22" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.4</Value>
+    </Setting>
+    <Setting Name="CameraIP23" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.11</Value>
+    </Setting>
+    <Setting Name="CameraIP24" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.12</Value>
+    </Setting>
+    <Setting Name="BascolPort2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM4</Value>
+    </Setting>
+    <Setting Name="CameraIP31" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.5</Value>
+    </Setting>
+    <Setting Name="CameraIP32" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.6</Value>
+    </Setting>
+    <Setting Name="CameraIP33" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.13</Value>
+    </Setting>
+    <Setting Name="CameraIP34" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.14</Value>
+    </Setting>
+    <Setting Name="BascolPort3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM3</Value>
+    </Setting>
+    <Setting Name="CameraIP41" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.7</Value>
+    </Setting>
+    <Setting Name="CameraIP42" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.8</Value>
+    </Setting>
+    <Setting Name="CameraIP43" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.15</Value>
+    </Setting>
+    <Setting Name="CameraIP44" Type="System.String" Scope="User">
+      <Value Profile="(Default)">172.20.200.16</Value>
+    </Setting>
+    <Setting Name="BascolPort4" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM4</Value>
+    </Setting>
+    <Setting Name="Setting1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">باسکول 60 تن ورودی</Value>
+    </Setting>
+    <Setting Name="Setting2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">باسکول 80 تن ورودی</Value>
+    </Setting>
+    <Setting Name="Setting3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">باسکول 60 تن خروجی</Value>
+    </Setting>
+    <Setting Name="Setting4" Type="System.String" Scope="User">
+      <Value Profile="(Default)">باسکول 80 تن خروجی</Value>
     </Setting>
   </Settings>
 </SettingsFile>

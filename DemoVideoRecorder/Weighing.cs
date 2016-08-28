@@ -56,7 +56,7 @@ namespace _03_Onvif_Network_Video_Recorder
         private void CreateSerialPort()
         {
             _serialPort = new SerialPort();
-            _serialPort.PortName = Settings.Default.BascolPort;
+            _serialPort.PortName = Settings.Default.BascolPort1;
             _serialPort.BaudRate = 2400;
             _serialPort.DataBits = 8;
             _serialPort.Parity = Parity.None;
@@ -159,19 +159,19 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 IpCameraHandler cc = sender as IpCameraHandler;
                 var cameraAddress = cc.Camera.CameraAddress.Split(':');
-                if (cameraAddress[0] == Settings.Default.CameraIP1)
+                if (cameraAddress[0] == Settings.Default.CameraIP11)
                 {
                     _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                 }
-                else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                else if (cameraAddress[0] == Settings.Default.CameraIP12)
                 {
                     _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                 }
-                else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                else if (cameraAddress[0] == Settings.Default.CameraIP13)
                 {
                     _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                 }
-                else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                else if (cameraAddress[0] == Settings.Default.CameraIP14)
                 {
                     _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                 }
@@ -187,51 +187,51 @@ namespace _03_Onvif_Network_Video_Recorder
                 switch (e.State)
                 {
                     case CameraState.Connected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        if (cameraAddress[0] == Settings.Default.CameraIP11)
                         {
                             _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
                         {
                             _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
                         {
                             _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
                         {
                             _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                         }
                         break;
 
                     case CameraState.Disconnected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        if (cameraAddress[0] == Settings.Default.CameraIP11)
                         {
                             _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
                         {
                             _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
                         {
                             _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
                         {
                             _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                         }
                         break;
 
                     case CameraState.Connecting:
-                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        if (cameraAddress[0] == Settings.Default.CameraIP11)
                             _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
-                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
                             _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
-                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
                             _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
-                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
                             _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
                         break;
                 }
@@ -427,10 +427,10 @@ namespace _03_Onvif_Network_Video_Recorder
         private void CreateConnectionStrings()
         {
             _connectionStringList.Clear();
-            _connectionStringList.Add(Settings.Default.CameraIP1 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP2 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP3 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP4 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP11 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP12 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP13 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP14 + ":80;Username=root;Password=49091;Transport=TCP;");
         }
 
         private void ConnectIpCam()

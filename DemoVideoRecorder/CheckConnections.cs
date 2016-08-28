@@ -30,11 +30,11 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void CreateCheckLabels()
         {
-            lblCamera1.Text = "آدرس دوربین " + Settings.Default.CameraIP1;
-            lblCamera2.Text = "آدرس دوربین " + Settings.Default.CameraIP2;
-            lblCamera3.Text = "آدرس دوربین " + Settings.Default.CameraIP3;
-            lblCamera4.Text = "آدرس دوربین " + Settings.Default.CameraIP4;
-            lblBascol.Text = "پورت باسکول " + Settings.Default.BascolPort;
+            lblCamera1.Text = "آدرس دوربین " + Settings.Default.CameraIP11;
+            lblCamera2.Text = "آدرس دوربین " + Settings.Default.CameraIP12;
+            lblCamera3.Text = "آدرس دوربین " + Settings.Default.CameraIP13;
+            lblCamera4.Text = "آدرس دوربین " + Settings.Default.CameraIP14;
+            lblBascol.Text = "پورت باسکول " + Settings.Default.BascolPort1;
         }
 
         private void CreateIndicators()
@@ -74,22 +74,22 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 IpCameraHandler cc = sender as IpCameraHandler;
                 var cameraAddress = cc.Camera.CameraAddress.Split(':');
-                if (cameraAddress[0] == Settings.Default.CameraIP1)
+                if (cameraAddress[0] == Settings.Default.CameraIP11)
                 {
                     _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                     lblCamera1.Text = "اتصال به دوربین " + cameraAddress[0] + " با خطا مواجه شد!";
                 }
-                else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                else if (cameraAddress[0] == Settings.Default.CameraIP12)
                 {
                     _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                     lblCamera2.Text = "اتصال به دوربین " + cameraAddress[0] + " با خطا مواجه شد!";
                 }
-                else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                else if (cameraAddress[0] == Settings.Default.CameraIP13)
                 {
                     _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                     lblCamera3.Text = "اتصال به دوربین " + cameraAddress[0] + " با خطا مواجه شد!";
                 }
-                else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                else if (cameraAddress[0] == Settings.Default.CameraIP14)
                 {
                     _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                     lblCamera4.Text = "اتصال به دوربین " + cameraAddress[0] + " با خطا مواجه شد!";
@@ -108,22 +108,22 @@ namespace _03_Onvif_Network_Video_Recorder
                 switch (e.State)
                 {
                     case CameraState.Connected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        if (cameraAddress[0] == Settings.Default.CameraIP11)
                         {
                             _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                             lblCamera1.Text = "با موفقیت به دوربین " + cameraAddress[0] + " متصل شد.";
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
                         {
                             _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                             lblCamera2.Text = "با موفقیت به دوربین " + cameraAddress[0] + " متصل شد.";
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
                         {
                             _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                             lblCamera3.Text = "با موفقیت به دوربین " + cameraAddress[0] + " متصل شد.";
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
                         {
                             _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                             lblCamera4.Text = "با موفقیت به دوربین " + cameraAddress[0] + " متصل شد.";
@@ -132,13 +132,13 @@ namespace _03_Onvif_Network_Video_Recorder
                         break;
 
                     case CameraState.Connecting:
-                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        if (cameraAddress[0] == Settings.Default.CameraIP11)
                             lblCamera1.Text = "در حال بررسی اتصال دوربین " + cameraAddress[0] + "...";
-                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
                             lblCamera2.Text = "در حال بررسی اتصال دوربین " + cameraAddress[0] + "...";
-                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
                             lblCamera3.Text = "در حال بررسی اتصال دوربین " + cameraAddress[0] + "...";
-                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
                             lblCamera4.Text = "در حال بررسی اتصال دوربین " + cameraAddress[0] + "...";
                         break;
                 }
@@ -160,7 +160,7 @@ namespace _03_Onvif_Network_Video_Recorder
         {
             imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
             SerialPort serialPort = new System.IO.Ports.SerialPort();
-            serialPort.PortName = Settings.Default.BascolPort;
+            serialPort.PortName = Settings.Default.BascolPort1;
             serialPort.BaudRate = 2400;
             serialPort.DataBits = 8;
             serialPort.Parity = System.IO.Ports.Parity.None;
@@ -175,7 +175,7 @@ namespace _03_Onvif_Network_Video_Recorder
             }
             catch(Exception)
             {
-                lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort;
+                lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort1;
                 imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                 return;
             }
@@ -183,10 +183,10 @@ namespace _03_Onvif_Network_Video_Recorder
             byte[] v = new byte[8];
             int tryCount = 0;
 
-            lblBascol.Text = "در حال بررسی اتصال به باسکول " + Settings.Default.BascolPort + " ...";
+            lblBascol.Text = "در حال بررسی اتصال به باسکول " + Settings.Default.BascolPort1 + " ...";
             if (serialPort.BytesToRead <= 0)
             {
-                lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort;
+                lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort1;
                 imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
             }
             else
@@ -201,13 +201,13 @@ namespace _03_Onvif_Network_Video_Recorder
                         try
                         {
                             int intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
-                            lblBascol.Text = "با موفقیت به باسکول " + Settings.Default.BascolPort + " متصل شد.";
+                            lblBascol.Text = "با موفقیت به باسکول " + Settings.Default.BascolPort1 + " متصل شد.";
                             imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
                             tryCount = 10;
                         }
                         catch (FormatException)
                         {
-                            lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort;
+                            lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort1;
                             imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                             tryCount++;
                         }
@@ -223,10 +223,10 @@ namespace _03_Onvif_Network_Video_Recorder
         private void CreateConnectionStrings()
         {
             _connectionStringList.Clear();
-            _connectionStringList.Add(Settings.Default.CameraIP1 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP2 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP3 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP4 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP11 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP12 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP13 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP14 + ":80;Username=root;Password=49091;Transport=TCP;");
         }
 
         private void ConnectIpCam()

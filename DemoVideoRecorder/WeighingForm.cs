@@ -106,7 +106,7 @@ namespace _03_Onvif_Network_Video_Recorder
         private void CreateSerialPort()
         {
             _serialPort = new SerialPort();
-            _serialPort.PortName = Settings.Default.BascolPort;
+            _serialPort.PortName = Settings.Default.BascolPort1;
             _serialPort.BaudRate = 2400;
             _serialPort.DataBits = 8;
             _serialPort.Parity = Parity.None;
@@ -121,35 +121,45 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            if (!_serialPort.IsOpen)
+            {
+                try
+                {
+                    _serialPort.Open();
+                    WeighingMachineIndicator.Text = "فعال";
+                    WeighingMachineIndicator.ForeColor = Color.Green;
+                }
+                catch (Exception)
+                {
+                    WeighingMachineIndicator.Text = "غیرفعال";
+                    WeighingMachineIndicator.ForeColor = Color.Red;
+                    return;
+                }
+            }
+
             byte[] v = new byte[8];
             int intResult = 0;
             int tryCount = 0;
 
-            if (_serialPort.BytesToRead <= 0)
+            while (_serialPort.BytesToRead > 0 && tryCount < 10)
             {
-            }
-            else
-            {
-                while (_serialPort.BytesToRead > 0 && tryCount < 10)
+
+                var output = _serialPort.Read(v, 0, 7);
+
+                if (output > 0)
                 {
-
-                    var output = _serialPort.Read(v, 0, 7);
-
-                    if (output > 0)
+                    try
                     {
-                        try
-                        {
-                            intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
-                            tryCount = 10;
-                        }
-                        catch (FormatException)
-                        {
-                            tryCount++;
-                        }
+                        intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
+                        tryCount = 10;
                     }
-                    else
+                    catch (FormatException)
+                    {
                         tryCount++;
+                    }
                 }
+                else
+                    tryCount++;
             }
 
             if (_shipmentState == "Shp_FirstWeighing")
@@ -242,22 +252,22 @@ namespace _03_Onvif_Network_Video_Recorder
                 switch (e.State)
                 {
                     case CameraState.Connected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        if (cameraAddress[0] == Settings.Default.CameraIP11)
                         {
                             _indicatorList[0].Text = "فعال";
                             _indicatorList[0].ForeColor = Color.Green;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
                         {
                             _indicatorList[1].Text = "فعال";
                             _indicatorList[1].ForeColor = Color.Green;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
                         {
                             _indicatorList[2].Text = "فعال";
                             _indicatorList[2].ForeColor = Color.Green;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
                         {
                             _indicatorList[3].Text = "فعال";
                             _indicatorList[3].ForeColor = Color.Green;
@@ -265,22 +275,22 @@ namespace _03_Onvif_Network_Video_Recorder
                         break;
 
                     case CameraState.Disconnected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        if (cameraAddress[0] == Settings.Default.CameraIP11)
                         {
                             _indicatorList[0].Text = "غیرفعال";
                             _indicatorList[0].ForeColor = Color.Red;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
                         {
                             _indicatorList[1].Text = "غیرفعال";
                             _indicatorList[1].ForeColor = Color.Red;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
                         {
                             _indicatorList[2].Text = "غیرفعال";
                             _indicatorList[2].ForeColor = Color.Red;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
                         {
                             _indicatorList[3].Text = "غیرفعال";
                             _indicatorList[3].ForeColor = Color.Red;
@@ -288,22 +298,22 @@ namespace _03_Onvif_Network_Video_Recorder
                         break;
 
                     case CameraState.Connecting:
-                        if (cameraAddress[0] == Settings.Default.CameraIP1)
+                        if (cameraAddress[0] == Settings.Default.CameraIP11)
                         {
                             _indicatorList[0].Text = "در حال اتصال";
                             _indicatorList[0].ForeColor = Color.Orange;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP2)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
                         {
                             _indicatorList[1].Text = "در حال اتصال";
                             _indicatorList[1].ForeColor = Color.Orange;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP3)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
                         {
                             _indicatorList[2].Text = "در حال اتصال";
                             _indicatorList[2].ForeColor = Color.Orange;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP4)
+                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
                         {
                             _indicatorList[3].Text = "در حال اتصال";
                             _indicatorList[3].ForeColor = Color.Orange;
@@ -315,61 +325,49 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private string GetWeight()
         {
-            WeighingMachineIndicator.Text = "در حال اتصال";
-            WeighingMachineIndicator.ForeColor = Color.Yellow;
+            //WeighingMachineIndicator.Text = "در حال اتصال";
+            //WeighingMachineIndicator.ForeColor = Color.Yellow;
 
-            if (!_serialPort.IsOpen)
-            {
-                try
-                {
-                    _serialPort.Open();
-                    WeighingMachineIndicator.Text = "فعال";
-                    WeighingMachineIndicator.ForeColor = Color.Green;
-                }
-                catch (Exception)
-                {
-                    WeighingMachineIndicator.Text = "غیرفعال";
-                    WeighingMachineIndicator.ForeColor = Color.Red;
-                    return "0";
-                }
-            }
+            //if (!_serialPort.IsOpen)
+            //{
+            //    try
+            //    {
+            //        _serialPort.Open();
+            //        WeighingMachineIndicator.Text = "فعال";
+            //        WeighingMachineIndicator.ForeColor = Color.Green;
+            //    }
+            //    catch (Exception)
+            //    {
+            //        WeighingMachineIndicator.Text = "غیرفعال";
+            //        WeighingMachineIndicator.ForeColor = Color.Red;
+            //        return "0";
+            //    }
+            //}
 
             byte[] v = new byte[8];
             int intResult = 0;
             int tryCount = 0;
 
-            if (_serialPort.BytesToRead <= 0)
-            {
-                WeighingMachineIndicator.Text = "غیرفعال";
-                WeighingMachineIndicator.ForeColor = Color.Red;
-            }
-            else
-            {
-                while (_serialPort.BytesToRead > 0 && tryCount < 10)
-                {
+            //while (_serialPort.BytesToRead > 0 && tryCount < 10)
+            //{
 
-                    var output = _serialPort.Read(v, 0, 7);
+            //    var output = _serialPort.Read(v, 0, 7);
 
-                    if (output > 0)
-                    {
-                        try
-                        {
-                            intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
-                            WeighingMachineIndicator.Text = "فعال";
-                            WeighingMachineIndicator.ForeColor = Color.Green;
-                            tryCount = 10;
-                        }
-                        catch (FormatException)
-                        {
-                            WeighingMachineIndicator.Text = "غیرفعال";
-                            WeighingMachineIndicator.ForeColor = Color.Red;
-                            tryCount++;
-                        }
-                    }
-                    else
-                        tryCount++;
-                }
-            }
+            //    if (output > 0)
+            //    {
+            //        try
+            //        {
+            //            intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
+            //            tryCount = 10;
+            //        }
+            //        catch (FormatException)
+            //        {
+            //            tryCount++;
+            //        }
+            //    }
+            //    else
+            //        tryCount++;
+            //}
 
 
             return intResult.ToString();
@@ -391,10 +389,10 @@ namespace _03_Onvif_Network_Video_Recorder
         private void CreateConnectionStrings()
         {
             _connectionStringList.Clear();
-            _connectionStringList.Add(Settings.Default.CameraIP1 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP2 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP3 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP4 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP11 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP12 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP13 + ":80;Username=root;Password=49091;Transport=TCP;");
+            _connectionStringList.Add(Settings.Default.CameraIP14 + ":80;Username=root;Password=49091;Transport=TCP;");
         }
 
         private void ConnectIpCam()
