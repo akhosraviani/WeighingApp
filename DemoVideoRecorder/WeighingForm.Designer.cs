@@ -200,7 +200,7 @@
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.36874F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.83334F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.85714F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 39F));
             this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.txtShipmentCode, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.button3, 3, 0);
@@ -248,7 +248,7 @@
             // btnShipmentSearch
             // 
             this.btnShipmentSearch.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnShipmentSearch.Location = new System.Drawing.Point(46, 6);
+            this.btnShipmentSearch.Location = new System.Drawing.Point(47, 6);
             this.btnShipmentSearch.Name = "btnShipmentSearch";
             this.btnShipmentSearch.Size = new System.Drawing.Size(81, 18);
             this.btnShipmentSearch.TabIndex = 4;
@@ -885,7 +885,7 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.26087F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.65217F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.6087F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 103F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 105F));
             this.tableLayoutPanel5.Controls.Add(this.label15, 0, 2);
             this.tableLayoutPanel5.Controls.Add(this.txtTime2, 3, 2);
             this.tableLayoutPanel5.Controls.Add(this.txtDate2, 2, 2);
@@ -928,18 +928,18 @@
             // 
             this.txtTime2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTime2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtTime2.Location = new System.Drawing.Point(108, 49);
+            this.txtTime2.Location = new System.Drawing.Point(110, 49);
             this.txtTime2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTime2.Name = "txtTime2";
             this.txtTime2.ReadOnly = true;
-            this.txtTime2.Size = new System.Drawing.Size(98, 20);
+            this.txtTime2.Size = new System.Drawing.Size(97, 20);
             this.txtTime2.TabIndex = 11;
             // 
             // txtDate2
             // 
             this.txtDate2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtDate2.Location = new System.Drawing.Point(212, 49);
+            this.txtDate2.Location = new System.Drawing.Point(213, 49);
             this.txtDate2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDate2.Name = "txtDate2";
             this.txtDate2.ReadOnly = true;
@@ -950,42 +950,44 @@
             // 
             this.txtTime1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTime1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtTime1.Location = new System.Drawing.Point(108, 23);
+            this.txtTime1.Location = new System.Drawing.Point(110, 23);
             this.txtTime1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTime1.Name = "txtTime1";
             this.txtTime1.ReadOnly = true;
-            this.txtTime1.Size = new System.Drawing.Size(98, 20);
+            this.txtTime1.Size = new System.Drawing.Size(97, 20);
             this.txtTime1.TabIndex = 7;
+            this.txtTime1.Text = "10:26:32";
             // 
             // txtDate1
             // 
             this.txtDate1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtDate1.Location = new System.Drawing.Point(212, 23);
+            this.txtDate1.Location = new System.Drawing.Point(213, 23);
             this.txtDate1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDate1.Name = "txtDate1";
             this.txtDate1.ReadOnly = true;
             this.txtDate1.Size = new System.Drawing.Size(134, 20);
             this.txtDate1.TabIndex = 6;
+            this.txtDate1.Text = "1395/6/8";
             // 
             // txtWeight1
             // 
             this.txtWeight1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtWeight1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeight1.Location = new System.Drawing.Point(352, 23);
+            this.txtWeight1.Location = new System.Drawing.Point(353, 23);
             this.txtWeight1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtWeight1.Name = "txtWeight1";
             this.txtWeight1.ReadOnly = true;
-            this.txtWeight1.Size = new System.Drawing.Size(124, 20);
+            this.txtWeight1.Size = new System.Drawing.Size(123, 20);
             this.txtWeight1.TabIndex = 5;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(108, 0);
+            this.label5.Location = new System.Drawing.Point(110, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(98, 21);
+            this.label5.Size = new System.Drawing.Size(97, 21);
             this.label5.TabIndex = 3;
             this.label5.Text = "ساعت";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -994,7 +996,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(212, 0);
+            this.label4.Location = new System.Drawing.Point(213, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(134, 21);
             this.label4.TabIndex = 2;
@@ -1005,9 +1007,9 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(352, 0);
+            this.label3.Location = new System.Drawing.Point(353, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(124, 21);
+            this.label3.Size = new System.Drawing.Size(123, 21);
             this.label3.TabIndex = 1;
             this.label3.Text = "وزن";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1040,7 +1042,7 @@
             this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label19.Location = new System.Drawing.Point(3, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(99, 21);
+            this.label19.Size = new System.Drawing.Size(101, 21);
             this.label19.TabIndex = 47;
             this.label19.Text = "شماره باسکول";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1049,7 +1051,7 @@
             // 
             this.txtMachine1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtMachine1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtMachine1.Location = new System.Drawing.Point(4, 23);
+            this.txtMachine1.Location = new System.Drawing.Point(5, 23);
             this.txtMachine1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMachine1.Name = "txtMachine1";
             this.txtMachine1.ReadOnly = true;
@@ -1060,7 +1062,7 @@
             // 
             this.txtMachine2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtMachine2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtMachine2.Location = new System.Drawing.Point(4, 49);
+            this.txtMachine2.Location = new System.Drawing.Point(5, 49);
             this.txtMachine2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMachine2.Name = "txtMachine2";
             this.txtMachine2.ReadOnly = true;
@@ -1071,7 +1073,7 @@
             // 
             this.txtWeight2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtWeight2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeight2.Location = new System.Drawing.Point(354, 49);
+            this.txtWeight2.Location = new System.Drawing.Point(355, 49);
             this.txtWeight2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtWeight2.Name = "txtWeight2";
             this.txtWeight2.ReadOnly = true;
