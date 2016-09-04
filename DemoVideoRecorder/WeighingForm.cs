@@ -106,7 +106,6 @@ namespace _03_Onvif_Network_Video_Recorder
         private void CreateSerialPort()
         {
             _serialPort = new SerialPort();
-            _serialPort.PortName = Settings.Default.BascolPort1;
             _serialPort.BaudRate = 2400;
             _serialPort.DataBits = 8;
             _serialPort.Parity = Parity.None;
@@ -114,9 +113,27 @@ namespace _03_Onvif_Network_Video_Recorder
             _serialPort.StopBits = StopBits.One;
             _serialPort.RtsEnable = true;
             _serialPort.Encoding = Encoding.ASCII;
-
             _serialPort.DataReceived +=
                 new SerialDataReceivedEventHandler(_serialPort_DataReceived);
+
+            switch (Settings.Default.SelectedSetting)
+            {
+                case 1:
+                    _serialPort.PortName = Settings.Default.BascolPort1;
+                    break;
+
+                case 2:
+                    _serialPort.PortName = Settings.Default.BascolPort2;
+                    break;
+
+                case 3:
+                    _serialPort.PortName = Settings.Default.BascolPort3;
+                    break;
+
+                case 4:
+                    _serialPort.PortName = Settings.Default.BascolPort4;
+                    break;
+            }            
         }
 
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -201,7 +218,7 @@ namespace _03_Onvif_Network_Video_Recorder
             foreach (var item in _modelList)
             {
                 item.CameraStateChanged += ModelCameraStateChanged;
-                item.CameraErrorOccurred += ModelCameraErrorOccurred;
+                //item.CameraErrorOccurred += ModelCameraErrorOccurred;
             }
         }
 
@@ -211,26 +228,6 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 IpCameraHandler cc = sender as IpCameraHandler;
                 var cameraAddress = cc.Camera.CameraAddress.Split(':');
-                //if (cameraAddress[0] == Settings.Default.CameraIP1)
-                //{
-                //    _indicatorList[0].Text = "خطا";
-                //    _indicatorList[0].ForeColor = Color.OrangeRed;
-                //}
-                //else if (cameraAddress[0] == Settings.Default.CameraIP2)
-                //{
-                //    _indicatorList[1].Text = "خطا";
-                //    _indicatorList[1].ForeColor = Color.OrangeRed;
-                //}
-                //else if (cameraAddress[0] == Settings.Default.CameraIP3)
-                //{
-                //    _indicatorList[2].Text = "خطا";
-                //    _indicatorList[2].ForeColor = Color.OrangeRed;
-                //}
-                //else if (cameraAddress[0] == Settings.Default.CameraIP4)
-                //{
-                //    _indicatorList[3].Text = "خطا";
-                //    _indicatorList[3].ForeColor = Color.OrangeRed;
-                //}
             });
         }
 
@@ -243,22 +240,22 @@ namespace _03_Onvif_Network_Video_Recorder
                 switch (e.State)
                 {
                     case CameraState.Connected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP11)
+                        if (_connectionStringList[0].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[0].Text = "فعال";
                             _indicatorList[0].ForeColor = Color.Green;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
+                        else if (_connectionStringList[1].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[1].Text = "فعال";
                             _indicatorList[1].ForeColor = Color.Green;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
+                        else if (_connectionStringList[2].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[2].Text = "فعال";
                             _indicatorList[2].ForeColor = Color.Green;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
+                        else if (_connectionStringList[3].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[3].Text = "فعال";
                             _indicatorList[3].ForeColor = Color.Green;
@@ -266,22 +263,22 @@ namespace _03_Onvif_Network_Video_Recorder
                         break;
 
                     case CameraState.Disconnected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP11)
+                        if (_connectionStringList[0].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[0].Text = "غیرفعال";
                             _indicatorList[0].ForeColor = Color.Red;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
+                        else if (_connectionStringList[1].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[1].Text = "غیرفعال";
                             _indicatorList[1].ForeColor = Color.Red;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
+                        else if (_connectionStringList[2].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[2].Text = "غیرفعال";
                             _indicatorList[2].ForeColor = Color.Red;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
+                        else if (_connectionStringList[3].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[3].Text = "غیرفعال";
                             _indicatorList[3].ForeColor = Color.Red;
@@ -289,22 +286,22 @@ namespace _03_Onvif_Network_Video_Recorder
                         break;
 
                     case CameraState.Connecting:
-                        if (cameraAddress[0] == Settings.Default.CameraIP11)
+                        if (_connectionStringList[0].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[0].Text = "در حال اتصال";
                             _indicatorList[0].ForeColor = Color.Orange;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
+                        else if (_connectionStringList[1].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[1].Text = "در حال اتصال";
                             _indicatorList[1].ForeColor = Color.Orange;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
+                        else if (_connectionStringList[2].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[2].Text = "در حال اتصال";
                             _indicatorList[2].ForeColor = Color.Orange;
                         }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
+                        else if (_connectionStringList[3].StartsWith(cameraAddress[0]))
                         {
                             _indicatorList[3].Text = "در حال اتصال";
                             _indicatorList[3].ForeColor = Color.Orange;
@@ -312,56 +309,6 @@ namespace _03_Onvif_Network_Video_Recorder
                         break;
                 }
             });
-        }
-
-        private string GetWeight()
-        {
-            //WeighingMachineIndicator.Text = "در حال اتصال";
-            //WeighingMachineIndicator.ForeColor = Color.Yellow;
-
-            //if (!_serialPort.IsOpen)
-            //{
-            //    try
-            //    {
-            //        _serialPort.Open();
-            //        WeighingMachineIndicator.Text = "فعال";
-            //        WeighingMachineIndicator.ForeColor = Color.Green;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        WeighingMachineIndicator.Text = "غیرفعال";
-            //        WeighingMachineIndicator.ForeColor = Color.Red;
-            //        return "0";
-            //    }
-            //}
-
-            byte[] v = new byte[8];
-            int intResult = 0;
-            int tryCount = 0;
-
-            //while (_serialPort.BytesToRead > 0 && tryCount < 10)
-            //{
-
-            //    var output = _serialPort.Read(v, 0, 7);
-
-            //    if (output > 0)
-            //    {
-            //        try
-            //        {
-            //            intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
-            //            tryCount = 10;
-            //        }
-            //        catch (FormatException)
-            //        {
-            //            tryCount++;
-            //        }
-            //    }
-            //    else
-            //        tryCount++;
-            //}
-
-
-            return intResult.ToString();
         }
 
         private string GetTime()
@@ -374,16 +321,42 @@ namespace _03_Onvif_Network_Video_Recorder
             string GregorianDate = DateTime.Now.ToString();
             DateTime d = DateTime.Parse(GregorianDate);
             PersianCalendar pc = new PersianCalendar();
-            return string.Format("{0}/{1}/{2}", pc.GetYear(d), pc.GetMonth(d), pc.GetDayOfMonth(d));
+            return string.Format("{0:0000}/{1:00}/{2:00}", pc.GetYear(d), pc.GetMonth(d), pc.GetDayOfMonth(d));
         }
 
         private void CreateConnectionStrings()
         {
             _connectionStringList.Clear();
-            _connectionStringList.Add(Settings.Default.CameraIP11 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP12 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP13 + ":80;Username=root;Password=49091;Transport=TCP;");
-            _connectionStringList.Add(Settings.Default.CameraIP14 + ":80;Username=root;Password=49091;Transport=TCP;");
+            switch (Settings.Default.SelectedSetting)
+            {
+                case 1:
+                    _connectionStringList.Add(Settings.Default.CameraIP11 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP12 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP13 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP14 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    break;
+
+                case 2:
+                    _connectionStringList.Add(Settings.Default.CameraIP21 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP22 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP23 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP24 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    break;
+
+                case 3:
+                    _connectionStringList.Add(Settings.Default.CameraIP31 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP32 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP33 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP34 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    break;
+
+                case 4:
+                    _connectionStringList.Add(Settings.Default.CameraIP41 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP42 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP43 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP44 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    break;
+            }
         }
 
         private void ConnectIpCam()
@@ -515,21 +488,6 @@ namespace _03_Onvif_Network_Video_Recorder
 
                 }
             }
-
-            //if (_shipmentState == "Shp_FirstWeighing")
-            //{
-            //    txtWeight1.Text = GetWeight();
-            //    txtDate1.Text = GetDate();
-            //    txtTime1.Text = GetTime();
-            //    txtMachine1.Text = GetMachine();
-            //}
-            //else if (_shipmentState == "Shp_SecondWeighing")
-            //{
-            //    txtWeight2.Text = GetWeight();
-            //    txtDate2.Text = GetDate();
-            //    txtTime2.Text = GetTime();
-            //    txtMachine2.Text = GetMachine();
-            //}
         }
 
         private void btnSaveData_Click(object sender, EventArgs e)
@@ -543,179 +501,222 @@ namespace _03_Onvif_Network_Video_Recorder
             Image[] images = { imgCamera1.Image, imgCamera2.Image, imgCamera3.Image, imgCamera4.Image };
             SqlCommand sqlCommand;
 
-            if (_shipmentState == "Shp_FirstWeighing")
+            try
             {
-                sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, StartTime=@StartTime " +
-                            "WHERE Code = @ShipmentCode", _dbConnection);
-                sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
-                sqlCommand.Parameters.AddWithValue("@TruckWeight", txtWeight1.Text);
-                sqlCommand.Parameters.AddWithValue("@StartTime", DateTime.Now.ToString(CultureInfo.InvariantCulture));
-                sqlCommand.ExecuteNonQuery();
-                sqlCommand.Dispose();
-
-                sqlCommand = new SqlCommand("SDSO_001_ShipmentStatus", _dbConnection);
-                sqlCommand.CommandType = CommandType.StoredProcedure;
-
-                // set up the parameters
-                sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@StatusCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@NewStatusCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
-                sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
-
-                // set parameter values
-                sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
-                sqlCommand.Parameters["@StatusCode"].Value = "Shp_FirstWeighing";
-                sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Loading";
-                sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                sqlCommand.Parameters["@CreatorCode"].Value = "1";
-                sqlCommand.Parameters["@ReturnMessage"].Value = "";
-                sqlCommand.Parameters["@ReturnValue"].Value = 1;
-
-                sqlCommand.ExecuteNonQuery();
-                string returnMessage = Convert.ToString(sqlCommand.Parameters["@ReturnMessage"].Value);
-                MessageBox.Show(returnMessage, "پیغام", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                sqlCommand.Dispose();
-
-                foreach (var item in images)
+                if (_shipmentState == "Shp_FirstWeighing")
                 {
-                    if (item == null) continue;
-                    var image = imageToByteArray(item);
-                    var date = item.Tag;
+                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, StartTime=@StartTime " +
+                                "WHERE Code = @ShipmentCode", _dbConnection);
+                    sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
+                    sqlCommand.Parameters.AddWithValue("@TruckWeight", txtWeight1.Text);
+                    sqlCommand.Parameters.AddWithValue("@StartTime", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                    sqlCommand.ExecuteNonQuery();
+                    sqlCommand.Dispose();
 
-                    if (image != null)
-                    {
-                        sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                                                                   "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                        sqlCommand.Parameters.AddWithValue("@date", date);
-                        sqlCommand.Parameters.AddWithValue("@Image", image);
-                        sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                        sqlCommand.ExecuteNonQuery();
-                        sqlCommand.Dispose();
+                    sqlCommand = new SqlCommand("SDSO_001_ShipmentStatus", _dbConnection);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-                        sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                        SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                        DataTable BinaryTable = new DataTable();
-                        sqlAdapter.Fill(BinaryTable);
-                        sqlCommand.Dispose();
+                    // set up the parameters
+                    sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@StatusCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@NewStatusCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
+                    sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
 
-                        sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                                                            "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                        sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
-                        sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                        sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                        sqlCommand.ExecuteNonQuery();
-                        sqlCommand.Dispose();
-                    }
-                }
-            }
-            else if (_shipmentState == "Shp_SecondWeighing")
-            {
-                sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, EndTime=@EndTime " +
-                            "WHERE Code = @ShipmentCode", _dbConnection);
-                sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
-                sqlCommand.Parameters.AddWithValue("@NetWeight", Convert.ToInt32(txtWeight2.Text) - Convert.ToInt32(txtWeight1.Text));
-                sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
-                sqlCommand.Parameters.AddWithValue("@EndTime", DateTime.Now);
-                sqlCommand.ExecuteNonQuery();
-                sqlCommand.Dispose();
+                    // set parameter values
+                    sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
+                    sqlCommand.Parameters["@StatusCode"].Value = "Shp_FirstWeighing";
+                    sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Loading";
+                    sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
+                    sqlCommand.Parameters["@CreatorCode"].Value = "1";
+                    sqlCommand.Parameters["@ReturnMessage"].Value = "";
+                    sqlCommand.Parameters["@ReturnValue"].Value = 1;
 
-                sqlCommand = new SqlCommand("SDSO_001_ShipmentStatus", _dbConnection);
-                sqlCommand.CommandType = CommandType.StoredProcedure;
-
-                // set up the parameters
-                sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@StatusCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@NewStatusCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
-                sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
-                sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
-
-                // set parameter values
-                sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
-                sqlCommand.Parameters["@StatusCode"].Value = "Shp_SecondWeighing";
-                sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Issue";
-                sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                sqlCommand.Parameters["@CreatorCode"].Value = "1";
-                sqlCommand.Parameters["@ReturnMessage"].Value = "";
-                sqlCommand.Parameters["@ReturnValue"].Value = 1;
-
-                sqlCommand.ExecuteNonQuery();
-                string returnMessage = Convert.ToString(sqlCommand.Parameters["@ReturnMessage"].Value);
-                int returnValue = Convert.ToInt32(sqlCommand.Parameters["@ReturnMessage"].Value);
-
-                if (returnValue == 1)
-                {
+                    sqlCommand.ExecuteNonQuery();
+                    string returnMessage = Convert.ToString(sqlCommand.Parameters["@ReturnMessage"].Value);
                     MessageBox.Show(returnMessage, "پیغام", MessageBoxButtons.OK,
                         MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     sqlCommand.Dispose();
-                }
-                else if (returnValue == 0)
-                {
-                    if (MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+
+                    foreach (var item in images)
                     {
-                        sqlCommand.Dispose();
+                        if (item == null) continue;
+                        var image = imageToByteArray(item);
+                        var date = item.Tag;
 
-                        if (MessageBox.Show("آیا مغایرت وزنی تایید می شود؟", "پیغام", MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                        if (image != null)
                         {
-                            sqlCommand = new SqlCommand("SDSO_001_ShipmentWeightApprove", _dbConnection);
-                            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-                            // set up the parameters
-                            sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
-                            sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
-                            sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
-                            sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
-
-                            // set parameter values
-                            sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
-                            sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                            sqlCommand.Parameters["@ReturnMessage"].Value = "";
-                            sqlCommand.Parameters["@ReturnValue"].Value = 1;
-
+                            sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
+                                                                       "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
+                            sqlCommand.Parameters.AddWithValue("@date", date);
+                            sqlCommand.Parameters.AddWithValue("@Image", image);
+                            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
                             sqlCommand.ExecuteNonQuery();
                             sqlCommand.Dispose();
 
-                            foreach (var item in images)
+                            sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
+                            SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
+                            DataTable BinaryTable = new DataTable();
+                            sqlAdapter.Fill(BinaryTable);
+                            sqlCommand.Dispose();
+
+                            sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
+                                                                "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
+                            sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
+                            sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
+                            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                            sqlCommand.ExecuteNonQuery();
+                            sqlCommand.Dispose();
+                        }
+                    }
+                }
+                else if (_shipmentState == "Shp_SecondWeighing")
+                {
+                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, EndTime=@EndTime " +
+                                "WHERE Code = @ShipmentCode", _dbConnection);
+                    sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
+                    sqlCommand.Parameters.AddWithValue("@NetWeight", Convert.ToInt32(txtWeight2.Text) - Convert.ToInt32(txtWeight1.Text));
+                    sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
+                    sqlCommand.Parameters.AddWithValue("@EndTime", DateTime.Now);
+                    sqlCommand.ExecuteNonQuery();
+                    sqlCommand.Dispose();
+
+                    sqlCommand = new SqlCommand("SDSO_001_ShipmentStatus", _dbConnection);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+
+                    // set up the parameters
+                    sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@StatusCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@NewStatusCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
+                    sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                    // set parameter values
+                    sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
+                    sqlCommand.Parameters["@StatusCode"].Value = "Shp_SecondWeighing";
+                    sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Issue";
+                    sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
+                    sqlCommand.Parameters["@CreatorCode"].Value = "1";
+                    sqlCommand.Parameters["@ReturnMessage"].Value = "";
+                    sqlCommand.Parameters["@ReturnValue"].Value = 1;
+
+                    sqlCommand.ExecuteNonQuery();
+                    string returnMessage = Convert.ToString(sqlCommand.Parameters["@ReturnMessage"].Value);
+                    int returnValue = Convert.ToInt32(sqlCommand.Parameters["@ReturnMessage"].Value);
+
+                    if (returnValue == 1)
+                    {
+                        MessageBox.Show(returnMessage, "پیغام", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                        sqlCommand.Dispose();
+
+                        foreach (var item in images)
+                        {
+                            if (item == null) continue;
+                            var image = imageToByteArray(item);
+                            var date = item.Tag;
+
+                            if (image != null)
                             {
-                                if (item == null) continue;
-                                var image = imageToByteArray(item);
-                                var date = item.Tag;
+                                sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
+                                                                           "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
+                                sqlCommand.Parameters.AddWithValue("@date", date);
+                                sqlCommand.Parameters.AddWithValue("@Image", image);
+                                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                                sqlCommand.ExecuteNonQuery();
+                                sqlCommand.Dispose();
 
-                                if (image != null)
+                                sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
+                                SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
+                                DataTable BinaryTable = new DataTable();
+                                sqlAdapter.Fill(BinaryTable);
+                                sqlCommand.Dispose();
+
+                                sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
+                                                                    "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
+                                sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
+                                sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
+                                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                                sqlCommand.ExecuteNonQuery();
+                                sqlCommand.Dispose();
+                            }
+                        }
+                    }
+                    else if (returnValue == 0)
+                    {
+                        if (MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+                        {
+                            sqlCommand.Dispose();
+
+                            if (MessageBox.Show("آیا مغایرت وزنی تایید می شود؟", "پیغام", MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                sqlCommand = new SqlCommand("SDSO_001_ShipmentWeightApprove", _dbConnection);
+                                sqlCommand.CommandType = CommandType.StoredProcedure;
+
+                                // set up the parameters
+                                sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
+                                sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                                // set parameter values
+                                sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
+                                sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
+                                sqlCommand.Parameters["@ReturnMessage"].Value = "";
+                                sqlCommand.Parameters["@ReturnValue"].Value = 1;
+
+                                sqlCommand.ExecuteNonQuery();
+                                sqlCommand.Dispose();
+
+                                foreach (var item in images)
                                 {
-                                    sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                                                                               "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                                    sqlCommand.Parameters.AddWithValue("@date", date);
-                                    sqlCommand.Parameters.AddWithValue("@Image", image);
-                                    sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                                    sqlCommand.ExecuteNonQuery();
-                                    sqlCommand.Dispose();
+                                    if (item == null) continue;
+                                    var image = imageToByteArray(item);
+                                    var date = item.Tag;
 
-                                    sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                                    SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                                    DataTable BinaryTable = new DataTable();
-                                    sqlAdapter.Fill(BinaryTable);
-                                    sqlCommand.Dispose();
+                                    if (image != null)
+                                    {
+                                        sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
+                                                                                   "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
+                                        sqlCommand.Parameters.AddWithValue("@date", date);
+                                        sqlCommand.Parameters.AddWithValue("@Image", image);
+                                        sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                                        sqlCommand.ExecuteNonQuery();
+                                        sqlCommand.Dispose();
 
-                                    sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                                                                        "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                                    sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
-                                    sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                                    sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                                    sqlCommand.ExecuteNonQuery();
-                                    sqlCommand.Dispose();
+                                        sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
+                                        SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
+                                        DataTable BinaryTable = new DataTable();
+                                        sqlAdapter.Fill(BinaryTable);
+                                        sqlCommand.Dispose();
+
+                                        sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
+                                                                            "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
+                                        sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[2].ToString());
+                                        sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
+                                        sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                                        sqlCommand.ExecuteNonQuery();
+                                        sqlCommand.Dispose();
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                InvokeGuiThread(() =>
+                {
+                    DatabaseIndicator.Text = "غیرفعال";
+                    DatabaseIndicator.ForeColor = Color.Red;
+                });
             }
         }
 
@@ -724,73 +725,84 @@ namespace _03_Onvif_Network_Video_Recorder
             if (_dbConnection == null || _dbConnection.State != ConnectionState.Open)
                 ConnectDatabase();
 
-            if (_dbConnection.State == ConnectionState.Open)
+            try
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT        SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, " +
-                                                       "                          WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus, " +
-                                                       "                          WFFC_Contact.Title AS TransportCompany, SISys_Location.Title AS City, SDSO_Shipment.TruckWeight, SDSO_Shipment.LoadedTruckWeight, " +
-                                                       "                          SDSO_Shipment.NetWeight, SDSO_Shipment.EstimatedWeight, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 10) AS EndDate, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 10) AS StartDate, " +
-                                                       "                          RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 8) AS EndTime, RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 8) AS StartTime, " +
-                                                       "                          FirstWeighingMachineCode, SecondWeighingMachineCode, SDSO_Shipment.Code " +
-                                                       " FROM            WMLog_Driver RIGHT OUTER JOIN" +
-                                                       "                          SDSO_Shipment INNER JOIN" +
-                                                       "                          WFFC_Contact ON SDSO_Shipment.TransportCompanyCode = WFFC_Contact.Code LEFT OUTER JOIN" +
-                                                       "                          SISys_Location INNER JOIN" +
-                                                       "                          WFFC_Contact AS WFFC_Contact_1 ON SISys_Location.Code = WFFC_Contact_1.GeograghyLocationCode LEFT OUTER JOIN" +
-                                                       "                          SDSO_Customer ON WFFC_Contact_1.Code = SDSO_Customer.CustomerCode ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode ON " +
-                                                       "                          WMLog_Driver.DriverCode = SDSO_Shipment.DriverCode LEFT OUTER JOIN" +
-                                                       "                          WMLog_Vehicle ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code" +
-                                                       " WHERE        (SDSO_Shipment.FormStatusCode LIKE '%Weighing%') AND SDSO_Shipment.Code LIKE '%" + txtShipmentCode.Text + "%'"
-                                                        , _dbConnection))
+                if (_dbConnection.State == ConnectionState.Open)
                 {
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    _shipmentTable.Clear();
-                    da.Fill(_shipmentTable);
-                    if (_shipmentTable.Rows.Count > 0)
+                    using (SqlCommand cmd = new SqlCommand("SELECT        SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, " +
+                                                           "                          WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus, " +
+                                                           "                          WFFC_Contact.Title AS TransportCompany, SISys_Location.Title AS City, SDSO_Shipment.TruckWeight, SDSO_Shipment.LoadedTruckWeight, " +
+                                                           "                          SDSO_Shipment.NetWeight, SDSO_Shipment.EstimatedWeight, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 10) AS EndDate, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 10) AS StartDate, " +
+                                                           "                          RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 8) AS EndTime, RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 8) AS StartTime, " +
+                                                           "                          FirstWeighingMachineCode, SecondWeighingMachineCode, SDSO_Shipment.Code " +
+                                                           " FROM            WMLog_Driver RIGHT OUTER JOIN" +
+                                                           "                          SDSO_Shipment INNER JOIN" +
+                                                           "                          WFFC_Contact ON SDSO_Shipment.TransportCompanyCode = WFFC_Contact.Code LEFT OUTER JOIN" +
+                                                           "                          SISys_Location INNER JOIN" +
+                                                           "                          WFFC_Contact AS WFFC_Contact_1 ON SISys_Location.Code = WFFC_Contact_1.GeograghyLocationCode LEFT OUTER JOIN" +
+                                                           "                          SDSO_Customer ON WFFC_Contact_1.Code = SDSO_Customer.CustomerCode ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode ON " +
+                                                           "                          WMLog_Driver.DriverCode = SDSO_Shipment.DriverCode LEFT OUTER JOIN" +
+                                                           "                          WMLog_Vehicle ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code" +
+                                                           " WHERE        (SDSO_Shipment.FormStatusCode LIKE '%Weighing%') AND SDSO_Shipment.Code LIKE '%" + txtShipmentCode.Text + "%'"
+                                                            , _dbConnection))
                     {
-                        lblSender.Text = _shipmentTable.Rows[0].ItemArray[8].ToString();
-                        lblSaler.Text = _shipmentTable.Rows[0].ItemArray[2].ToString();
-                        lblBillOfLading.Text = _shipmentTable.Rows[0].ItemArray[1].ToString();
-                        lblDestination.Text = _shipmentTable.Rows[0].ItemArray[9].ToString();
-                        lblCar.Text = _shipmentTable.Rows[0].ItemArray[3].ToString();
-                        lblDriver.Text = _shipmentTable.Rows[0].ItemArray[4].ToString();
-                        lblDriverLicence.Text = _shipmentTable.Rows[0].ItemArray[5].ToString();
-                        txtWeight1.Text = "90";// string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[10]);
-                        txtWeight2.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[11]);
-                        //txtDate1.Text = _shipmentTable.Rows[0].ItemArray[15].ToString();
-                        txtDate2.Text = _shipmentTable.Rows[0].ItemArray[14].ToString();
-                        //txtTime1.Text = _shipmentTable.Rows[0].ItemArray[17].ToString();
-                        txtTime2.Text = _shipmentTable.Rows[0].ItemArray[16].ToString();
-                        txtMachine1.Text = _shipmentTable.Rows[0].ItemArray[18].ToString();
-                        txtMachine2.Text = _shipmentTable.Rows[0].ItemArray[19].ToString();
-                        _shipmentState = _shipmentTable.Rows[0].ItemArray[7].ToString();
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        _shipmentTable.Clear();
+                        da.Fill(_shipmentTable);
+                        if (_shipmentTable.Rows.Count > 0)
+                        {
+                            lblSender.Text = _shipmentTable.Rows[0].ItemArray[8].ToString();
+                            lblSaler.Text = _shipmentTable.Rows[0].ItemArray[2].ToString();
+                            lblBillOfLading.Text = _shipmentTable.Rows[0].ItemArray[1].ToString();
+                            lblDestination.Text = _shipmentTable.Rows[0].ItemArray[9].ToString();
+                            lblCar.Text = _shipmentTable.Rows[0].ItemArray[3].ToString();
+                            lblDriver.Text = _shipmentTable.Rows[0].ItemArray[4].ToString();
+                            lblDriverLicence.Text = _shipmentTable.Rows[0].ItemArray[5].ToString();
+                            txtWeight1.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[10]);
+                            txtWeight2.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[11]);
+                            txtDate1.Text = _shipmentTable.Rows[0].ItemArray[15].ToString();
+                            txtDate2.Text = _shipmentTable.Rows[0].ItemArray[14].ToString();
+                            txtTime1.Text = _shipmentTable.Rows[0].ItemArray[17].ToString();
+                            txtTime2.Text = _shipmentTable.Rows[0].ItemArray[16].ToString();
+                            txtMachine1.Text = _shipmentTable.Rows[0].ItemArray[18].ToString();
+                            txtMachine2.Text = _shipmentTable.Rows[0].ItemArray[19].ToString();
+                            _shipmentState = _shipmentTable.Rows[0].ItemArray[7].ToString();
+                        }
+                        else
+                        {
+                            lblDriver.Text = "---";
+                            lblBillOfLading.Text = "---";
+                            lblDestination.Text = "---";
+                            lblCar.Text = "---";
+                            lblDriverLicence.Text = "---";
+                        }
                     }
-                    else
+
+                    using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل] FROM SDSO_Shipment " +
+                        "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
+                        "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code Like '%" + txtShipmentCode.Text + "%'"
+                                                            , _dbConnection))
                     {
-                        lblDriver.Text = "---";
-                        lblBillOfLading.Text = "---";
-                        lblDestination.Text = "---";
-                        lblCar.Text = "---";
-                        lblDriverLicence.Text = "---";
+                        DataTable shipmentDetailTable = new DataTable();
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(shipmentDetailTable);
+                        if (shipmentDetailTable.Rows.Count > 0)
+                        {
+                            dgShipmentDetail.DataSource = shipmentDetailTable;
+
+                            var results = shipmentDetailTable.AsEnumerable().Count();
+                            lblLoadedBranches.Text = string.Format("{0:0.###}", results);
+                        }
                     }
                 }
-
-                using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل] FROM SDSO_Shipment " +
-                    "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
-                    "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code Like '%" + txtShipmentCode.Text + "%'"
-                                                        , _dbConnection))
+            }
+            catch (Exception)
+            {
+                InvokeGuiThread(() =>
                 {
-                    DataTable shipmentDetailTable = new DataTable();
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(shipmentDetailTable);
-                    if (shipmentDetailTable.Rows.Count > 0)
-                    {
-                        dgShipmentDetail.DataSource = shipmentDetailTable;
-
-                        //var results = shipmentDetailTable.AsEnumerable().Where(x => x.Field<string>("[کد کالا]").StartsWith("8")).ToList().Count;
-                        //lblLoadedBranches.Text = string.Format("{0:0.###}", results);
-                    }
-                }
+                    DatabaseIndicator.Text = "غیرفعال";
+                    DatabaseIndicator.ForeColor = Color.Red;
+                });
             }
         }
 

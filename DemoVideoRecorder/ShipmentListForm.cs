@@ -29,41 +29,48 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void doSearch(string p)
         {
-            var connection =
-                System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
-            if (_dbConnector == null)
-                _dbConnector = new SqlConnection(connection);
-            if (_dbConnector.State != ConnectionState.Open)
+            try
             {
-                _dbConnector.Open();
-            }
-
-            _dbCommand = new SqlCommand("SELECT SDSO_Shipment.Code AS ShipmentCode, SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode AS TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber AS LicenseNumber, SDSO_Shipment.Guid " +
-                                            "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
-                                            "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
-                                            "ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN SDSO_Customer " +
-                                            "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE SDSO_Shipment.FormStatusCode LIKE '%Weighing%' AND SDSO_Shipment.Code LIKE '%" + txtSearch.Text + "%'");
-            _dbCommand.Connection = _dbConnector;
-            _dbAdapter = new SqlDataAdapter(_dbCommand);
-            _shipmentTable = new DataTable();
-            _dbAdapter.Fill(_shipmentTable);
-
-            if (_shipmentTable.Rows.Count > 0)
-            {
-                dataGridView1.DataSource = _shipmentTable;
-            }
-
-            dataGridView1.DefaultCellStyle.NullValue = "---";
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
-            {
-                if (i % 2 != 0)
+                var connection =
+                    System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
+                if (_dbConnector == null)
+                    _dbConnector = new SqlConnection(connection);
+                if (_dbConnector.State != ConnectionState.Open)
                 {
-                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.AliceBlue;
+                    _dbConnector.Open();
                 }
+
+                _dbCommand = new SqlCommand("SELECT SDSO_Shipment.Code AS ShipmentCode, SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode AS TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber AS LicenseNumber, SDSO_Shipment.Guid " +
+                                                "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
+                                                "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
+                                                "ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN SDSO_Customer " +
+                                                "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE SDSO_Shipment.FormStatusCode LIKE '%Weighing%' AND SDSO_Shipment.Code LIKE '%" + txtSearch.Text + "%'");
+                _dbCommand.Connection = _dbConnector;
+                _dbAdapter = new SqlDataAdapter(_dbCommand);
+                _shipmentTable = new DataTable();
+                _dbAdapter.Fill(_shipmentTable);
+
+                if (_shipmentTable.Rows.Count > 0)
+                {
+                    dataGridView1.DataSource = _shipmentTable;
+                }
+
+                dataGridView1.DefaultCellStyle.NullValue = "---";
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                {
+                    if (i % 2 != 0)
+                    {
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.AliceBlue;
+                    }
+                }
+                dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
+                _dbConnector.Close();
             }
-            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            
-            _dbConnector.Close();
+            catch(Exception)
+            {
+                MessageBox.Show("مشکل در اتصال به پایگاه داده", "خطا", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)

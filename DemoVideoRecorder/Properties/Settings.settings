@@ -83,5 +83,8 @@
     <Setting Name="Setting4" Type="System.String" Scope="User">
       <Value Profile="(Default)">باسکول 80 تن خروجی</Value>
     </Setting>
+    <Setting Name="SelectedSetting" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

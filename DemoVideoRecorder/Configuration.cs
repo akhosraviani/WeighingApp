@@ -21,44 +21,42 @@ namespace _03_Onvif_Network_Video_Recorder
 
         void Configuration_Load(object sender, EventArgs e)
         {
-            // Set Camera IP 1
-            if (Settings.Default.CameraIP11 != null)
-            {
-                this.txtCameraIP1.Text = Settings.Default.CameraIP11;
-            }
+            this.txtTitle1.Text = Settings.Default.Setting1;
+            this.txtCameraIP11.Text = Settings.Default.CameraIP11;
+            this.txtCameraIP12.Text = Settings.Default.CameraIP12;
+            this.txtCameraIP13.Text = Settings.Default.CameraIP13;
+            this.txtCameraIP14.Text = Settings.Default.CameraIP14;
+            this.txtBascolPort1.Text = Settings.Default.BascolPort1;
 
-            // Set Camera IP 2
-            if (Settings.Default.CameraIP12 != null)
-            {
-                this.txtCameraIP2.Text = Settings.Default.CameraIP12;
-            }
+            this.txtTitle2.Text = Settings.Default.Setting2;
+            this.txtCameraIP21.Text = Settings.Default.CameraIP21;
+            this.txtCameraIP22.Text = Settings.Default.CameraIP22;
+            this.txtCameraIP23.Text = Settings.Default.CameraIP23;
+            this.txtCameraIP24.Text = Settings.Default.CameraIP24;
+            this.txtBascolPort2.Text = Settings.Default.BascolPort2;
 
-            // Set Camera IP 3
-            if (Settings.Default.CameraIP13 != null)
-            {
-                this.txtCameraIP3.Text = Settings.Default.CameraIP13;
-            }
+            this.txtTitle3.Text = Settings.Default.Setting3;
+            this.txtCameraIP31.Text = Settings.Default.CameraIP31;
+            this.txtCameraIP32.Text = Settings.Default.CameraIP32;
+            this.txtCameraIP33.Text = Settings.Default.CameraIP33;
+            this.txtCameraIP34.Text = Settings.Default.CameraIP34;
+            this.txtBascolPort3.Text = Settings.Default.BascolPort3;
 
-            // Set Camera IP 4
-            if (Settings.Default.CameraIP14 != null)
-            {
-                this.txtCameraIP4.Text = Settings.Default.CameraIP14;
-            }
-
-            // Set bascol port
-            if (Settings.Default.BascolPort1 != null)
-            {
-                this.txtBascolPort1.Text = Settings.Default.BascolPort1;
-            }
+            this.txtTitle4.Text = Settings.Default.Setting4;
+            this.txtCameraIP41.Text = Settings.Default.CameraIP41;
+            this.txtCameraIP42.Text = Settings.Default.CameraIP42;
+            this.txtCameraIP43.Text = Settings.Default.CameraIP43;
+            this.txtCameraIP44.Text = Settings.Default.CameraIP44;
+            this.txtBascolPort4.Text = Settings.Default.BascolPort4;
         }
 
         void Configuration_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (this.txtBascolPort1.Text != Settings.Default.BascolPort1 ||
-                this.txtCameraIP4.Text != Settings.Default.CameraIP14 ||
-                this.txtCameraIP3.Text != Settings.Default.CameraIP13 ||
-                this.txtCameraIP2.Text != Settings.Default.CameraIP12 ||
-                this.txtCameraIP1.Text != Settings.Default.CameraIP11)
+                this.txtCameraIP14.Text != Settings.Default.CameraIP14 ||
+                this.txtCameraIP13.Text != Settings.Default.CameraIP13 ||
+                this.txtCameraIP12.Text != Settings.Default.CameraIP12 ||
+                this.txtCameraIP11.Text != Settings.Default.CameraIP11)
             {
                 DialogResult result = MessageBox.Show("تنظیمات تغییر کرده است. آیا می خواهید اطلاعات را ذخیره کنید؟", "ذخیره اطلاعات",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RtlReading);
@@ -69,10 +67,10 @@ namespace _03_Onvif_Network_Video_Recorder
                 }
                 else if (result == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Settings.Default.CameraIP11 = this.txtCameraIP1.Text;
-                    Settings.Default.CameraIP12 = this.txtCameraIP2.Text;
-                    Settings.Default.CameraIP13 = this.txtCameraIP3.Text;
-                    Settings.Default.CameraIP14 = this.txtCameraIP4.Text;
+                    Settings.Default.CameraIP11 = this.txtCameraIP11.Text;
+                    Settings.Default.CameraIP12 = this.txtCameraIP12.Text;
+                    Settings.Default.CameraIP13 = this.txtCameraIP13.Text;
+                    Settings.Default.CameraIP14 = this.txtCameraIP14.Text;
                     Settings.Default.BascolPort1 = this.txtBascolPort1.Text;
                     
                     // Save settings
@@ -88,10 +86,10 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Settings.Default.CameraIP11 = this.txtCameraIP1.Text;
-            Settings.Default.CameraIP12 = this.txtCameraIP2.Text;
-            Settings.Default.CameraIP13 = this.txtCameraIP3.Text;
-            Settings.Default.CameraIP14 = this.txtCameraIP4.Text;
+            Settings.Default.CameraIP11 = this.txtCameraIP11.Text;
+            Settings.Default.CameraIP12 = this.txtCameraIP12.Text;
+            Settings.Default.CameraIP13 = this.txtCameraIP13.Text;
+            Settings.Default.CameraIP14 = this.txtCameraIP14.Text;
             Settings.Default.BascolPort1 = this.txtBascolPort1.Text;
 
             // Save settings
@@ -108,15 +106,20 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void btnSaveExit_Click(object sender, EventArgs e)
         {
-            Settings.Default.CameraIP11 = this.txtCameraIP1.Text;
-            Settings.Default.CameraIP12 = this.txtCameraIP2.Text;
-            Settings.Default.CameraIP13 = this.txtCameraIP3.Text;
-            Settings.Default.CameraIP14 = this.txtCameraIP4.Text;
+            Settings.Default.CameraIP11 = this.txtCameraIP11.Text;
+            Settings.Default.CameraIP12 = this.txtCameraIP12.Text;
+            Settings.Default.CameraIP13 = this.txtCameraIP13.Text;
+            Settings.Default.CameraIP14 = this.txtCameraIP14.Text;
             Settings.Default.BascolPort1 = this.txtBascolPort1.Text;
 
             // Save settings
             Settings.Default.Save();
             this.Close();
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }
