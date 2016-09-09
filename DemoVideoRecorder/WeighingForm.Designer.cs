@@ -103,16 +103,19 @@
             this.txtMachine2 = new System.Windows.Forms.TextBox();
             this.txtWeight2 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
-            this.btnSaveData = new System.Windows.Forms.Button();
-            this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
-            this.btnGetData = new System.Windows.Forms.Button();
+            this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblDiscrepency = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
             this.lblLoadedBranches = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.lblNetWeightLoad = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnSaveData = new System.Windows.Forms.Button();
+            this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnGetData = new System.Windows.Forms.Button();
             this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -123,9 +126,11 @@
             this.DatabaseIndicator = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.تنظیماتToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.تنظیمات1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.تنظیمات2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctmConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctmSetting1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctmSetting2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctmSetting3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctmSetting4 = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -149,10 +154,11 @@
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
-            this.tableLayoutPanel13.SuspendLayout();
-            this.tableLayoutPanel12.SuspendLayout();
+            this.tableLayoutPanel17.SuspendLayout();
             this.tableLayoutPanel10.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
+            this.tableLayoutPanel13.SuspendLayout();
+            this.tableLayoutPanel12.SuspendLayout();
             this.tableLayoutPanel14.SuspendLayout();
             this.tableLayoutPanel16.SuspendLayout();
             this.tableLayoutPanel15.SuspendLayout();
@@ -200,7 +206,7 @@
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.36874F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.83334F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.85714F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 53F));
             this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.txtShipmentCode, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.button3, 3, 0);
@@ -217,9 +223,9 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(512, 0);
+            this.label1.Location = new System.Drawing.Point(513, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 30);
+            this.label1.Size = new System.Drawing.Size(52, 30);
             this.label1.TabIndex = 3;
             this.label1.Text = "کد محموله";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -228,16 +234,16 @@
             // 
             this.txtShipmentCode.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtShipmentCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtShipmentCode.Location = new System.Drawing.Point(141, 5);
+            this.txtShipmentCode.Location = new System.Drawing.Point(149, 5);
             this.txtShipmentCode.Name = "txtShipmentCode";
-            this.txtShipmentCode.Size = new System.Drawing.Size(364, 20);
+            this.txtShipmentCode.Size = new System.Drawing.Size(358, 20);
             this.txtShipmentCode.TabIndex = 1;
             this.txtShipmentCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtShipmentCode_KeyDown);
             // 
             // button3
             // 
             this.button3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button3.Location = new System.Drawing.Point(5, 6);
+            this.button3.Location = new System.Drawing.Point(12, 6);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(32, 18);
             this.button3.TabIndex = 5;
@@ -248,7 +254,7 @@
             // btnShipmentSearch
             // 
             this.btnShipmentSearch.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnShipmentSearch.Location = new System.Drawing.Point(49, 6);
+            this.btnShipmentSearch.Location = new System.Drawing.Point(60, 6);
             this.btnShipmentSearch.Name = "btnShipmentSearch";
             this.btnShipmentSearch.Size = new System.Drawing.Size(81, 18);
             this.btnShipmentSearch.TabIndex = 4;
@@ -885,7 +891,7 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.26087F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.65217F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.6087F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 107F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel5.Controls.Add(this.label15, 0, 2);
             this.tableLayoutPanel5.Controls.Add(this.txtTime2, 3, 2);
             this.tableLayoutPanel5.Controls.Add(this.txtDate2, 2, 2);
@@ -917,9 +923,9 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label15.Location = new System.Drawing.Point(482, 46);
+            this.label15.Location = new System.Drawing.Point(485, 46);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(78, 27);
+            this.label15.Size = new System.Drawing.Size(75, 27);
             this.label15.TabIndex = 46;
             this.label15.Text = "توزین ثانویه:";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -928,64 +934,64 @@
             // 
             this.txtTime2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTime2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtTime2.Location = new System.Drawing.Point(112, 49);
+            this.txtTime2.Location = new System.Drawing.Point(125, 49);
             this.txtTime2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTime2.Name = "txtTime2";
             this.txtTime2.ReadOnly = true;
-            this.txtTime2.Size = new System.Drawing.Size(97, 20);
+            this.txtTime2.Size = new System.Drawing.Size(94, 20);
             this.txtTime2.TabIndex = 11;
             // 
             // txtDate2
             // 
             this.txtDate2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtDate2.Location = new System.Drawing.Point(215, 49);
+            this.txtDate2.Location = new System.Drawing.Point(225, 49);
             this.txtDate2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDate2.Name = "txtDate2";
             this.txtDate2.ReadOnly = true;
-            this.txtDate2.Size = new System.Drawing.Size(133, 20);
+            this.txtDate2.Size = new System.Drawing.Size(129, 20);
             this.txtDate2.TabIndex = 10;
             // 
             // txtTime1
             // 
             this.txtTime1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTime1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtTime1.Location = new System.Drawing.Point(112, 23);
+            this.txtTime1.Location = new System.Drawing.Point(125, 23);
             this.txtTime1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTime1.Name = "txtTime1";
             this.txtTime1.ReadOnly = true;
-            this.txtTime1.Size = new System.Drawing.Size(97, 20);
+            this.txtTime1.Size = new System.Drawing.Size(94, 20);
             this.txtTime1.TabIndex = 7;
             // 
             // txtDate1
             // 
             this.txtDate1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtDate1.Location = new System.Drawing.Point(215, 23);
+            this.txtDate1.Location = new System.Drawing.Point(225, 23);
             this.txtDate1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDate1.Name = "txtDate1";
             this.txtDate1.ReadOnly = true;
-            this.txtDate1.Size = new System.Drawing.Size(133, 20);
+            this.txtDate1.Size = new System.Drawing.Size(129, 20);
             this.txtDate1.TabIndex = 6;
             // 
             // txtWeight1
             // 
             this.txtWeight1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtWeight1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeight1.Location = new System.Drawing.Point(354, 23);
+            this.txtWeight1.Location = new System.Drawing.Point(360, 23);
             this.txtWeight1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtWeight1.Name = "txtWeight1";
             this.txtWeight1.ReadOnly = true;
-            this.txtWeight1.Size = new System.Drawing.Size(122, 20);
+            this.txtWeight1.Size = new System.Drawing.Size(119, 20);
             this.txtWeight1.TabIndex = 5;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(112, 0);
+            this.label5.Location = new System.Drawing.Point(125, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 21);
+            this.label5.Size = new System.Drawing.Size(94, 21);
             this.label5.TabIndex = 3;
             this.label5.Text = "ساعت";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -994,9 +1000,9 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(215, 0);
+            this.label4.Location = new System.Drawing.Point(225, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(133, 21);
+            this.label4.Size = new System.Drawing.Size(129, 21);
             this.label4.TabIndex = 2;
             this.label4.Text = "تاریخ";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1005,9 +1011,9 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(354, 0);
+            this.label3.Location = new System.Drawing.Point(360, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(122, 21);
+            this.label3.Size = new System.Drawing.Size(119, 21);
             this.label3.TabIndex = 1;
             this.label3.Text = "وزن";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1016,9 +1022,9 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Location = new System.Drawing.Point(482, 0);
+            this.label7.Location = new System.Drawing.Point(485, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(78, 21);
+            this.label7.Size = new System.Drawing.Size(75, 21);
             this.label7.TabIndex = 0;
             this.label7.Text = "مرحله";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1027,9 +1033,9 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label12.Location = new System.Drawing.Point(482, 21);
+            this.label12.Location = new System.Drawing.Point(485, 21);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(78, 25);
+            this.label12.Size = new System.Drawing.Size(75, 25);
             this.label12.TabIndex = 45;
             this.label12.Text = "توزین اولیه:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1040,7 +1046,7 @@
             this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label19.Location = new System.Drawing.Point(3, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(103, 21);
+            this.label19.Size = new System.Drawing.Size(116, 21);
             this.label19.TabIndex = 47;
             this.label19.Text = "شماره باسکول";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1049,7 +1055,7 @@
             // 
             this.txtMachine1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtMachine1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtMachine1.Location = new System.Drawing.Point(6, 23);
+            this.txtMachine1.Location = new System.Drawing.Point(13, 23);
             this.txtMachine1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMachine1.Name = "txtMachine1";
             this.txtMachine1.ReadOnly = true;
@@ -1060,7 +1066,7 @@
             // 
             this.txtMachine2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtMachine2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtMachine2.Location = new System.Drawing.Point(6, 49);
+            this.txtMachine2.Location = new System.Drawing.Point(13, 49);
             this.txtMachine2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMachine2.Name = "txtMachine2";
             this.txtMachine2.ReadOnly = true;
@@ -1071,24 +1077,26 @@
             // 
             this.txtWeight2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtWeight2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeight2.Location = new System.Drawing.Point(355, 49);
+            this.txtWeight2.Location = new System.Drawing.Point(360, 49);
             this.txtWeight2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtWeight2.Name = "txtWeight2";
             this.txtWeight2.ReadOnly = true;
-            this.txtWeight2.Size = new System.Drawing.Size(120, 20);
+            this.txtWeight2.Size = new System.Drawing.Size(119, 20);
             this.txtWeight2.TabIndex = 49;
             // 
             // tableLayoutPanel6
             // 
-            this.tableLayoutPanel6.ColumnCount = 4;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel13, 3, 0);
-            this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel12, 2, 0);
+            this.tableLayoutPanel6.ColumnCount = 5;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel17, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel10, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel9, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel13, 4, 0);
+            this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel12, 3, 0);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 96);
             this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1097,6 +1105,127 @@
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.Size = new System.Drawing.Size(569, 44);
             this.tableLayoutPanel6.TabIndex = 1;
+            // 
+            // tableLayoutPanel17
+            // 
+            this.tableLayoutPanel17.ColumnCount = 1;
+            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel17.Controls.Add(this.lblDiscrepency, 0, 1);
+            this.tableLayoutPanel17.Controls.Add(this.label21, 0, 0);
+            this.tableLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel17.Location = new System.Drawing.Point(346, 2);
+            this.tableLayoutPanel17.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanel17.Name = "tableLayoutPanel17";
+            this.tableLayoutPanel17.RowCount = 2;
+            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.6499F));
+            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.3501F));
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(107, 40);
+            this.tableLayoutPanel17.TabIndex = 4;
+            // 
+            // lblDiscrepency
+            // 
+            this.lblDiscrepency.AutoSize = true;
+            this.lblDiscrepency.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+            this.lblDiscrepency.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblDiscrepency.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblDiscrepency.Location = new System.Drawing.Point(3, 16);
+            this.lblDiscrepency.Name = "lblDiscrepency";
+            this.lblDiscrepency.Size = new System.Drawing.Size(101, 24);
+            this.lblDiscrepency.TabIndex = 10;
+            this.lblDiscrepency.Text = "0.0";
+            this.lblDiscrepency.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label21.Location = new System.Drawing.Point(3, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(101, 16);
+            this.label21.TabIndex = 7;
+            this.label21.Text = "درصد مغایرت وزنی";
+            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel10
+            // 
+            this.tableLayoutPanel10.ColumnCount = 1;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel10.Controls.Add(this.lblLoadedBranches, 0, 1);
+            this.tableLayoutPanel10.Controls.Add(this.label34, 0, 0);
+            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(233, 2);
+            this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 2;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.6499F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.3501F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(107, 40);
+            this.tableLayoutPanel10.TabIndex = 1;
+            // 
+            // lblLoadedBranches
+            // 
+            this.lblLoadedBranches.AutoSize = true;
+            this.lblLoadedBranches.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+            this.lblLoadedBranches.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblLoadedBranches.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLoadedBranches.Location = new System.Drawing.Point(3, 16);
+            this.lblLoadedBranches.Name = "lblLoadedBranches";
+            this.lblLoadedBranches.Size = new System.Drawing.Size(101, 24);
+            this.lblLoadedBranches.TabIndex = 10;
+            this.lblLoadedBranches.Text = "0.0";
+            this.lblLoadedBranches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label34.Location = new System.Drawing.Point(3, 0);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(101, 16);
+            this.label34.TabIndex = 7;
+            this.label34.Text = "تعداد شاخه بارگیری شده";
+            this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel9
+            // 
+            this.tableLayoutPanel9.ColumnCount = 1;
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel9.Controls.Add(this.lblNetWeightLoad, 0, 1);
+            this.tableLayoutPanel9.Controls.Add(this.label26, 0, 0);
+            this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(459, 2);
+            this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+            this.tableLayoutPanel9.RowCount = 2;
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.6499F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.3501F));
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(107, 40);
+            this.tableLayoutPanel9.TabIndex = 0;
+            // 
+            // lblNetWeightLoad
+            // 
+            this.lblNetWeightLoad.AutoSize = true;
+            this.lblNetWeightLoad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+            this.lblNetWeightLoad.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblNetWeightLoad.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNetWeightLoad.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.lblNetWeightLoad.Location = new System.Drawing.Point(3, 16);
+            this.lblNetWeightLoad.Name = "lblNetWeightLoad";
+            this.lblNetWeightLoad.Size = new System.Drawing.Size(101, 24);
+            this.lblNetWeightLoad.TabIndex = 9;
+            this.lblNetWeightLoad.Text = "0.0";
+            this.lblNetWeightLoad.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label26.Location = new System.Drawing.Point(3, 0);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(101, 16);
+            this.label26.TabIndex = 5;
+            this.label26.Text = "وزن خالص بارگیری";
+            this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel13
             // 
@@ -1110,16 +1239,16 @@
             this.tableLayoutPanel13.RowCount = 2;
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.6499F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.3501F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(137, 40);
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(111, 40);
             this.tableLayoutPanel13.TabIndex = 3;
             // 
             // btnSaveData
             // 
             this.btnSaveData.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnSaveData.Location = new System.Drawing.Point(2, 16);
+            this.btnSaveData.Location = new System.Drawing.Point(0, 16);
             this.btnSaveData.Margin = new System.Windows.Forms.Padding(0);
             this.btnSaveData.Name = "btnSaveData";
-            this.btnSaveData.Size = new System.Drawing.Size(134, 24);
+            this.btnSaveData.Size = new System.Drawing.Size(111, 24);
             this.btnSaveData.TabIndex = 2;
             this.btnSaveData.Text = "تایید و ثبت نهایی";
             this.btnSaveData.UseVisualStyleBackColor = true;
@@ -1131,107 +1260,26 @@
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel12.Controls.Add(this.btnGetData, 0, 1);
             this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel12.Location = new System.Drawing.Point(146, 2);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(120, 2);
             this.tableLayoutPanel12.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tableLayoutPanel12.Name = "tableLayoutPanel12";
             this.tableLayoutPanel12.RowCount = 2;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.6499F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.3501F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(136, 40);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(107, 40);
             this.tableLayoutPanel12.TabIndex = 2;
             // 
             // btnGetData
             // 
             this.btnGetData.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnGetData.Location = new System.Drawing.Point(2, 16);
+            this.btnGetData.Location = new System.Drawing.Point(0, 16);
             this.btnGetData.Margin = new System.Windows.Forms.Padding(0);
             this.btnGetData.Name = "btnGetData";
-            this.btnGetData.Size = new System.Drawing.Size(133, 24);
+            this.btnGetData.Size = new System.Drawing.Size(107, 24);
             this.btnGetData.TabIndex = 1;
-            this.btnGetData.Text = "دریافت تصویر و تثبیت وزن";
+            this.btnGetData.Text = "دریافت تصویر";
             this.btnGetData.UseVisualStyleBackColor = true;
             this.btnGetData.Click += new System.EventHandler(this.btnGetData_Click);
-            // 
-            // tableLayoutPanel10
-            // 
-            this.tableLayoutPanel10.ColumnCount = 1;
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel10.Controls.Add(this.lblLoadedBranches, 0, 1);
-            this.tableLayoutPanel10.Controls.Add(this.label34, 0, 0);
-            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(288, 2);
-            this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
-            this.tableLayoutPanel10.RowCount = 2;
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.6499F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.3501F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(136, 40);
-            this.tableLayoutPanel10.TabIndex = 1;
-            // 
-            // lblLoadedBranches
-            // 
-            this.lblLoadedBranches.AutoSize = true;
-            this.lblLoadedBranches.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.lblLoadedBranches.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLoadedBranches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblLoadedBranches.Location = new System.Drawing.Point(3, 16);
-            this.lblLoadedBranches.Name = "lblLoadedBranches";
-            this.lblLoadedBranches.Size = new System.Drawing.Size(130, 24);
-            this.lblLoadedBranches.TabIndex = 10;
-            this.lblLoadedBranches.Text = "0.0";
-            this.lblLoadedBranches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label34.Location = new System.Drawing.Point(3, 0);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(130, 16);
-            this.label34.TabIndex = 7;
-            this.label34.Text = "تعداد شاخه بارگیری شده";
-            this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // tableLayoutPanel9
-            // 
-            this.tableLayoutPanel9.ColumnCount = 1;
-            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel9.Controls.Add(this.lblNetWeightLoad, 0, 1);
-            this.tableLayoutPanel9.Controls.Add(this.label26, 0, 0);
-            this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(430, 2);
-            this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-            this.tableLayoutPanel9.RowCount = 2;
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.6499F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 58.3501F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(136, 40);
-            this.tableLayoutPanel9.TabIndex = 0;
-            // 
-            // lblNetWeightLoad
-            // 
-            this.lblNetWeightLoad.AutoSize = true;
-            this.lblNetWeightLoad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.lblNetWeightLoad.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblNetWeightLoad.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNetWeightLoad.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.lblNetWeightLoad.Location = new System.Drawing.Point(3, 16);
-            this.lblNetWeightLoad.Name = "lblNetWeightLoad";
-            this.lblNetWeightLoad.Size = new System.Drawing.Size(130, 24);
-            this.lblNetWeightLoad.TabIndex = 9;
-            this.lblNetWeightLoad.Text = "0.0";
-            this.lblNetWeightLoad.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label26.Location = new System.Drawing.Point(3, 0);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(130, 16);
-            this.label26.TabIndex = 5;
-            this.label26.Text = "وزن خالص بارگیری";
-            this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel14
             // 
@@ -1362,30 +1410,59 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.تنظیماتToolStripMenuItem});
+            this.ctmConfig});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.contextMenuStrip1.Size = new System.Drawing.Size(118, 26);
             // 
-            // تنظیماتToolStripMenuItem
+            // ctmConfig
             // 
-            this.تنظیماتToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.تنظیمات1ToolStripMenuItem,
-            this.تنظیمات2ToolStripMenuItem});
-            this.تنظیماتToolStripMenuItem.Name = "تنظیماتToolStripMenuItem";
-            this.تنظیماتToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.تنظیماتToolStripMenuItem.Text = "تنظیمات";
+            this.ctmConfig.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctmSetting1,
+            this.ctmSetting2,
+            this.ctmSetting3,
+            this.ctmSetting4});
+            this.ctmConfig.Name = "ctmConfig";
+            this.ctmConfig.Size = new System.Drawing.Size(117, 22);
+            this.ctmConfig.Text = "تنظیمات";
             // 
-            // تنظیمات1ToolStripMenuItem
+            // ctmSetting1
             // 
-            this.تنظیمات1ToolStripMenuItem.Name = "تنظیمات1ToolStripMenuItem";
-            this.تنظیمات1ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.تنظیمات1ToolStripMenuItem.Text = "تنظیمات 1";
+            this.ctmSetting1.Checked = true;
+            this.ctmSetting1.CheckOnClick = true;
+            this.ctmSetting1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ctmSetting1.Name = "ctmSetting1";
+            this.ctmSetting1.Size = new System.Drawing.Size(178, 22);
+            this.ctmSetting1.Tag = "1";
+            this.ctmSetting1.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting1;
+            this.ctmSetting1.Click += new System.EventHandler(this.contextMenu_Click);
             // 
-            // تنظیمات2ToolStripMenuItem
+            // ctmSetting2
             // 
-            this.تنظیمات2ToolStripMenuItem.Name = "تنظیمات2ToolStripMenuItem";
-            this.تنظیمات2ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.تنظیمات2ToolStripMenuItem.Text = "تنظیمات 2";
+            this.ctmSetting2.CheckOnClick = true;
+            this.ctmSetting2.Name = "ctmSetting2";
+            this.ctmSetting2.Size = new System.Drawing.Size(178, 22);
+            this.ctmSetting2.Tag = "2";
+            this.ctmSetting2.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting2;
+            this.ctmSetting2.Click += new System.EventHandler(this.contextMenu_Click);
+            // 
+            // ctmSetting3
+            // 
+            this.ctmSetting3.CheckOnClick = true;
+            this.ctmSetting3.Name = "ctmSetting3";
+            this.ctmSetting3.Size = new System.Drawing.Size(178, 22);
+            this.ctmSetting3.Tag = "3";
+            this.ctmSetting3.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting3;
+            this.ctmSetting3.Click += new System.EventHandler(this.contextMenu_Click);
+            // 
+            // ctmSetting4
+            // 
+            this.ctmSetting4.CheckOnClick = true;
+            this.ctmSetting4.Name = "ctmSetting4";
+            this.ctmSetting4.Size = new System.Drawing.Size(178, 22);
+            this.ctmSetting4.Tag = "4";
+            this.ctmSetting4.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting4;
+            this.ctmSetting4.Click += new System.EventHandler(this.contextMenu_Click);
             // 
             // WeighingForm
             // 
@@ -1430,12 +1507,14 @@
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel5.PerformLayout();
             this.tableLayoutPanel6.ResumeLayout(false);
-            this.tableLayoutPanel13.ResumeLayout(false);
-            this.tableLayoutPanel12.ResumeLayout(false);
+            this.tableLayoutPanel17.ResumeLayout(false);
+            this.tableLayoutPanel17.PerformLayout();
             this.tableLayoutPanel10.ResumeLayout(false);
             this.tableLayoutPanel10.PerformLayout();
             this.tableLayoutPanel9.ResumeLayout(false);
             this.tableLayoutPanel9.PerformLayout();
+            this.tableLayoutPanel13.ResumeLayout(false);
+            this.tableLayoutPanel12.ResumeLayout(false);
             this.tableLayoutPanel14.ResumeLayout(false);
             this.tableLayoutPanel16.ResumeLayout(false);
             this.tableLayoutPanel16.PerformLayout();
@@ -1529,9 +1608,9 @@
         private System.Windows.Forms.Label WeighingMachineIndicator;
         private System.Windows.Forms.Label DatabaseIndicator;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem تنظیماتToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem تنظیمات1ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem تنظیمات2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ctmConfig;
+        private System.Windows.Forms.ToolStripMenuItem ctmSetting1;
+        private System.Windows.Forms.ToolStripMenuItem ctmSetting2;
         private System.Windows.Forms.Label cameraIndicator1;
         private System.Windows.Forms.Label cameraIndicator4;
         private System.Windows.Forms.Label cameraIndicator3;
@@ -1544,5 +1623,10 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox txtMachine1;
         private System.Windows.Forms.TextBox txtWeight2;
+        private System.Windows.Forms.ToolStripMenuItem ctmSetting3;
+        private System.Windows.Forms.ToolStripMenuItem ctmSetting4;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel17;
+        private System.Windows.Forms.Label lblDiscrepency;
+        private System.Windows.Forms.Label label21;
     }
 }

@@ -16,17 +16,17 @@ namespace _03_Onvif_Network_Video_Recorder
         private MediaConnector Connector;
 
         public OzekiCamera Camera { get; private set; }
-        public DrawingImageProvider ImageProvider { get; private set; }
+        //public DrawingImageProvider ImageProvider { get; private set; }
         public SnapshotHandler Snapshot { get; private set; }
 
-        private MPEG4Recorder _mpeg4Recorder;
+        //private MPEG4Recorder _mpeg4Recorder;
 
         public event EventHandler<CameraStateEventArgs> CameraStateChanged;
         public event EventHandler<CameraErrorEventArgs> CameraErrorOccurred;
        
         public IpCameraHandler()
         {
-            ImageProvider = new DrawingImageProvider();
+            //ImageProvider = new DrawingImageProvider();
             Snapshot = new SnapshotHandler();
             Connector = new MediaConnector();
         }
@@ -40,14 +40,13 @@ namespace _03_Onvif_Network_Video_Recorder
             Camera = new OzekiCamera(cameraUrl);
 
             if (Camera == null) return;
-            Connector.Connect(Camera.VideoChannel, ImageProvider);
+            //Connector.Connect(Camera.VideoChannel, ImageProvider);
             Connector.Connect(Camera.VideoChannel, Snapshot);
 
             Camera.CameraStateChanged += Camera_CameraStateChanged;
             Camera.CameraErrorOccurred += Camera_CameraErrorOccurred;
-            Camera.ConnectionLostTimeout = 250;
+            //Camera.ConnectionLostTimeout = 250;
             Camera.Start();
-            
         }
 
         private void Camera_CameraErrorOccurred(object sender, CameraErrorEventArgs e)
@@ -76,7 +75,7 @@ namespace _03_Onvif_Network_Video_Recorder
             if (Camera == null)
                 return;
 
-            Connector.Disconnect(Camera.VideoChannel, ImageProvider);
+            //Connector.Disconnect(Camera.VideoChannel, ImageProvider);
             Connector.Disconnect(Camera.VideoChannel, Snapshot);
             Camera.Disconnect();
             Camera.Dispose();
@@ -88,10 +87,10 @@ namespace _03_Onvif_Network_Video_Recorder
             if (Camera != null)
             {
                 
-               StopVideoCapture();
+               //StopVideoCapture();
                 CloseCamera();
                 Connector.Dispose();
-                ImageProvider.Dispose();
+                //ImageProvider.Dispose();
                 Snapshot.Dispose();
             }
         }
@@ -233,11 +232,11 @@ namespace _03_Onvif_Network_Video_Recorder
             else
                 currentpath = path + "\\" + date + ".mp4";
 
-            _mpeg4Recorder = new MPEG4Recorder(currentpath);
-            _mpeg4Recorder.MultiplexFinished += Mpeg4Recorder_MultiplexFinished;
+            //_mpeg4Recorder = new MPEG4Recorder(currentpath);
+            //_mpeg4Recorder.MultiplexFinished += Mpeg4Recorder_MultiplexFinished;
 
-            Connector.Connect(Camera.AudioChannel, _mpeg4Recorder.AudioRecorder);
-            Connector.Connect(Camera.VideoChannel, _mpeg4Recorder.VideoRecorder);
+            ////Connector.Connect(Camera.AudioChannel, _mpeg4Recorder.AudioRecorder);
+            //Connector.Connect(Camera.VideoChannel, _mpeg4Recorder.VideoRecorder);
 
             Log.Write("Video capture has been started");
             Log.Write("The captured video will be saved: " + currentpath);
@@ -247,7 +246,7 @@ namespace _03_Onvif_Network_Video_Recorder
         {
             var recorder = sender as MPEG4Recorder;
             if (recorder == null) return;
-            Connector.Disconnect(Camera.AudioChannel, recorder.AudioRecorder);
+            //Connector.Disconnect(Camera.AudioChannel, recorder.AudioRecorder);
             Connector.Disconnect(Camera.VideoChannel, recorder.VideoRecorder);
 
             recorder.Dispose();
@@ -257,12 +256,12 @@ namespace _03_Onvif_Network_Video_Recorder
 
         public void StopVideoCapture()
         {
-            if (Camera == null || _mpeg4Recorder == null) return;
+            //if (Camera == null || _mpeg4Recorder == null) return;
 
-            _mpeg4Recorder.Multiplex();
+            //_mpeg4Recorder.Multiplex();
 
-            Connector.Disconnect(Camera.AudioChannel, _mpeg4Recorder.AudioRecorder);
-            Connector.Disconnect(Camera.VideoChannel, _mpeg4Recorder.VideoRecorder);
+            ////Connector.Disconnect(Camera.AudioChannel, _mpeg4Recorder.AudioRecorder);
+            //Connector.Disconnect(Camera.VideoChannel, _mpeg4Recorder.VideoRecorder);
 
             Log.Write("Video capture has been stopped");
 

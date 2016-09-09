@@ -39,7 +39,7 @@
       <Value Profile="(Default)">172.20.200.12</Value>
     </Setting>
     <Setting Name="BascolPort2" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM4</Value>
+      <Value Profile="(Default)">COM6</Value>
     </Setting>
     <Setting Name="CameraIP31" Type="System.String" Scope="User">
       <Value Profile="(Default)">172.20.200.5</Value>
@@ -69,7 +69,7 @@
       <Value Profile="(Default)">172.20.200.16</Value>
     </Setting>
     <Setting Name="BascolPort4" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM4</Value>
+      <Value Profile="(Default)">COM5</Value>
     </Setting>
     <Setting Name="Setting1" Type="System.String" Scope="User">
       <Value Profile="(Default)">باسکول 60 تن ورودی</Value>

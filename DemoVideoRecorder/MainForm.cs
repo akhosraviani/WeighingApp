@@ -109,7 +109,7 @@ namespace _03_Onvif_Network_Video_Recorder
             var i = 0;
             while (i < _videoViewerList.Count)
             {
-                _videoViewerList[i].SetImageProvider(ModelList[i].ImageProvider);
+                //_videoViewerList[i].SetImageProvider(ModelList[i].ImageProvider);
                 i++;
             }
 
