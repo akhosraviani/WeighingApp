@@ -651,6 +651,12 @@ namespace _03_Onvif_Network_Video_Recorder
                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                     == System.Windows.Forms.DialogResult.OK)
                 {
+                    double weight1, weight2;
+                    if (double.TryParse(txtWeight1.Text, out weight1) && double.TryParse(txtWeight2.Text, out weight2))
+                    {
+                        lblNetWeightLoad.Text = string.Format("{0:0.###}", Math.Abs(weight2 - weight1));
+                    }
+
                     sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, EndTime=@EndTime " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
                     sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
