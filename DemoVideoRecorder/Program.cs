@@ -29,7 +29,15 @@ namespace _03_Onvif_Network_Video_Recorder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new App());
+            DialogResult result;
+            using (var loginForm = new LoginForm())
+                result = loginForm.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                // login was successful
+                Application.Run(new App());
+            }
+            
         }
     }
 }

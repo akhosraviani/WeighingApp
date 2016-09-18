@@ -221,7 +221,21 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private string GetMachine()
         {
-            return "7740001001";
+            switch (Settings.Default.SelectedSetting)
+            {
+                case 1:
+                    return Settings.Default.MachineCode1;
+
+                case 2:
+                    return Settings.Default.MachineCode2;
+
+                case 3:
+                    return Settings.Default.MachineCode3;
+
+                case 4:
+                    return Settings.Default.MachineCode4;
+            };
+            return Settings.Default.MachineCode1;
         }
 
         private void CreateIndicators()
@@ -269,7 +283,7 @@ namespace _03_Onvif_Network_Video_Recorder
             InvokeGuiThread(() =>
             {
                 IpCameraHandler cc = sender as IpCameraHandler;
-                if (cc.Camera != null)
+                if (cc != null && cc.Camera != null && cc.Camera.CameraAddress != null)
                 {
                     var cameraAddress = cc.Camera.CameraAddress.Split(':');
                     switch (e.State)
@@ -556,8 +570,8 @@ namespace _03_Onvif_Network_Video_Recorder
                         lblDiscrepency.Text = string.Format("{0:0.###}", Math.Abs((estimatedWeight-netWeight)/estimatedWeight*100));
                     }
                 }
-                
             }
+            calcWaitingCars();
         }
         private void btnSaveData_Click(object sender, EventArgs e)
         {
@@ -577,11 +591,13 @@ namespace _03_Onvif_Network_Video_Recorder
                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                     == System.Windows.Forms.DialogResult.OK)
                 {
-                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, StartTime=@StartTime " +
+                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, StartTime=@StartTime, FirstWeighingMachineCode=@FirstMachine, FirstWeighingResponsibleCode=@Responsible " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
                     sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
                     sqlCommand.Parameters.AddWithValue("@TruckWeight", txtWeight1.Text);
                     sqlCommand.Parameters.AddWithValue("@StartTime", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                    sqlCommand.Parameters.AddWithValue("@FirstMachine", txtMachine1.Text);
+                    sqlCommand.Parameters.AddWithValue("@Responsible", Globals.UserCode);
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
 
@@ -602,7 +618,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     sqlCommand.Parameters["@StatusCode"].Value = "Shp_FirstWeighing";
                     sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Loading";
                     sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                    sqlCommand.Parameters["@CreatorCode"].Value = "1";
+                    sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
                     sqlCommand.Parameters["@ReturnMessage"].Value = "";
                     sqlCommand.Parameters["@ReturnValue"].Value = 1;
 
@@ -657,12 +673,14 @@ namespace _03_Onvif_Network_Video_Recorder
                         lblNetWeightLoad.Text = string.Format("{0:0.###}", Math.Abs(weight2 - weight1));
                     }
 
-                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, EndTime=@EndTime " +
+                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, EndTime=@EndTime, SecondWeighingMachineCode=@SecondMachine, SecondWeighingResponsibleCode=@Responsible " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
                     sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
                     sqlCommand.Parameters.AddWithValue("@NetWeight", lblNetWeightLoad.Text);
                     sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
                     sqlCommand.Parameters.AddWithValue("@EndTime", DateTime.Now);
+                    sqlCommand.Parameters.AddWithValue("@SecondMachine", txtMachine2.Text);
+                    sqlCommand.Parameters.AddWithValue("@Responsible", Globals.UserCode);
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
 
@@ -683,7 +701,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     sqlCommand.Parameters["@StatusCode"].Value = "Shp_SecondWeighing";
                     sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Issue";
                     sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                    sqlCommand.Parameters["@CreatorCode"].Value = "1";
+                    sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
                     sqlCommand.Parameters["@ReturnMessage"].Value = "";
                     sqlCommand.Parameters["@ReturnValue"].Value = 1;
 
@@ -755,7 +773,7 @@ namespace _03_Onvif_Network_Video_Recorder
                                 // set parameter values
                                 sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
                                 sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                                sqlCommand.Parameters["@CreatorCode"].Value = "1";
+                                sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
                                 sqlCommand.Parameters["@ReturnMessage"].Value = "";
                                 sqlCommand.Parameters["@ReturnValue"].Value = 1;
 
@@ -811,6 +829,10 @@ namespace _03_Onvif_Network_Video_Recorder
             catch(SqlException exp)
             {
                 MessageBox.Show(exp.Message, "SQL Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                calcWaitingCars();
             }
         }
 
@@ -902,8 +924,11 @@ namespace _03_Onvif_Network_Video_Recorder
                         }
                     }
 
-                    using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل] FROM SDSO_Shipment " +
+                    calcWaitingCars();
+
+                    using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], SDSO_ShipmentDetail.ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل], CONVERT(DECIMAL(10,0), RemainedQuantity) as [باقیمانده مجوز] FROM SDSO_Shipment " +
                         "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
+                        "INNER JOIN SDSO_ShipmentAuthorize ON SDSO_ShipmentDetail.ShipmentAuthorizeCode = SDSO_ShipmentAuthorize.Code " +
                         "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code Like '%" + txtShipmentCode.Text + "%'"
                                                             , _dbConnection))
                     {
@@ -930,6 +955,39 @@ namespace _03_Onvif_Network_Video_Recorder
             }
         }
 
+        private void calcWaitingCars()
+        {
+             if (_dbConnection == null || _dbConnection.State != ConnectionState.Open)
+                ConnectDatabase();
+
+             try
+             {
+                 if (_dbConnection.State == ConnectionState.Open)
+                 {
+                     using (SqlCommand cmd = new SqlCommand("SELECT        COUNT(*) FROM SDSO_Shipment " +
+                                                            " WHERE        (FormStatusCode LIKE '%SecondWeighing%' OR FormStatusCode LIKE '%Loading%') AND ReceptionDate > DATEADD(dd, -1, GETDATE())"
+                                                                     , _dbConnection))
+                     {
+                         DataTable CarCount = new DataTable();
+                         SqlDataAdapter da = new SqlDataAdapter(cmd);
+                         CarCount.Clear();
+                         da.Fill(CarCount);
+                         if (CarCount.Rows.Count > 0)
+                         {
+                             lblWaitingMachines2.Text = CarCount.Rows[0].ItemArray[0].ToString();
+                         }
+                         else
+                         {
+                             lblWaitingMachines2.Text = "---";
+                         }
+                     }
+                 }
+             }
+            catch(Exception)
+             {
+                 lblWaitingMachines2.Text = "---";
+             }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             System.Threading.Thread thread0 = new System.Threading.Thread(ConnectIpCam);

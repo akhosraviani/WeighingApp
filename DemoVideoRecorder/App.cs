@@ -21,13 +21,8 @@ namespace _03_Onvif_Network_Video_Recorder
         private PrivateFontCollection fonts = new PrivateFontCollection();
 
         Font myFont;
-        Thread splashThread;
         public App()
         {
-            splashThread = new Thread(new ThreadStart(splash));
-            splashThread.Start();
-            Thread.Sleep(1625);
-
             InitializeComponent();
             Initialize();
             toolStripStatusLabel1.Text = "";
@@ -73,13 +68,10 @@ namespace _03_Onvif_Network_Video_Recorder
                 Settings.Default.Save();
             }
         }
-        private void splash()
-        {
-            Application.Run(new SplashScreen());
-        }
         void App_Load(object sender, EventArgs e)
         {
             this.Font = myFont;
+            menuStrip1.Font = myFont;
             // Set window state
             this.WindowState = Settings.Default.AppWindowState;
 
@@ -94,8 +86,6 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 this.Size = Settings.Default.AppWindowSize;
             }
-
-            splashThread.Abort();
         }
 
         private void MenuItem_exit_Click(object sender, EventArgs e)

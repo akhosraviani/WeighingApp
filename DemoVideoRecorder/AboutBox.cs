@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -10,16 +11,41 @@ namespace _03_Onvif_Network_Video_Recorder
 {
     partial class AboutBox : Form
     {
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont,
+            IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
+
+        private PrivateFontCollection fonts = new PrivateFontCollection();
+
+        Font myFont;
         public AboutBox()
         {
             InitializeComponent();
+            Initialize();
             this.Text = String.Format("About {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.textBoxDescription.Text = AssemblyDescription;
+            this.Load += AboutBox_Load;
         }
 
+        void AboutBox_Load(object sender, EventArgs e)
+        {
+            this.Font = myFont;
+        }
+        private void Initialize()
+        {
+            byte[] fontData = Properties.Resources.IRANSans_FaNum_;
+            IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
+            System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
+            uint dummy = 0;
+            fonts.AddMemoryFont(fontPtr, Properties.Resources.IRANSans_FaNum_.Length);
+            AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.IRANSans_FaNum_.Length, IntPtr.Zero, ref dummy);
+            System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
+
+            myFont = new Font(fonts.Families[0], 8.5F);
+        }
         #region Assembly Attribute Accessors
 
         public string AssemblyTitle
