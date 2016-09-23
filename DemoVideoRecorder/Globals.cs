@@ -8,5 +8,6 @@ namespace _03_Onvif_Network_Video_Recorder
     public static class Globals
     {
         public static string UserCode = "";
+        public static string PersonnelCode = "";
     }
 }

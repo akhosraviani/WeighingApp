@@ -13,6 +13,7 @@ using Ozeki.Camera;
 using _03_Onvif_Network_Video_Recorder.Properties;
 using System.Globalization;
 using System.Configuration;
+using System.Threading;
 
 namespace _03_Onvif_Network_Video_Recorder
 {
@@ -32,6 +33,7 @@ namespace _03_Onvif_Network_Video_Recorder
         private SqlConnection _dbConnection;
         private string _shipmentState = "Shp_FirstWeighing";
         private DataTable _shipmentTable;
+        private bool _negativeWeight = false;
         public WeighingForm()
         {
             InitializeComponent();
@@ -148,27 +150,61 @@ namespace _03_Onvif_Network_Video_Recorder
             }            
         }
 
+        public void ShowNegativeWeightMessageBox()
+        {
+          var thread = new Thread(
+            () =>
+            {
+              if(MessageBox.Show("وزن باسکول منفی می باشد! لطفا دستگاه را بررسی نمایید") == System.Windows.Forms.DialogResult.OK);
+              {
+                  _negativeWeight = false;
+                  btnSaveData.Enabled = true;
+              }
+            });
+          thread.Start();
+        }
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             byte[] v = new byte[8];
             int intResult = 0;
             int tryCount = 0;
 
+            
             if (_serialPort.BytesToRead <= 0)
             {
+                
             }
             else
             {
                 while (_serialPort.BytesToRead > 0 && tryCount < 10)
                 {
+                    
 
                     var output = _serialPort.Read(v, 0, 7);
-
-                    if (output > 0)
+                    
+                    if (output == 7)
                     {
                         try
                         {
-                            intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
+                            StringBuilder hex = new StringBuilder(2);
+                            hex.AppendFormat("{0:x2}", v[0]);
+
+                            if (hex.ToString().ToLower().Equals("bb"))
+                            {
+                                hex.Clear();
+                                hex.AppendFormat("{0:x2}", v[1]);
+
+
+                                if (hex.ToString().ToLower().Equals("e0"))
+                                {
+                                    intResult = -10 * Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 2, 6));
+                                }
+                                else
+                                {
+                                    intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
+                                }
+                            }
+                            
                             tryCount = 10;
                         }
                         catch (FormatException)
@@ -186,12 +222,45 @@ namespace _03_Onvif_Network_Video_Recorder
 
                 if (_shipmentState == "Shp_FirstWeighing")
                 {
-                    txtWeight1.Text = intResult.ToString();
-                    txtDate1.Text = GetDate();
-                    txtTime1.Text = GetTime();
-                    txtMachine1.Text = GetMachine();
+                    if (intResult < -20)
+                    {
 
-                    if (_shipmentTable.Rows.Count > 0)
+                        txtWeight1.Text = intResult.ToString();
+                        txtDate1.Text = GetDate();
+                        txtTime1.Text = GetTime();
+                        txtMachine1.Text = GetMachine();
+
+                        if (txtWeight1.BackColor != Color.Red)
+                        {
+                            txtWeight1.BackColor = Color.Red;
+                            txtDate1.BackColor = Color.Red;
+                            txtTime1.BackColor = Color.Red;
+                            txtMachine1.BackColor = Color.Red;
+                        }
+
+                        if(_negativeWeight == false)
+                        {
+                            _negativeWeight = true;
+                            btnSaveData.Enabled = false;
+                            ShowNegativeWeightMessageBox();
+                        }
+
+                    }
+                    else if (intResult > 0)
+                    {
+                        txtWeight1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+                        txtDate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+                        txtTime1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+                        txtMachine1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+
+                        txtWeight1.Text = intResult.ToString();
+                        txtDate1.Text = GetDate();
+                        txtTime1.Text = GetTime();
+                        txtMachine1.Text = GetMachine();
+                    }
+
+
+                    if (txtWeight2.Text != "")
                     {
                         txtWeight2.Text = "";
                         txtDate2.Text = "";
@@ -201,10 +270,45 @@ namespace _03_Onvif_Network_Video_Recorder
                 }
                 else if (_shipmentState == "Shp_SecondWeighing")
                 {
-                    txtWeight2.Text = intResult.ToString();
-                    txtDate2.Text = GetDate();
-                    txtTime2.Text = GetTime();
-                    txtMachine2.Text = GetMachine();
+
+                    if (intResult < -20)
+                    {
+                        if (txtWeight2.BackColor != Color.Red)
+                        {
+                            txtWeight2.BackColor = Color.Red;
+                            txtDate2.BackColor = Color.Red;
+                            txtTime2.BackColor = Color.Red;
+                            txtMachine2.BackColor = Color.Red;
+                        }
+
+                        txtWeight2.Text = intResult.ToString();
+                        txtDate2.Text = GetDate();
+                        txtTime2.Text = GetTime();
+                        txtMachine2.Text = GetMachine();
+
+                        if (_negativeWeight == false)
+                        {
+                            _negativeWeight = true;
+                            btnSaveData.Enabled = false;
+                            ShowNegativeWeightMessageBox();
+                        }
+                    }
+                    else if (intResult > 0)
+                    {
+                        if (txtWeight2.BackColor != System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225))))))
+                        {
+                            txtWeight2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+                            txtDate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+                            txtTime2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+                            txtMachine2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+                        }
+
+                        txtWeight2.Text = intResult.ToString();
+                        txtDate2.Text = GetDate();
+                        txtTime2.Text = GetTime();
+                        txtMachine2.Text = GetMachine();
+                    }
+
 
                     if (_shipmentTable.Rows.Count > 0)
                     {
@@ -591,13 +695,13 @@ namespace _03_Onvif_Network_Video_Recorder
                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                     == System.Windows.Forms.DialogResult.OK)
                 {
-                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, StartTime=@StartTime, FirstWeighingMachineCode=@FirstMachine, FirstWeighingResponsibleCode=@Responsible " +
+                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, ActualShipmentDate=@StartTime, FirstWeighingMachineCode=@FirstMachine, FirstWeighingResponsibleCode=@Responsible " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
                     sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
                     sqlCommand.Parameters.AddWithValue("@TruckWeight", txtWeight1.Text);
                     sqlCommand.Parameters.AddWithValue("@StartTime", DateTime.Now.ToString(CultureInfo.InvariantCulture));
                     sqlCommand.Parameters.AddWithValue("@FirstMachine", txtMachine1.Text);
-                    sqlCommand.Parameters.AddWithValue("@Responsible", Globals.UserCode);
+                    sqlCommand.Parameters.AddWithValue("@Responsible", Globals.PersonnelCode);
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
 
@@ -673,14 +777,14 @@ namespace _03_Onvif_Network_Video_Recorder
                         lblNetWeightLoad.Text = string.Format("{0:0.###}", Math.Abs(weight2 - weight1));
                     }
 
-                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, EndTime=@EndTime, SecondWeighingMachineCode=@SecondMachine, SecondWeighingResponsibleCode=@Responsible " +
+                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, LoadingDate=@EndTime, SecondWeighingMachineCode=@SecondMachine, SecondWeighingResponsibleCode=@Responsible " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
                     sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
                     sqlCommand.Parameters.AddWithValue("@NetWeight", lblNetWeightLoad.Text);
                     sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
                     sqlCommand.Parameters.AddWithValue("@EndTime", DateTime.Now);
                     sqlCommand.Parameters.AddWithValue("@SecondMachine", txtMachine2.Text);
-                    sqlCommand.Parameters.AddWithValue("@Responsible", Globals.UserCode);
+                    sqlCommand.Parameters.AddWithValue("@Responsible", Globals.PersonnelCode);
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
 
@@ -838,6 +942,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void ClearFields()
         {
+            _shipmentState = "Shp_FirstWeighing";
             lblBillOfLading.Text = "---";
             lblCar.Text = "---";
             lblDestination.Text = "---";
@@ -860,7 +965,6 @@ namespace _03_Onvif_Network_Video_Recorder
             lblDiscrepency.Text = "0";
             _shipmentTable.Clear();
             dgShipmentDetail.DataSource = null;
-            _shipmentState = "Shp_FirstWeighing";
             imgCamera1.Image = null;
             imgCamera2.Image = null;
             imgCamera3.Image = null;

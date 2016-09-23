@@ -41,7 +41,7 @@ namespace _03_Onvif_Network_Video_Recorder
             AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.IRANSans_FaNum_.Length, IntPtr.Zero, ref dummy);
             System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
 
-            myFont = new Font(fonts.Families[0], 8.5F);
+            myFont = new Font(fonts.Families[0], 8F);
         }
 
         void App_FormClosing(object sender, FormClosingEventArgs e)
@@ -103,7 +103,7 @@ namespace _03_Onvif_Network_Video_Recorder
             this.HScroll = false;
             this.VScroll = false;
             WeighingForm weighingForm = new WeighingForm();
-            weighingForm.WindowState = FormWindowState.Maximized;
+            //weighingForm.WindowState = FormWindowState.Maximized;
             weighingForm.MdiParent = this;
             weighingForm.Show();
 
