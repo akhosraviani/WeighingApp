@@ -186,7 +186,7 @@ namespace _03_Onvif_Network_Video_Recorder
             lblBascol.Text = "در حال بررسی اتصال به باسکول " + Settings.Default.BascolPort1 + " ...";
             if (serialPort.BytesToRead <= 0)
             {
-                lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort1;
+                lblBascol.Text = "خطا در خواندن اطلاعات " + Settings.Default.BascolPort1;
                 imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
             }
             else
@@ -207,7 +207,7 @@ namespace _03_Onvif_Network_Video_Recorder
                         }
                         catch (FormatException)
                         {
-                            lblBascol.Text = "خطا در اتصال به باسکول " + Settings.Default.BascolPort1;
+                            lblBascol.Text = "خطا در تشخیص اطلاعات " + Settings.Default.BascolPort1;
                             imgBascol.Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
                             tryCount++;
                         }

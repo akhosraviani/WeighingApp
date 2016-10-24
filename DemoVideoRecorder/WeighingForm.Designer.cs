@@ -39,14 +39,13 @@
             this.btnShipmentSearch = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            this.label13 = new System.Windows.Forms.Label();
-            this.lblSaler = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.lblDestination = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lblAddress = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lblSender = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.lblSource = new System.Windows.Forms.Label();
+            this.lblSaler = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.label14 = new System.Windows.Forms.Label();
@@ -127,10 +126,12 @@
             this.label8 = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctmConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.label13 = new System.Windows.Forms.Label();
             this.ctmSetting1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ctmSetting2 = new System.Windows.Forms.ToolStripMenuItem();
             this.ctmSetting3 = new System.Windows.Forms.ToolStripMenuItem();
             this.ctmSetting4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.button4 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -177,7 +178,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 502F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 411F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(984, 411);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -202,15 +203,17 @@
             // 
             // tableLayoutPanel4
             // 
-            this.tableLayoutPanel4.ColumnCount = 4;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.36874F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.83334F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.85714F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel4.ColumnCount = 5;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.36201F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.79141F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.84657F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 64F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 64F));
             this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.txtShipmentCode, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.button3, 3, 0);
             this.tableLayoutPanel4.Controls.Add(this.btnShipmentSearch, 2, 0);
+            this.tableLayoutPanel4.Controls.Add(this.button4, 4, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -223,9 +226,9 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(436, 0);
+            this.label1.Location = new System.Drawing.Point(444, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 30);
+            this.label1.Size = new System.Drawing.Size(33, 30);
             this.label1.TabIndex = 3;
             this.label1.Text = "کد محموله";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -234,18 +237,18 @@
             // 
             this.txtShipmentCode.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtShipmentCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtShipmentCode.Location = new System.Drawing.Point(139, 5);
+            this.txtShipmentCode.Location = new System.Drawing.Point(195, 5);
             this.txtShipmentCode.Name = "txtShipmentCode";
-            this.txtShipmentCode.Size = new System.Drawing.Size(291, 20);
+            this.txtShipmentCode.Size = new System.Drawing.Size(243, 20);
             this.txtShipmentCode.TabIndex = 1;
             this.txtShipmentCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtShipmentCode_KeyDown);
             // 
             // button3
             // 
             this.button3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button3.Location = new System.Drawing.Point(15, 6);
+            this.button3.Location = new System.Drawing.Point(70, 6);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(32, 18);
+            this.button3.Size = new System.Drawing.Size(56, 18);
             this.button3.TabIndex = 5;
             this.button3.Text = "...";
             this.button3.UseVisualStyleBackColor = true;
@@ -254,9 +257,9 @@
             // btnShipmentSearch
             // 
             this.btnShipmentSearch.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnShipmentSearch.Location = new System.Drawing.Point(65, 6);
+            this.btnShipmentSearch.Location = new System.Drawing.Point(133, 6);
             this.btnShipmentSearch.Name = "btnShipmentSearch";
-            this.btnShipmentSearch.Size = new System.Drawing.Size(68, 18);
+            this.btnShipmentSearch.Size = new System.Drawing.Size(56, 18);
             this.btnShipmentSearch.TabIndex = 4;
             this.btnShipmentSearch.Text = "جستجو";
             this.btnShipmentSearch.UseVisualStyleBackColor = true;
@@ -283,13 +286,13 @@
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.81139F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.43416F));
             this.tableLayoutPanel7.Controls.Add(this.label13, 0, 1);
-            this.tableLayoutPanel7.Controls.Add(this.lblSaler, 0, 1);
-            this.tableLayoutPanel7.Controls.Add(this.label11, 0, 1);
             this.tableLayoutPanel7.Controls.Add(this.lblDestination, 0, 1);
+            this.tableLayoutPanel7.Controls.Add(this.label11, 0, 1);
+            this.tableLayoutPanel7.Controls.Add(this.lblAddress, 0, 1);
             this.tableLayoutPanel7.Controls.Add(this.label6, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.lblSender, 1, 0);
             this.tableLayoutPanel7.Controls.Add(this.label9, 2, 0);
-            this.tableLayoutPanel7.Controls.Add(this.lblSource, 3, 0);
+            this.tableLayoutPanel7.Controls.Add(this.lblSaler, 3, 0);
             this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 15);
             this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -301,27 +304,16 @@
             this.tableLayoutPanel7.Size = new System.Drawing.Size(474, 38);
             this.tableLayoutPanel7.TabIndex = 2;
             // 
-            // label13
+            // lblDestination
             // 
-            this.label13.AutoSize = true;
-            this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label13.Location = new System.Drawing.Point(399, 19);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(72, 19);
-            this.label13.TabIndex = 48;
-            this.label13.Text = "فرستنده/گیرنده:";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblSaler
-            // 
-            this.lblSaler.AutoSize = true;
-            this.lblSaler.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblSaler.Location = new System.Drawing.Point(246, 19);
-            this.lblSaler.Name = "lblSaler";
-            this.lblSaler.Size = new System.Drawing.Size(147, 19);
-            this.lblSaler.TabIndex = 47;
-            this.lblSaler.Text = "---";
-            this.lblSaler.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblDestination.AutoSize = true;
+            this.lblDestination.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblDestination.Location = new System.Drawing.Point(246, 19);
+            this.lblDestination.Name = "lblDestination";
+            this.lblDestination.Size = new System.Drawing.Size(147, 19);
+            this.lblDestination.TabIndex = 47;
+            this.lblDestination.Text = "---";
+            this.lblDestination.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label11
             // 
@@ -331,19 +323,19 @@
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(54, 19);
             this.label11.TabIndex = 46;
-            this.label11.Text = "مبداء/مقصد:";
+            this.label11.Text = "آدرس:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lblDestination
+            // lblAddress
             // 
-            this.lblDestination.AutoSize = true;
-            this.lblDestination.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblDestination.Location = new System.Drawing.Point(3, 19);
-            this.lblDestination.Name = "lblDestination";
-            this.lblDestination.Size = new System.Drawing.Size(177, 19);
-            this.lblDestination.TabIndex = 43;
-            this.lblDestination.Text = "---";
-            this.lblDestination.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblAddress.AutoSize = true;
+            this.lblAddress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAddress.Location = new System.Drawing.Point(3, 19);
+            this.lblAddress.Name = "lblAddress";
+            this.lblAddress.Size = new System.Drawing.Size(177, 19);
+            this.lblAddress.TabIndex = 43;
+            this.lblAddress.Text = "---";
+            this.lblAddress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label6
             // 
@@ -375,17 +367,19 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(54, 19);
             this.label9.TabIndex = 44;
+            this.label9.Text = "از / به:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lblSource
+            // lblSaler
             // 
-            this.lblSource.AutoSize = true;
-            this.lblSource.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblSource.Location = new System.Drawing.Point(3, 0);
-            this.lblSource.Name = "lblSource";
-            this.lblSource.Size = new System.Drawing.Size(177, 19);
-            this.lblSource.TabIndex = 42;
-            this.lblSource.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblSaler.AutoSize = true;
+            this.lblSaler.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSaler.Location = new System.Drawing.Point(3, 0);
+            this.lblSaler.Name = "lblSaler";
+            this.lblSaler.Size = new System.Drawing.Size(177, 19);
+            this.lblSaler.TabIndex = 42;
+            this.lblSaler.Text = "---";
+            this.lblSaler.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // groupBox2
             // 
@@ -891,7 +885,7 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.26087F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.65217F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.6087F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 128F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132F));
             this.tableLayoutPanel5.Controls.Add(this.label15, 0, 2);
             this.tableLayoutPanel5.Controls.Add(this.txtTime2, 3, 2);
             this.tableLayoutPanel5.Controls.Add(this.txtDate2, 2, 2);
@@ -934,64 +928,64 @@
             // 
             this.txtTime2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTime2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtTime2.Location = new System.Drawing.Point(133, 49);
+            this.txtTime2.Location = new System.Drawing.Point(137, 49);
             this.txtTime2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTime2.Name = "txtTime2";
             this.txtTime2.ReadOnly = true;
-            this.txtTime2.Size = new System.Drawing.Size(72, 20);
+            this.txtTime2.Size = new System.Drawing.Size(71, 20);
             this.txtTime2.TabIndex = 11;
             // 
             // txtDate2
             // 
             this.txtDate2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDate2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtDate2.Location = new System.Drawing.Point(211, 49);
+            this.txtDate2.Location = new System.Drawing.Point(214, 49);
             this.txtDate2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDate2.Name = "txtDate2";
             this.txtDate2.ReadOnly = true;
-            this.txtDate2.Size = new System.Drawing.Size(100, 20);
+            this.txtDate2.Size = new System.Drawing.Size(98, 20);
             this.txtDate2.TabIndex = 10;
             // 
             // txtTime1
             // 
             this.txtTime1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTime1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtTime1.Location = new System.Drawing.Point(133, 23);
+            this.txtTime1.Location = new System.Drawing.Point(137, 23);
             this.txtTime1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtTime1.Name = "txtTime1";
             this.txtTime1.ReadOnly = true;
-            this.txtTime1.Size = new System.Drawing.Size(72, 20);
+            this.txtTime1.Size = new System.Drawing.Size(71, 20);
             this.txtTime1.TabIndex = 7;
             // 
             // txtDate1
             // 
             this.txtDate1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDate1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtDate1.Location = new System.Drawing.Point(211, 23);
+            this.txtDate1.Location = new System.Drawing.Point(214, 23);
             this.txtDate1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDate1.Name = "txtDate1";
             this.txtDate1.ReadOnly = true;
-            this.txtDate1.Size = new System.Drawing.Size(100, 20);
+            this.txtDate1.Size = new System.Drawing.Size(98, 20);
             this.txtDate1.TabIndex = 6;
             // 
             // txtWeight1
             // 
             this.txtWeight1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtWeight1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeight1.Location = new System.Drawing.Point(317, 23);
+            this.txtWeight1.Location = new System.Drawing.Point(318, 23);
             this.txtWeight1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtWeight1.Name = "txtWeight1";
             this.txtWeight1.ReadOnly = true;
-            this.txtWeight1.Size = new System.Drawing.Size(91, 20);
+            this.txtWeight1.Size = new System.Drawing.Size(90, 20);
             this.txtWeight1.TabIndex = 5;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(133, 0);
+            this.label5.Location = new System.Drawing.Point(137, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(72, 21);
+            this.label5.Size = new System.Drawing.Size(71, 21);
             this.label5.TabIndex = 3;
             this.label5.Text = "ساعت";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1000,9 +994,9 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(211, 0);
+            this.label4.Location = new System.Drawing.Point(214, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 21);
+            this.label4.Size = new System.Drawing.Size(98, 21);
             this.label4.TabIndex = 2;
             this.label4.Text = "تاریخ";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1011,9 +1005,9 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(317, 0);
+            this.label3.Location = new System.Drawing.Point(318, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 21);
+            this.label3.Size = new System.Drawing.Size(90, 21);
             this.label3.TabIndex = 1;
             this.label3.Text = "وزن";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1046,7 +1040,7 @@
             this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label19.Location = new System.Drawing.Point(3, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(124, 21);
+            this.label19.Size = new System.Drawing.Size(128, 21);
             this.label19.TabIndex = 47;
             this.label19.Text = "شماره باسکول";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1055,7 +1049,7 @@
             // 
             this.txtMachine1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtMachine1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtMachine1.Location = new System.Drawing.Point(17, 23);
+            this.txtMachine1.Location = new System.Drawing.Point(19, 23);
             this.txtMachine1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMachine1.Name = "txtMachine1";
             this.txtMachine1.ReadOnly = true;
@@ -1066,7 +1060,7 @@
             // 
             this.txtMachine2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtMachine2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtMachine2.Location = new System.Drawing.Point(17, 49);
+            this.txtMachine2.Location = new System.Drawing.Point(19, 49);
             this.txtMachine2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtMachine2.Name = "txtMachine2";
             this.txtMachine2.ReadOnly = true;
@@ -1077,11 +1071,11 @@
             // 
             this.txtWeight2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtWeight2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeight2.Location = new System.Drawing.Point(317, 49);
+            this.txtWeight2.Location = new System.Drawing.Point(318, 49);
             this.txtWeight2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtWeight2.Name = "txtWeight2";
             this.txtWeight2.ReadOnly = true;
-            this.txtWeight2.Size = new System.Drawing.Size(91, 20);
+            this.txtWeight2.Size = new System.Drawing.Size(90, 20);
             this.txtWeight2.TabIndex = 49;
             // 
             // tableLayoutPanel6
@@ -1426,6 +1420,17 @@
             this.ctmConfig.Size = new System.Drawing.Size(117, 22);
             this.ctmConfig.Text = "تنظیمات";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label13.Location = new System.Drawing.Point(399, 19);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(72, 19);
+            this.label13.TabIndex = 48;
+            this.label13.Text = "شهر:";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // ctmSetting1
             // 
             this.ctmSetting1.Checked = true;
@@ -1463,6 +1468,17 @@
             this.ctmSetting4.Tag = "4";
             this.ctmSetting4.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting4;
             this.ctmSetting4.Click += new System.EventHandler(this.contextMenu_Click);
+            // 
+            // button4
+            // 
+            this.button4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button4.Location = new System.Drawing.Point(5, 6);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(56, 18);
+            this.button4.TabIndex = 5;
+            this.button4.Text = "پــاک";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // WeighingForm
             // 
@@ -1535,14 +1551,13 @@
         private System.Windows.Forms.Button btnShipmentSearch;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label lblSaler;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lblDestination;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lblAddress;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lblSender;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label lblSource;
+        private System.Windows.Forms.Label lblSaler;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private System.Windows.Forms.Label label14;
@@ -1628,5 +1643,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel17;
         private System.Windows.Forms.Label lblDiscrepency;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button button4;
     }
 }

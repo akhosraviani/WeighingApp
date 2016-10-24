@@ -96,7 +96,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ShipmentListForm";
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.Text = "محموله های در انتظار";
+            this.Text = "محموله های در انتظار توزین";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

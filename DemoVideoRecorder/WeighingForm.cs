@@ -169,7 +169,6 @@ namespace _03_Onvif_Network_Video_Recorder
             int intResult = 0;
             int tryCount = 0;
 
-            
             if (_serialPort.BytesToRead <= 0)
             {
                 
@@ -178,8 +177,6 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 while (_serialPort.BytesToRead > 0 && tryCount < 10)
                 {
-                    
-
                     var output = _serialPort.Read(v, 0, 7);
                     
                     if (output == 7)
@@ -194,18 +191,19 @@ namespace _03_Onvif_Network_Video_Recorder
                                 hex.Clear();
                                 hex.AppendFormat("{0:x2}", v[1]);
 
-
                                 if (hex.ToString().ToLower().Equals("e0"))
                                 {
                                     intResult = -10 * Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 2, 6));
+                                    tryCount = 10;
                                 }
                                 else
                                 {
                                     intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
+                                    tryCount = 10;
                                 }
                             }
                             
-                            tryCount = 10;
+                            
                         }
                         catch (FormatException)
                         {
@@ -268,7 +266,7 @@ namespace _03_Onvif_Network_Video_Recorder
                         txtMachine2.Text = "";
                     }
                 }
-                else if (_shipmentState == "Shp_SecondWeighing")
+                else if (_shipmentState == "Shp_SecondWeighing" || _shipmentState == "Shp_Loading")
                 {
 
                     if (intResult < -20)
@@ -605,10 +603,11 @@ namespace _03_Onvif_Network_Video_Recorder
             {
                 for (int i = 0; i < _modelList.Count; i++)
                 {
-                    if ((_modelList[i] == null || _modelList[i].Camera == null) || _modelList[i].Camera.State == CameraState.Disconnected) continue;
-                    {
-                        _modelList[i].Disconnect();
-                        //_modelList[i].Camera.Disconnect();
+                    if ((_modelList[i] == null || _modelList[i].Camera == null) || _modelList[i].Camera.State == CameraState.Disconnected) 
+                        continue;
+                    else {
+                        //_modelList[i].Disconnect();
+                        _modelList[i].Camera.Disconnect();
                     }
                 }
             }
@@ -661,7 +660,7 @@ namespace _03_Onvif_Network_Video_Recorder
                 }
             }
 
-            if (_shipmentState == "Shp_SecondWeighing")
+            if (_shipmentState == "Shp_SecondWeighing" || _shipmentState == "Shp_Loading")
             {
                 double weight1, weight2;
                 if (double.TryParse(txtWeight1.Text, out weight1) && double.TryParse(txtWeight2.Text, out weight2))
@@ -695,13 +694,11 @@ namespace _03_Onvif_Network_Video_Recorder
                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                     == System.Windows.Forms.DialogResult.OK)
                 {
-                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, ActualShipmentDate=@StartTime, FirstWeighingMachineCode=@FirstMachine, FirstWeighingResponsibleCode=@Responsible " +
+                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, FirstWeighingMachineCode=@FirstMachine " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
                     sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
                     sqlCommand.Parameters.AddWithValue("@TruckWeight", txtWeight1.Text);
-                    sqlCommand.Parameters.AddWithValue("@StartTime", DateTime.Now.ToString(CultureInfo.InvariantCulture));
                     sqlCommand.Parameters.AddWithValue("@FirstMachine", txtMachine1.Text);
-                    sqlCommand.Parameters.AddWithValue("@Responsible", Globals.PersonnelCode);
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
 
@@ -766,7 +763,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
                     ClearFields();
                 }
-                else if (_shipmentState == "Shp_SecondWeighing" &&
+                else if ((_shipmentState == "Shp_SecondWeighing" || _shipmentState == "Shp_Loading") &&
                     MessageBox.Show("اطلاعات به دیسپچینگ ارسال خواهد شد. آیا مطمئن هستید؟", "تکمیل توزین", MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                     == System.Windows.Forms.DialogResult.OK)
@@ -777,14 +774,12 @@ namespace _03_Onvif_Network_Video_Recorder
                         lblNetWeightLoad.Text = string.Format("{0:0.###}", Math.Abs(weight2 - weight1));
                     }
 
-                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, LoadingDate=@EndTime, SecondWeighingMachineCode=@SecondMachine, SecondWeighingResponsibleCode=@Responsible " +
+                    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, SecondWeighingMachineCode=@SecondMachine " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
                     sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
                     sqlCommand.Parameters.AddWithValue("@NetWeight", lblNetWeightLoad.Text);
                     sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
-                    sqlCommand.Parameters.AddWithValue("@EndTime", DateTime.Now);
                     sqlCommand.Parameters.AddWithValue("@SecondMachine", txtMachine2.Text);
-                    sqlCommand.Parameters.AddWithValue("@Responsible", Globals.PersonnelCode);
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
 
@@ -945,12 +940,13 @@ namespace _03_Onvif_Network_Video_Recorder
             _shipmentState = "Shp_FirstWeighing";
             lblBillOfLading.Text = "---";
             lblCar.Text = "---";
-            lblDestination.Text = "---";
+            lblAddress.Text = "---";
             lblDriver.Text = "---";
             lblDriverLicence.Text = "---";
+            lblDestination.Text = "---";
             lblSaler.Text = "---";
             lblSender.Text = "---";
-            lblSource.Text = "---";
+            lblSaler.Text = "---";
             txtDate1.Text = "";
             txtDate2.Text = "";
             txtMachine1.Text = "";
@@ -982,10 +978,10 @@ namespace _03_Onvif_Network_Video_Recorder
                 {
                     using (SqlCommand cmd = new SqlCommand("SELECT        SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, " +
                                                            "                     WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus, " +
-                                                           "                     contact1.Title AS TransportCompany, SISys_Location.Title AS City, SDSO_Shipment.TruckWeight, SDSO_Shipment.LoadedTruckWeight, " +
+                                                           "                     contact1.Title AS TransportCompany, SDSO_Shipment.DestinationPoint AS City, SDSO_Shipment.TruckWeight, SDSO_Shipment.LoadedTruckWeight, " +
                                                            "                     SDSO_Shipment.NetWeight, SDSO_Shipment.EstimatedWeight, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 10) AS EndDate, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 10) AS StartDate, " +
                                                            "                     RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 8) AS EndTime, RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 8) AS StartTime, " +
-                                                           "                     FirstWeighingMachineCode, SecondWeighingMachineCode, SDSO_Shipment.Code, SDSO_Shipment.EstimatedWeight, sdso_customer.CustomerCode " +
+                                                           "                     FirstWeighingMachineCode, SecondWeighingMachineCode, SDSO_Shipment.Code, SDSO_Shipment.EstimatedWeight, sdso_customer.CustomerCode, SDSO_Shipment.DeliverToAddress " +
                                                            " FROM		  SDSO_Shipment LEFT OUTER JOIN SDSO_Customer " +
 		                                                   "         ON	SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode LEFT OUTER JOIN WMLog_Vehicle " +
 		                                                   "         ON	SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN WMLog_Driver " +
@@ -993,7 +989,7 @@ namespace _03_Onvif_Network_Video_Recorder
 		                                                   "         ON	SDSO_Shipment.TransportCompanyCode = contact1.Code LEFT OUTER JOIN WFFC_Contact AS contact2 " +
 		                                                   "        ON	SDSO_Customer.CustomerCode = contact2.code LEFT OUTER JOIN SISys_Location " +
                                                            "         ON	contact2.GeograghyLocationCode = SISys_Location.Code " +
-                                                           " WHERE        (SDSO_Shipment.FormStatusCode LIKE '%Weighing%') AND SDSO_Shipment.Code LIKE '%" + txtShipmentCode.Text + "%'"
+                                                           " WHERE        (SDSO_Shipment.FormStatusCode LIKE '%Weighing%' OR FormStatusCode LIKE '%Loading%') AND SDSO_Shipment.Code = '" + txtShipmentCode.Text.PadLeft(8, '0') + "'"
                                                             , _dbConnection))
                     {
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -1008,6 +1004,7 @@ namespace _03_Onvif_Network_Video_Recorder
                             lblCar.Text = _shipmentTable.Rows[0].ItemArray[3].ToString();
                             lblDriver.Text = _shipmentTable.Rows[0].ItemArray[4].ToString();
                             lblDriverLicence.Text = _shipmentTable.Rows[0].ItemArray[5].ToString();
+                            lblAddress.Text = _shipmentTable.Rows[0].ItemArray[23].ToString();
                             txtWeight1.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[10]);
                             txtWeight2.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[11]);
                             txtDate1.Text = _shipmentTable.Rows[0].ItemArray[15].ToString();
@@ -1022,7 +1019,7 @@ namespace _03_Onvif_Network_Video_Recorder
                         {
                             lblDriver.Text = "---";
                             lblBillOfLading.Text = "---";
-                            lblDestination.Text = "---";
+                            lblAddress.Text = "---";
                             lblCar.Text = "---";
                             lblDriverLicence.Text = "---";
                         }
@@ -1033,7 +1030,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], SDSO_ShipmentDetail.ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل], CONVERT(DECIMAL(10,0), RemainedQuantity) as [باقیمانده مجوز] FROM SDSO_Shipment " +
                         "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
                         "INNER JOIN SDSO_ShipmentAuthorize ON SDSO_ShipmentDetail.ShipmentAuthorizeCode = SDSO_ShipmentAuthorize.Code " +
-                        "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE SDSO_Shipment.FormStatusCode Like '%Weighing%' AND SDSO_Shipment.Code Like '%" + txtShipmentCode.Text + "%'"
+                        "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE (SDSO_Shipment.FormStatusCode Like '%Weighing%') AND SDSO_Shipment.Code = '" + txtShipmentCode.Text.PadLeft(8, '0') + "'"
                                                             , _dbConnection))
                     {
                         DataTable shipmentDetailTable = new DataTable();
@@ -1045,6 +1042,10 @@ namespace _03_Onvif_Network_Video_Recorder
 
                             var results = shipmentDetailTable.AsEnumerable().Count();
                             lblLoadedBranches.Text = string.Format("{0:0.###}", results);
+                        }
+                        else
+                        {
+                            dgShipmentDetail.DataSource = null;
                         }
                     }
                 }
@@ -1069,7 +1070,7 @@ namespace _03_Onvif_Network_Video_Recorder
                  if (_dbConnection.State == ConnectionState.Open)
                  {
                      using (SqlCommand cmd = new SqlCommand("SELECT        COUNT(*) FROM SDSO_Shipment " +
-                                                            " WHERE        (FormStatusCode LIKE '%SecondWeighing%' OR FormStatusCode LIKE '%Loading%') AND ReceptionDate > DATEADD(dd, -1, GETDATE())"
+                                                            " WHERE        (FormStatusCode LIKE '%Loading%') AND ReceptionDate > DATEADD(dd, -1, GETDATE())"
                                                                      , _dbConnection))
                      {
                          DataTable CarCount = new DataTable();
@@ -1161,6 +1162,11 @@ namespace _03_Onvif_Network_Video_Recorder
             System.Threading.Thread thread2 = new System.Threading.Thread(ConnectWeighingMachine);
             thread0.Start();
             thread2.Start();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ClearFields();
         }
     }
 }
