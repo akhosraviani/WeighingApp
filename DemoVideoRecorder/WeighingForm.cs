@@ -606,8 +606,8 @@ namespace _03_Onvif_Network_Video_Recorder
                     if ((_modelList[i] == null || _modelList[i].Camera == null) || _modelList[i].Camera.State == CameraState.Disconnected) 
                         continue;
                     else {
-                        //_modelList[i].Disconnect();
-                        _modelList[i].Camera.Disconnect();
+                        _modelList[i].Disconnect();
+                        //_modelList[i].Camera.Disconnect();
                     }
                 }
             }
@@ -783,6 +783,38 @@ namespace _03_Onvif_Network_Video_Recorder
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
 
+                    foreach (var item in images)
+                    {
+                        if (item == null) continue;
+                        var image = imageToByteArray(item);
+                        var date = item.Tag;
+
+                        if (image != null)
+                        {
+                            sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
+                                                                       "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
+                            sqlCommand.Parameters.AddWithValue("@date", date);
+                            sqlCommand.Parameters.AddWithValue("@Image", image);
+                            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                            sqlCommand.ExecuteNonQuery();
+                            sqlCommand.Dispose();
+
+                            sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
+                            SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
+                            DataTable BinaryTable = new DataTable();
+                            sqlAdapter.Fill(BinaryTable);
+                            sqlCommand.Dispose();
+
+                            sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
+                                                                "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
+                            sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
+                            sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
+                            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                            sqlCommand.ExecuteNonQuery();
+                            sqlCommand.Dispose();
+                        }
+                    }
+
                     sqlCommand = new SqlCommand("SDSO_001_ShipmentStatus", _dbConnection);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
 
@@ -814,106 +846,76 @@ namespace _03_Onvif_Network_Video_Recorder
                     {
                         MessageBox.Show(returnMessage, "پیغام", MessageBoxButtons.OK,
                             MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                        sqlCommand.Dispose();
-
-                        foreach (var item in images)
-                        {
-                            if (item == null) continue;
-                            var image = imageToByteArray(item);
-                            var date = item.Tag;
-
-                            if (image != null)
-                            {
-                                sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                                                                           "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                                sqlCommand.Parameters.AddWithValue("@date", date);
-                                sqlCommand.Parameters.AddWithValue("@Image", image);
-                                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                                sqlCommand.ExecuteNonQuery();
-                                sqlCommand.Dispose();
-
-                                sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                                SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                                DataTable BinaryTable = new DataTable();
-                                sqlAdapter.Fill(BinaryTable);
-                                sqlCommand.Dispose();
-
-                                sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                                                                    "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                                sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
-                                sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                                sqlCommand.ExecuteNonQuery();
-                                sqlCommand.Dispose();
-                            }
-                        }
-                        ClearFields();
                     }
                     else if (returnValue == 0)
                     {
-                        if (MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
-                        {
-                            sqlCommand.Dispose();
+                        MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        //if (MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
+                        //    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+                        //{
+                        //    sqlCommand.Dispose();
 
-                            if (MessageBox.Show("آیا مغایرت وزنی تایید می شود؟", "پیغام", MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                sqlCommand = new SqlCommand("SDSO_001_ShipmentWeightApprove", _dbConnection);
-                                sqlCommand.CommandType = CommandType.StoredProcedure;
+                        //    if (MessageBox.Show("آیا مغایرت وزنی تایید می شود؟", "پیغام", MessageBoxButtons.YesNo,
+                        //    MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                        //    {
+                        //        sqlCommand = new SqlCommand("SDSO_001_ShipmentWeightApprove", _dbConnection);
+                        //        sqlCommand.CommandType = CommandType.StoredProcedure;
 
-                                // set up the parameters
-                                sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
-                                sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
-                                sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
-                                sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
-                                sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        //        // set up the parameters
+                        //        sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
+                        //        sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
+                        //        sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
+                        //        sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
+                        //        sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
 
-                                // set parameter values
-                                sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
-                                sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                                sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
-                                sqlCommand.Parameters["@ReturnMessage"].Value = "";
-                                sqlCommand.Parameters["@ReturnValue"].Value = 1;
+                        //        // set parameter values
+                        //        sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
+                        //        sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
+                        //        sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
+                        //        sqlCommand.Parameters["@ReturnMessage"].Value = "";
+                        //        sqlCommand.Parameters["@ReturnValue"].Value = 1;
 
-                                sqlCommand.ExecuteNonQuery();
-                                sqlCommand.Dispose();
+                        //        sqlCommand.ExecuteNonQuery();
+                        //        sqlCommand.Dispose();
 
-                                foreach (var item in images)
-                                {
-                                    if (item == null) continue;
-                                    var image = imageToByteArray(item);
-                                    var date = item.Tag;
+                        //        foreach (var item in images)
+                        //        {
+                        //            if (item == null) continue;
+                        //            var image = imageToByteArray(item);
+                        //            var date = item.Tag;
 
-                                    if (image != null)
-                                    {
-                                        sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                                                                                   "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                                        sqlCommand.Parameters.AddWithValue("@date", date);
-                                        sqlCommand.Parameters.AddWithValue("@Image", image);
-                                        sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                                        sqlCommand.ExecuteNonQuery();
-                                        sqlCommand.Dispose();
+                        //            if (image != null)
+                        //            {
+                        //                sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
+                        //                                                           "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
+                        //                sqlCommand.Parameters.AddWithValue("@date", date);
+                        //                sqlCommand.Parameters.AddWithValue("@Image", image);
+                        //                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                        //                sqlCommand.ExecuteNonQuery();
+                        //                sqlCommand.Dispose();
 
-                                        sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                                        SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                                        DataTable BinaryTable = new DataTable();
-                                        sqlAdapter.Fill(BinaryTable);
-                                        sqlCommand.Dispose();
+                        //                sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
+                        //                SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
+                        //                DataTable BinaryTable = new DataTable();
+                        //                sqlAdapter.Fill(BinaryTable);
+                        //                sqlCommand.Dispose();
 
-                                        sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                                                                            "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                                        sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
-                                        sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                                        sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                                        sqlCommand.ExecuteNonQuery();
-                                        sqlCommand.Dispose();
-                                    }
-                                }
-                                ClearFields();
-                            }
-                        }
+                        //                sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
+                        //                                                    "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
+                        //                sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
+                        //                sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
+                        //                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                        //                sqlCommand.ExecuteNonQuery();
+                        //                sqlCommand.Dispose();
+                        //            }
+                        //        }
+                        //        ClearFields();
+                        //    }
+                        //}
                     }
+                    sqlCommand.Dispose(); 
+                    ClearFields();
                 }
             }
             catch (InvalidOperationException ex)

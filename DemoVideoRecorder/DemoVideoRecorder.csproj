@@ -103,7 +103,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OzekiSDK">
-      <HintPath>bin\Debug\OzekiSDK.dll</HintPath>
+      <HintPath>..\..\..\Ozeki\Ozeki SDK\Examples\Resources\.NET4\OzekiSDK.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
       <Private>True</Private>

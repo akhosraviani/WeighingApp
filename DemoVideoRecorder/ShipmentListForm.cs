@@ -70,7 +70,8 @@ namespace _03_Onvif_Network_Video_Recorder
                     _dbConnector.Open();
                 }
 
-                _dbCommand = new SqlCommand("SELECT SDSO_Shipment.Code AS [کد محموله], SDSO_Shipment.Title AS [عنوان محموله], SDSO_Customer.Title AS [گیرنده], WMLog_Vehicle.CarrierNumber AS [شماره ماشین], WMLog_Driver.Title AS [نام راننده], WMLog_Driver.LicenseNumber AS [شماره گواهینامه], SDSO_Shipment.Guid " +
+                _dbCommand = new SqlCommand("SELECT CASE WHEN SDSO_Shipment.FormStatusCode='Shp_FirstWeighing' THEN 'توزین اولیه' WHEN SDSO_Shipment.FormStatusCode='Shp_SecondWeighing' THEN 'توزین ثانویه' END AS [وضعیت], " +
+                                                "SDSO_Shipment.Code AS [کد محموله], SDSO_Shipment.Title AS [عنوان محموله], SDSO_Customer.Title AS [گیرنده], WMLog_Vehicle.CarrierNumber AS [شماره ماشین], WMLog_Driver.Title AS [نام راننده], WMLog_Driver.LicenseNumber AS [شماره گواهینامه], SDSO_Shipment.Guid " +
                                                 "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
                                                 "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
                                                 "ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN SDSO_Customer " +
