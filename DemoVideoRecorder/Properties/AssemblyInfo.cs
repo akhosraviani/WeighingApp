@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("توزین اشا")]
-[assembly: AssemblyDescription("نرم افزار توزین اشا توسط شرکت اندیش پرداز اشا و به درخواست شرکت فولاد پاسارگاد تهیه شده است")]
+[assembly: AssemblyDescription("نرم افزار توزین اشا توسط شرکت اندیش پرداز اشا و به درخواست مجتمع صنعتی ذوب آهن پاسارگاد تهیه شده است")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("شرکت اندیش پرداز اشا")]
 [assembly: AssemblyProduct("نرم افزار توزین اشا")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.5.2.7")]
-[assembly: AssemblyFileVersion("1.5.2.7")]
+[assembly: AssemblyVersion("2.1.2.0")]
+[assembly: AssemblyFileVersion("2.1.2.0")]

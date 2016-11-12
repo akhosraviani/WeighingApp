@@ -40,12 +40,12 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void Initialize()
         {
-            byte[] fontData = Properties.Resources.IRANSans_FaNum_;
+            byte[] fontData = AshaWeighing.Properties.Resources.IRANSans_FaNum_;
             IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
             System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
             uint dummy = 0;
-            fonts.AddMemoryFont(fontPtr, Properties.Resources.IRANSans_FaNum_.Length);
-            AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.IRANSans_FaNum_.Length, IntPtr.Zero, ref dummy);
+            fonts.AddMemoryFont(fontPtr, AshaWeighing.Properties.Resources.IRANSans_FaNum_.Length);
+            AddFontMemResourceEx(fontPtr, (uint)AshaWeighing.Properties.Resources.IRANSans_FaNum_.Length, IntPtr.Zero, ref dummy);
             System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
 
             myFont = new Font(fonts.Families[0], 8.5F);
@@ -75,7 +75,7 @@ namespace _03_Onvif_Network_Video_Recorder
                                                 "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
                                                 "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
                                                 "ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN SDSO_Customer " +
-                                                "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE (SDSO_Shipment.FormStatusCode LIKE '%Weighing%' OR SDSO_Shipment.FormStatusCode LIKE '%Loading%' ) AND SDSO_Shipment.ReceptionDate > DATEADD(DAY, -1, GETDATE()) AND SDSO_Shipment.Code LIKE '%" + txtSearch.Text + "%'");
+                                                "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE (SDSO_Shipment.FormStatusCode IN ('Shp_FirstWeighing', 'Shp_SecondWeighing') ) AND SDSO_Shipment.Code LIKE '%" + txtSearch.Text + "%'");
                 _dbCommand.Connection = _dbConnector;
                 _dbAdapter = new SqlDataAdapter(_dbCommand);
                 _shipmentTable = new DataTable();
@@ -119,7 +119,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            this.shipmentCode = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
+            this.shipmentCode = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }

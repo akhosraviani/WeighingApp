@@ -1,5 +1,5 @@
 ﻿using _03_Onvif_Network_Video_Recorder.Properties;
-using Ozeki.Camera;
+//using Ozeki.Camera;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,7 +17,7 @@ namespace _03_Onvif_Network_Video_Recorder
     public partial class Weighing : Form
     {
         private List<string> _connectionStringList;
-        private List<IpCameraHandler> _modelList;
+        //private List<IpCameraHandler> _modelList;
         private List<PictureBox> _indicatorList;
         private SerialPort _serialPort;
         private SqlConnection _dbConnection;
@@ -32,11 +32,11 @@ namespace _03_Onvif_Network_Video_Recorder
 
         void Weighing_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach(var camera in _modelList)
-            {
-                if (camera.Camera != null && camera.Camera.State != CameraState.Disconnected)
-                    camera.Camera.Disconnect();
-            }
+            //foreach(var camera in _modelList)
+            //{
+            //    if (camera.Camera != null && camera.Camera.State != CameraState.Disconnected)
+            //        camera.Camera.Disconnect();
+            //}
             DisconnectWeighingMachine();
             DisconnectDatabase();
         }
@@ -139,104 +139,104 @@ namespace _03_Onvif_Network_Video_Recorder
         }
         private void CreateIPCameraHandlers()
         {
-            _modelList.Clear();
-            var i = 0;
-            while (i < 4)
-            {
-                _modelList.Add(new IpCameraHandler());
-                i++;
-            }
-            foreach (var item in _modelList)
-            {
-                item.CameraStateChanged += ModelCameraStateChanged;
-                item.CameraErrorOccurred += ModelCameraErrorOccurred;
-            }
+            //_modelList.Clear();
+            //var i = 0;
+            //while (i < 4)
+            //{
+            //    _modelList.Add(new IpCameraHandler());
+            //    i++;
+            //}
+            //foreach (var item in _modelList)
+            //{
+            //    item.CameraStateChanged += ModelCameraStateChanged;
+            //    item.CameraErrorOccurred += ModelCameraErrorOccurred;
+            //}
         }
 
-        private void ModelCameraErrorOccurred(object sender, Ozeki.Camera.CameraErrorEventArgs e)
-        {
-            InvokeGuiThread(() =>
-            {
-                IpCameraHandler cc = sender as IpCameraHandler;
-                var cameraAddress = cc.Camera.CameraAddress.Split(':');
-                if (cameraAddress[0] == Settings.Default.CameraIP11)
-                {
-                    _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
-                }
-                else if (cameraAddress[0] == Settings.Default.CameraIP12)
-                {
-                    _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
-                }
-                else if (cameraAddress[0] == Settings.Default.CameraIP13)
-                {
-                    _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
-                }
-                else if (cameraAddress[0] == Settings.Default.CameraIP14)
-                {
-                    _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
-                }
-            });
-        }
+        //private void ModelCameraErrorOccurred(object sender, Ozeki.Camera.CameraErrorEventArgs e)
+        //{
+        //    InvokeGuiThread(() =>
+        //    {
+        //        IpCameraHandler cc = sender as IpCameraHandler;
+        //        var cameraAddress = cc.Camera.CameraAddress.Split(':');
+        //        if (cameraAddress[0] == Settings.Default.CameraIP11)
+        //        {
+        //            _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+        //        }
+        //        else if (cameraAddress[0] == Settings.Default.CameraIP12)
+        //        {
+        //            _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+        //        }
+        //        else if (cameraAddress[0] == Settings.Default.CameraIP13)
+        //        {
+        //            _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+        //        }
+        //        else if (cameraAddress[0] == Settings.Default.CameraIP14)
+        //        {
+        //            _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+        //        }
+        //    });
+        //}
 
-        private void ModelCameraStateChanged(object sender, Ozeki.Camera.CameraStateEventArgs e)
-        {
-            InvokeGuiThread(() =>
-            {
-                IpCameraHandler cc = sender as IpCameraHandler;
-                var cameraAddress = cc.Camera.CameraAddress.Split(':');
-                switch (e.State)
-                {
-                    case CameraState.Connected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP11)
-                        {
-                            _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
-                        }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
-                        {
-                            _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
-                        }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
-                        {
-                            _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
-                        }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
-                        {
-                            _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
-                        }
-                        break;
+        //private void ModelCameraStateChanged(object sender, Ozeki.Camera.CameraStateEventArgs e)
+        //{
+        //    InvokeGuiThread(() =>
+        //    {
+        //        IpCameraHandler cc = sender as IpCameraHandler;
+        //        var cameraAddress = cc.Camera.CameraAddress.Split(':');
+        //        switch (e.State)
+        //        {
+        //            case CameraState.Connected:
+        //                if (cameraAddress[0] == Settings.Default.CameraIP11)
+        //                {
+        //                    _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+        //                }
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP12)
+        //                {
+        //                    _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+        //                }
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP13)
+        //                {
+        //                    _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+        //                }
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP14)
+        //                {
+        //                    _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.green);
+        //                }
+        //                break;
 
-                    case CameraState.Disconnected:
-                        if (cameraAddress[0] == Settings.Default.CameraIP11)
-                        {
-                            _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
-                        }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
-                        {
-                            _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
-                        }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
-                        {
-                            _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
-                        }
-                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
-                        {
-                            _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
-                        }
-                        break;
+        //            case CameraState.Disconnected:
+        //                if (cameraAddress[0] == Settings.Default.CameraIP11)
+        //                {
+        //                    _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+        //                }
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP12)
+        //                {
+        //                    _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+        //                }
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP13)
+        //                {
+        //                    _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+        //                }
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP14)
+        //                {
+        //                    _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.red);
+        //                }
+        //                break;
 
-                    case CameraState.Connecting:
-                        if (cameraAddress[0] == Settings.Default.CameraIP11)
-                            _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
-                        else if (cameraAddress[0] == Settings.Default.CameraIP12)
-                            _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
-                        else if (cameraAddress[0] == Settings.Default.CameraIP13)
-                            _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
-                        else if (cameraAddress[0] == Settings.Default.CameraIP14)
-                            _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
-                        break;
-                }
-            });
-        }
+        //            case CameraState.Connecting:
+        //                if (cameraAddress[0] == Settings.Default.CameraIP11)
+        //                    _indicatorList[0].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP12)
+        //                    _indicatorList[1].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP13)
+        //                    _indicatorList[2].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
+        //                else if (cameraAddress[0] == Settings.Default.CameraIP14)
+        //                    _indicatorList[3].Image = new Bitmap(_03_Onvif_Network_Video_Recorder.Properties.Resources.yellow);
+        //                break;
+        //        }
+        //    });
+        //}
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 

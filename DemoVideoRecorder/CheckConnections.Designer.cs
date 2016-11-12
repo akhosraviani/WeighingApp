@@ -63,8 +63,8 @@
             // 
             // imgBascol
             // 
-            this.imgBascol.Image = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
-            this.imgBascol.InitialImage = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
+            this.imgBascol.Image = global::AshaWeighing.Properties.Resources.red;
+            this.imgBascol.InitialImage = global::AshaWeighing.Properties.Resources.red;
             this.imgBascol.Location = new System.Drawing.Point(279, 16);
             this.imgBascol.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.imgBascol.Name = "imgBascol";
@@ -74,8 +74,8 @@
             // 
             // imgCamera1
             // 
-            this.imgCamera1.Image = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
-            this.imgCamera1.InitialImage = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
+            this.imgCamera1.Image = global::AshaWeighing.Properties.Resources.red;
+            this.imgCamera1.InitialImage = global::AshaWeighing.Properties.Resources.red;
             this.imgCamera1.Location = new System.Drawing.Point(675, 13);
             this.imgCamera1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.imgCamera1.Name = "imgCamera1";
@@ -85,8 +85,8 @@
             // 
             // imgCamera2
             // 
-            this.imgCamera2.Image = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
-            this.imgCamera2.InitialImage = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
+            this.imgCamera2.Image = global::AshaWeighing.Properties.Resources.red;
+            this.imgCamera2.InitialImage = global::AshaWeighing.Properties.Resources.red;
             this.imgCamera2.Location = new System.Drawing.Point(675, 53);
             this.imgCamera2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.imgCamera2.Name = "imgCamera2";
@@ -107,8 +107,8 @@
             // 
             // imgCamera3
             // 
-            this.imgCamera3.Image = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
-            this.imgCamera3.InitialImage = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
+            this.imgCamera3.Image = global::AshaWeighing.Properties.Resources.red;
+            this.imgCamera3.InitialImage = global::AshaWeighing.Properties.Resources.red;
             this.imgCamera3.Location = new System.Drawing.Point(675, 93);
             this.imgCamera3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.imgCamera3.Name = "imgCamera3";
@@ -162,8 +162,8 @@
             // 
             // imgCamera4
             // 
-            this.imgCamera4.Image = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
-            this.imgCamera4.InitialImage = global::_03_Onvif_Network_Video_Recorder.Properties.Resources.red;
+            this.imgCamera4.Image = global::AshaWeighing.Properties.Resources.red;
+            this.imgCamera4.InitialImage = global::AshaWeighing.Properties.Resources.red;
             this.imgCamera4.Location = new System.Drawing.Point(675, 133);
             this.imgCamera4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.imgCamera4.Name = "imgCamera4";

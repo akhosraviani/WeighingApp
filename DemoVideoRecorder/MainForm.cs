@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Ozeki.Media;
+//using Ozeki.Media;
 using _03_Onvif_Network_Video_Recorder.LOG;
-using Ozeki.Camera;
+//using Ozeki.Camera;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO.Ports;
@@ -21,15 +21,15 @@ namespace _03_Onvif_Network_Video_Recorder
         private SqlDataAdapter _dbAdapter;
         private DataTable _shipmentTable;
 
-        private VideoViewerWF _currentVideoViewer;
+        //private VideoViewerWF _currentVideoViewer;
 
         private List<string> _connectionStringList;
 
-        private List<VideoViewerWF> _videoViewerList;
+        //private List<VideoViewerWF> _videoViewerList;
 
-        private List<IpCameraHandler> ModelList;
+        //private List<IpCameraHandler> ModelList;
 
-        private CameraURLBuilderWF _myCameraUrlBuilder;
+        //private CameraURLBuilderWF _myCameraUrlBuilder;
 
         public MainForm()
         {
@@ -145,51 +145,51 @@ namespace _03_Onvif_Network_Video_Recorder
             _videoViewerList = null;
         }
 
-        private void ModelCameraStateChanged(object sender, CameraStateEventArgs e)
-        {
-            InvokeGuiThread(() =>
-            {
-                IpCameraHandler cc = sender as IpCameraHandler;
-                if(cc.Camera != null)
-                    Log.Write(cc.Camera.Host + " -- Camera state: " +e.State);
-                switch (e.State)
-                {
-                    case CameraState.Streaming:
-                        button_Connect.Enabled = false;
-                        button_Disconnect.Enabled = true;
-                        _currentVideoViewer.Start();
-                        //ClearFields();
-                        GetCameraStreams(cc);
+        //private void ModelCameraStateChanged(object sender, CameraStateEventArgs e)
+        //{
+        //    InvokeGuiThread(() =>
+        //    {
+        //        IpCameraHandler cc = sender as IpCameraHandler;
+        //        if(cc.Camera != null)
+        //            Log.Write(cc.Camera.Host + " -- Camera state: " +e.State);
+        //        switch (e.State)
+        //        {
+        //            case CameraState.Streaming:
+        //                button_Connect.Enabled = false;
+        //                button_Disconnect.Enabled = true;
+        //                _currentVideoViewer.Start();
+        //                //ClearFields();
+        //                GetCameraStreams(cc);
 
-                        //if (cc.Camera.UriType != CameraUriType.RTSP)
-                            //InitializeTrackBars();
-                        break;
+        //                //if (cc.Camera.UriType != CameraUriType.RTSP)
+        //                    //InitializeTrackBars();
+        //                break;
 
-                    case CameraState.Disconnected:
-                        button_Disconnect.Enabled = false;
-                        _currentVideoViewer.Stop();
-                        button_Connect.Enabled = true;
-                        break;
-                }
-            });
-        }
+        //            case CameraState.Disconnected:
+        //                button_Disconnect.Enabled = false;
+        //                _currentVideoViewer.Stop();
+        //                button_Connect.Enabled = true;
+        //                break;
+        //        }
+        //    });
+        //}
 
-        private void GetCameraStreams(IpCameraHandler cameraHandler)
-        {
-            //if (cameraHandler.Camera != null)
-            //    cameraHandler.Camera.Start();
+        //private void GetCameraStreams(IpCameraHandler cameraHandler)
+        //{
+        //    //if (cameraHandler.Camera != null)
+        //    //    cameraHandler.Camera.Start();
             
-        }
+        //}
 
-        private void ModelCameraErrorOccurred(object sender, CameraErrorEventArgs e)
-        {
-            InvokeGuiThread(() => 
-                {
-                    IpCameraHandler cc = sender as IpCameraHandler;
-                    if (cc.Camera != null)
-                        Log.Write(cc.Camera.Host + " -- Camera error: " + (e.Details ?? e.Error.ToString()));
-                });
-        }
+        //private void ModelCameraErrorOccurred(object sender, CameraErrorEventArgs e)
+        //{
+        //    InvokeGuiThread(() => 
+        //        {
+        //            IpCameraHandler cc = sender as IpCameraHandler;
+        //            if (cc.Camera != null)
+        //                Log.Write(cc.Camera.Host + " -- Camera error: " + (e.Details ?? e.Error.ToString()));
+        //        });
+        //}
 
         private void LinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

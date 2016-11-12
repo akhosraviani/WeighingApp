@@ -9,11 +9,12 @@ using System.Windows.Forms;
 using System.Drawing.Text;
 using System.IO.Ports;
 using System.Data.SqlClient;
-using Ozeki.Camera;
-using _03_Onvif_Network_Video_Recorder.Properties;
 using System.Globalization;
 using System.Configuration;
 using System.Threading;
+using System.Net;
+using System.IO;
+using AshaWeighing.Properties;
 
 namespace _03_Onvif_Network_Video_Recorder
 {
@@ -27,13 +28,13 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private Font myFont, myFontBig;
         private List<string> _connectionStringList;
-        private List<IpCameraHandler> _modelList;
         private List<Label> _indicatorList;
         private SerialPort _serialPort;
         private SqlConnection _dbConnection;
         private string _shipmentState = "Shp_FirstWeighing";
         private DataTable _shipmentTable;
         private bool _negativeWeight = false;
+        private Bitmap loadedBitmap;
         public WeighingForm()
         {
             InitializeComponent();
@@ -43,13 +44,75 @@ namespace _03_Onvif_Network_Video_Recorder
             Initialize();
         }
 
+        private void requestFrame(int requestNumber)
+        {
+            string cameraUrl = _connectionStringList[requestNumber];
+            try
+            {
+                var request = System.Net.HttpWebRequest.Create(cameraUrl);
+                request.Credentials = new NetworkCredential("root", "49091");
+                request.Proxy = null;
+                request.BeginGetResponse(new AsyncCallback(finishRequestFrame), request);
+            }
+            catch(UriFormatException exp)
+            {
+                MessageBox.Show("تنظیمات دوربین " + (requestNumber+1) + " صحیح نمیباشد. لطفا با مدیر سیستم تماس بگیرید");
+            }
+        }
+
+        void finishRequestFrame(IAsyncResult result)
+        {
+            try
+            {
+                HttpWebResponse response = (result.AsyncState as HttpWebRequest).EndGetResponse(result) as HttpWebResponse;
+                Stream responseStream = response.GetResponseStream();
+
+                using (Bitmap frame = new Bitmap(responseStream))
+                {
+                    if (frame != null)
+                    {
+                        if (response.ResponseUri.OriginalString == _connectionStringList[0])
+                        {
+                            imgCamera1.Image = (Bitmap)frame.Clone();
+                            imgCamera1.Image.Tag = "Camera1-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
+                                DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
+                            _indicatorList[0].Text = "فعال";
+                            _indicatorList[0].ForeColor = Color.Green;
+                        }
+                        else if (response.ResponseUri.OriginalString == _connectionStringList[1])
+                        {
+                            imgCamera2.Image = (Bitmap)frame.Clone();
+                            imgCamera2.Image.Tag = "Camera2-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
+                                DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
+                            _indicatorList[1].Text = "فعال";
+                            _indicatorList[1].ForeColor = Color.Green;
+                        }
+                        else if (response.ResponseUri.OriginalString == _connectionStringList[2])
+                        {
+                            imgCamera3.Image = (Bitmap)frame.Clone();
+                            imgCamera3.Image.Tag = "Camera3-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
+                                DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
+                            _indicatorList[2].Text = "فعال";
+                            _indicatorList[2].ForeColor = Color.Green;
+                        }
+                        else if (response.ResponseUri.OriginalString == _connectionStringList[3])
+                        {
+                            imgCamera4.Image = (Bitmap)frame.Clone();
+                            imgCamera4.Image.Tag = "Camera4-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
+                                DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
+                            _indicatorList[3].Text = "فعال";
+                            _indicatorList[3].ForeColor = Color.Green;
+                        }
+                    }
+                }
+            }
+            catch(WebException exp)
+            {
+
+            }
+        }
         void WeighingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach (var camera in _modelList)
-            {
-                if (camera.Camera != null && camera.Camera.State != CameraState.Disconnected)
-                    camera.Camera.Disconnect();
-            }
             DisconnectWeighingMachine();
             DisconnectDatabase();
         }
@@ -72,12 +135,12 @@ namespace _03_Onvif_Network_Video_Recorder
             cameraIndicator4.Location = new Point(6, 1);
             imgCamera4.MouseDoubleClick += new MouseEventHandler(this.PicBox_DoubleClick);
 
-            byte[] fontData = Properties.Resources.IRANSans_FaNum_;
+            byte[] fontData = AshaWeighing.Properties.Resources.IRANSans_FaNum_;
             IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
             System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
             uint dummy = 0;
-            fonts.AddMemoryFont(fontPtr, Properties.Resources.IRANSans_FaNum_.Length);
-            AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.IRANSans_FaNum_.Length, IntPtr.Zero, ref dummy);
+            fonts.AddMemoryFont(fontPtr, AshaWeighing.Properties.Resources.IRANSans_FaNum_.Length);
+            AddFontMemResourceEx(fontPtr, (uint)AshaWeighing.Properties.Resources.IRANSans_FaNum_.Length, IntPtr.Zero, ref dummy);
             System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
 
             myFont = new Font(fonts.Families[0], 8.5F);
@@ -108,10 +171,8 @@ namespace _03_Onvif_Network_Video_Recorder
             }
 
             _connectionStringList = new List<string>();
-            _modelList = new List<IpCameraHandler>();
             _indicatorList = new List<Label>();
             _shipmentTable = new DataTable();
-            CreateIPCameraHandlers();
             CreateIndicators();
             CreateConnectionStrings();
             CreateSerialPort();
@@ -220,7 +281,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
                 if (_shipmentState == "Shp_FirstWeighing")
                 {
-                    if (intResult < -20)
+                    if (intResult < -10)
                     {
 
                         txtWeight1.Text = intResult.ToString();
@@ -269,7 +330,7 @@ namespace _03_Onvif_Network_Video_Recorder
                 else if (_shipmentState == "Shp_SecondWeighing" || _shipmentState == "Shp_Loading")
                 {
 
-                    if (intResult < -20)
+                    if (intResult < -10)
                     {
                         if (txtWeight2.BackColor != Color.Red)
                         {
@@ -305,6 +366,18 @@ namespace _03_Onvif_Network_Video_Recorder
                         txtDate2.Text = GetDate();
                         txtTime2.Text = GetTime();
                         txtMachine2.Text = GetMachine();
+
+                        double weight1, weight2;
+                        if (double.TryParse(txtWeight1.Text, out weight1) && double.TryParse(txtWeight2.Text, out weight2))
+                        {
+                            lblNetWeightLoad.Text = string.Format("{0:0.###}", Math.Abs(weight2 - weight1));
+
+                            double netWeight, estimatedWeight;
+                            if (double.TryParse(lblNetWeightLoad.Text, out netWeight) && double.TryParse(_shipmentTable.Rows[0].ItemArray[21].ToString(), out estimatedWeight))
+                            {
+                                lblDiscrepency.Text = string.Format("{0:0.###}", Math.Abs((estimatedWeight - netWeight) / estimatedWeight * 100));
+                            }
+                        }
                     }
 
 
@@ -355,117 +428,6 @@ namespace _03_Onvif_Network_Video_Recorder
                 BeginInvoke(action);
             }
         }
-        private void CreateIPCameraHandlers()
-        {
-            _modelList.Clear();
-            var i = 0;
-            while (i < 4)
-            {
-                _modelList.Add(new IpCameraHandler());
-                i++;
-            }
-            foreach (var item in _modelList)
-            {
-                item.CameraStateChanged += ModelCameraStateChanged;
-                //item.CameraErrorOccurred += ModelCameraErrorOccurred;
-            }
-        }
-
-        private void ModelCameraErrorOccurred(object sender, Ozeki.Camera.CameraErrorEventArgs e)
-        {
-            InvokeGuiThread(() =>
-            {
-                IpCameraHandler cc = sender as IpCameraHandler;
-                var cameraAddress = cc.Camera.CameraAddress.Split(':');
-            });
-        }
-
-        private void ModelCameraStateChanged(object sender, Ozeki.Camera.CameraStateEventArgs e)
-        {
-            InvokeGuiThread(() =>
-            {
-                IpCameraHandler cc = sender as IpCameraHandler;
-                if (cc != null && cc.Camera != null && cc.Camera.CameraAddress != null)
-                {
-                    var cameraAddress = cc.Camera.CameraAddress.Split(':');
-                    switch (e.State)
-                    {
-                        case CameraState.Connected:
-                            if (_connectionStringList[0].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[0].Text = "فعال";
-                                _indicatorList[0].ForeColor = Color.Green;
-                            }
-                            else if (_connectionStringList[1].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[1].Text = "فعال";
-                                _indicatorList[1].ForeColor = Color.Green;
-                            }
-                            else if (_connectionStringList[2].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[2].Text = "فعال";
-                                _indicatorList[2].ForeColor = Color.Green;
-                            }
-                            else if (_connectionStringList[3].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[3].Text = "فعال";
-                                _indicatorList[3].ForeColor = Color.Green;
-                            }
-                            break;
-
-                        case CameraState.Disconnected:
-                            if (_connectionStringList[0].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[0].Text = "غیرفعال";
-                                _indicatorList[0].ForeColor = Color.Red;
-                                //_modelList[0].Camera.Dispose();
-                            }
-                            else if (_connectionStringList[1].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[1].Text = "غیرفعال";
-                                _indicatorList[1].ForeColor = Color.Red;
-                                //_modelList[1].Camera.Dispose();
-                            }
-                            else if (_connectionStringList[2].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[2].Text = "غیرفعال";
-                                _indicatorList[2].ForeColor = Color.Red;
-                                //_modelList[2].Camera.Dispose();
-                            }
-                            else if (_connectionStringList[3].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[3].Text = "غیرفعال";
-                                _indicatorList[3].ForeColor = Color.Red;
-                                //_modelList[3].Camera.Dispose();
-                            }
-                            break;
-
-                        case CameraState.Connecting:
-                            if (_connectionStringList[0].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[0].Text = "در حال اتصال";
-                                _indicatorList[0].ForeColor = Color.Orange;
-                            }
-                            else if (_connectionStringList[1].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[1].Text = "در حال اتصال";
-                                _indicatorList[1].ForeColor = Color.Orange;
-                            }
-                            else if (_connectionStringList[2].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[2].Text = "در حال اتصال";
-                                _indicatorList[2].ForeColor = Color.Orange;
-                            }
-                            else if (_connectionStringList[3].StartsWith(cameraAddress[0]))
-                            {
-                                _indicatorList[3].Text = "در حال اتصال";
-                                _indicatorList[3].ForeColor = Color.Orange;
-                            }
-                            break;
-                    }
-                }
-            });
-        }
 
         private string GetTime()
         {
@@ -486,49 +448,38 @@ namespace _03_Onvif_Network_Video_Recorder
             switch (Settings.Default.SelectedSetting)
             {
                 case 1:
-                    _connectionStringList.Add(Settings.Default.CameraIP11 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP12 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP13 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP14 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP11);
+                    _connectionStringList.Add(Settings.Default.CameraIP12);
+                    _connectionStringList.Add(Settings.Default.CameraIP13);
+                    _connectionStringList.Add(Settings.Default.CameraIP14);
                     break;
 
                 case 2:
-                    _connectionStringList.Add(Settings.Default.CameraIP21 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP22 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP23 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP24 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP21);
+                    _connectionStringList.Add(Settings.Default.CameraIP22);
+                    _connectionStringList.Add(Settings.Default.CameraIP23);
+                    _connectionStringList.Add(Settings.Default.CameraIP24);
                     break;
 
                 case 3:
-                    _connectionStringList.Add(Settings.Default.CameraIP31 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP32 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP33 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP34 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP31);
+                    _connectionStringList.Add(Settings.Default.CameraIP32);
+                    _connectionStringList.Add(Settings.Default.CameraIP33);
+                    _connectionStringList.Add(Settings.Default.CameraIP34);
                     break;
 
                 case 4:
-                    _connectionStringList.Add(Settings.Default.CameraIP41 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP42 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP43 + ":80;Username=root;Password=49091;Transport=TCP;");
-                    _connectionStringList.Add(Settings.Default.CameraIP44 + ":80;Username=root;Password=49091;Transport=TCP;");
+                    _connectionStringList.Add(Settings.Default.CameraIP41);
+                    _connectionStringList.Add(Settings.Default.CameraIP42);
+                    _connectionStringList.Add(Settings.Default.CameraIP43);
+                    _connectionStringList.Add(Settings.Default.CameraIP44);
                     break;
             }
         }
 
         private void ConnectIpCam()
         {
-            try
-            {
-                var i = 0;
-                while (i < _modelList.Count)
-                {
-                    if (_modelList[i] == null && _modelList[i].Camera.State == CameraState.Connected) return;
-                    _modelList[i].ConnectOnvifCamera(_connectionStringList[i]);
-                    i++;
-                }
-            }
-            catch(Exception)
-            { }
+            
         }
 
         private void ConnectDatabase()
@@ -599,20 +550,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void DisconnectIpCam()
         {
-            try
-            {
-                for (int i = 0; i < _modelList.Count; i++)
-                {
-                    if ((_modelList[i] == null || _modelList[i].Camera == null) || _modelList[i].Camera.State == CameraState.Disconnected) 
-                        continue;
-                    else {
-                        _modelList[i].Disconnect();
-                        //_modelList[i].Camera.Disconnect();
-                    }
-                }
-            }
-            catch (Exception)
-            { }
+
         }
 
         public byte[] imageToByteArray(System.Drawing.Image imageIn)
@@ -626,54 +564,12 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private void btnGetData_Click(object sender, EventArgs e)
         {
-            string path = "C:\\";
+
             for (int i = 0; i < 4; i++)
             {
-                if (_modelList[i] == null || _modelList[i].Camera == null) continue;
-                
-                var date = _modelList[i].Camera.Host.ToString() + "-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                       DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                var image = _modelList[i].CreateSnapShot(path);
-
-                if (image != null)
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            imgCamera1.Image = new Bitmap(image);
-                            imgCamera1.Image.Tag = date;
-                            break;
-                        case 1:
-                            imgCamera2.Image = new Bitmap(image);
-                            imgCamera2.Image.Tag = date;
-                            break;
-                        case 2:
-                            imgCamera3.Image = new Bitmap(image);
-                            imgCamera3.Image.Tag = date;
-                            break;
-                        case 3:
-                            imgCamera4.Image = new Bitmap(image);
-                            imgCamera4.Image.Tag = date;
-                            break;
-                    }
-
-                }
+                requestFrame(i);
             }
-
-            if (_shipmentState == "Shp_SecondWeighing" || _shipmentState == "Shp_Loading")
-            {
-                double weight1, weight2;
-                if (double.TryParse(txtWeight1.Text, out weight1) && double.TryParse(txtWeight2.Text, out weight2))
-                {
-                    lblNetWeightLoad.Text = string.Format("{0:0.###}", Math.Abs(weight2 - weight1));
-
-                    double netWeight, estimatedWeight;
-                    if (double.TryParse(lblNetWeightLoad.Text, out netWeight) && double.TryParse(_shipmentTable.Rows[0].ItemArray[21].ToString(), out estimatedWeight))
-                    {
-                        lblDiscrepency.Text = string.Format("{0:0.###}", Math.Abs((estimatedWeight-netWeight)/estimatedWeight*100));
-                    }
-                }
-            }
+           
             calcWaitingCars();
         }
         private void btnSaveData_Click(object sender, EventArgs e)
@@ -783,38 +679,6 @@ namespace _03_Onvif_Network_Video_Recorder
                     sqlCommand.ExecuteNonQuery();
                     sqlCommand.Dispose();
 
-                    foreach (var item in images)
-                    {
-                        if (item == null) continue;
-                        var image = imageToByteArray(item);
-                        var date = item.Tag;
-
-                        if (image != null)
-                        {
-                            sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                                                                       "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                            sqlCommand.Parameters.AddWithValue("@date", date);
-                            sqlCommand.Parameters.AddWithValue("@Image", image);
-                            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                            sqlCommand.ExecuteNonQuery();
-                            sqlCommand.Dispose();
-
-                            sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                            SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                            DataTable BinaryTable = new DataTable();
-                            sqlAdapter.Fill(BinaryTable);
-                            sqlCommand.Dispose();
-
-                            sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                                                                "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                            sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
-                            sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                            sqlCommand.ExecuteNonQuery();
-                            sqlCommand.Dispose();
-                        }
-                    }
-
                     sqlCommand = new SqlCommand("SDSO_001_ShipmentStatus", _dbConnection);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
 
@@ -840,79 +704,111 @@ namespace _03_Onvif_Network_Video_Recorder
                     string returnMessage = Convert.ToString(sqlCommand.Parameters["@ReturnMessage"].Value);
                     int returnValue = Convert.ToInt32(sqlCommand.Parameters["@ReturnValue"].Value);
 
-                    
+
 
                     if (returnValue == 1)
                     {
                         MessageBox.Show(returnMessage, "پیغام", MessageBoxButtons.OK,
                             MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                        sqlCommand.Dispose();
+
+                        foreach (var item in images)
+                        {
+                            if (item == null) continue;
+                            var image = imageToByteArray(item);
+                            var date = item.Tag;
+
+                            if (image != null)
+                            {
+                                sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
+                                                                           "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
+                                sqlCommand.Parameters.AddWithValue("@date", date);
+                                sqlCommand.Parameters.AddWithValue("@Image", image);
+                                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                                sqlCommand.ExecuteNonQuery();
+                                sqlCommand.Dispose();
+
+                                sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
+                                SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
+                                DataTable BinaryTable = new DataTable();
+                                sqlAdapter.Fill(BinaryTable);
+                                sqlCommand.Dispose();
+
+                                sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
+                                                                    "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
+                                sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
+                                sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
+                                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                                sqlCommand.ExecuteNonQuery();
+                                sqlCommand.Dispose();
+                            }
+                        }
+                        ClearFields();
                     }
                     else if (returnValue == 0)
                     {
-                        MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        //if (MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
-                        //    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
-                        //{
-                        //    sqlCommand.Dispose();
+                        if (MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+                        {
+                            sqlCommand.Dispose();
 
-                        //    if (MessageBox.Show("آیا مغایرت وزنی تایید می شود؟", "پیغام", MessageBoxButtons.YesNo,
-                        //    MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
-                        //    {
-                        //        sqlCommand = new SqlCommand("SDSO_001_ShipmentWeightApprove", _dbConnection);
-                        //        sqlCommand.CommandType = CommandType.StoredProcedure;
+                            if (MessageBox.Show("آیا مغایرت وزنی تایید می شود؟", "پیغام", MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                sqlCommand = new SqlCommand("SDSO_001_ShipmentWeightApprove", _dbConnection);
+                                sqlCommand.CommandType = CommandType.StoredProcedure;
 
-                        //        // set up the parameters
-                        //        sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
-                        //        sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
-                        //        sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
-                        //        sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
-                        //        sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
+                                // set up the parameters
+                                sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
+                                sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
 
-                        //        // set parameter values
-                        //        sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
-                        //        sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                        //        sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
-                        //        sqlCommand.Parameters["@ReturnMessage"].Value = "";
-                        //        sqlCommand.Parameters["@ReturnValue"].Value = 1;
+                                // set parameter values
+                                sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
+                                sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
+                                sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
+                                sqlCommand.Parameters["@ReturnMessage"].Value = "";
+                                sqlCommand.Parameters["@ReturnValue"].Value = 1;
 
-                        //        sqlCommand.ExecuteNonQuery();
-                        //        sqlCommand.Dispose();
+                                sqlCommand.ExecuteNonQuery();
+                                sqlCommand.Dispose();
 
-                        //        foreach (var item in images)
-                        //        {
-                        //            if (item == null) continue;
-                        //            var image = imageToByteArray(item);
-                        //            var date = item.Tag;
+                                foreach (var item in images)
+                                {
+                                    if (item == null) continue;
+                                    var image = imageToByteArray(item);
+                                    var date = item.Tag;
 
-                        //            if (image != null)
-                        //            {
-                        //                sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                        //                                                           "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                        //                sqlCommand.Parameters.AddWithValue("@date", date);
-                        //                sqlCommand.Parameters.AddWithValue("@Image", image);
-                        //                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                        //                sqlCommand.ExecuteNonQuery();
-                        //                sqlCommand.Dispose();
+                                    if (image != null)
+                                    {
+                                        sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
+                                                                                   "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
+                                        sqlCommand.Parameters.AddWithValue("@date", date);
+                                        sqlCommand.Parameters.AddWithValue("@Image", image);
+                                        sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                                        sqlCommand.ExecuteNonQuery();
+                                        sqlCommand.Dispose();
 
-                        //                sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                        //                SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                        //                DataTable BinaryTable = new DataTable();
-                        //                sqlAdapter.Fill(BinaryTable);
-                        //                sqlCommand.Dispose();
+                                        sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
+                                        SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
+                                        DataTable BinaryTable = new DataTable();
+                                        sqlAdapter.Fill(BinaryTable);
+                                        sqlCommand.Dispose();
 
-                        //                sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                        //                                                    "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                        //                sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
-                        //                sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                        //                sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                        //                sqlCommand.ExecuteNonQuery();
-                        //                sqlCommand.Dispose();
-                        //            }
-                        //        }
-                        //        ClearFields();
-                        //    }
-                        //}
+                                        sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
+                                                                            "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
+                                        sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
+                                        sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
+                                        sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
+                                        sqlCommand.ExecuteNonQuery();
+                                        sqlCommand.Dispose();
+                                    }
+                                }
+                                ClearFields();
+                            }
+                        }
                     }
                     sqlCommand.Dispose(); 
                     ClearFields();
@@ -991,7 +887,7 @@ namespace _03_Onvif_Network_Video_Recorder
 		                                                   "         ON	SDSO_Shipment.TransportCompanyCode = contact1.Code LEFT OUTER JOIN WFFC_Contact AS contact2 " +
 		                                                   "        ON	SDSO_Customer.CustomerCode = contact2.code LEFT OUTER JOIN SISys_Location " +
                                                            "         ON	contact2.GeograghyLocationCode = SISys_Location.Code " +
-                                                           " WHERE        (SDSO_Shipment.FormStatusCode LIKE '%Weighing%' OR FormStatusCode LIKE '%Loading%') AND SDSO_Shipment.Code = '" + txtShipmentCode.Text.PadLeft(8, '0') + "'"
+                                                           " WHERE        (SDSO_Shipment.FormStatusCode IN ('Shp_FirstWeighing', 'Shp_SecondWeighing')) AND SDSO_Shipment.Code = '" + txtShipmentCode.Text.PadLeft(8, '0') + "'"
                                                             , _dbConnection))
                     {
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -1032,7 +928,7 @@ namespace _03_Onvif_Network_Video_Recorder
                     using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], SDSO_ShipmentDetail.ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل], CONVERT(DECIMAL(10,0), RemainedQuantity) as [باقیمانده مجوز] FROM SDSO_Shipment " +
                         "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
                         "INNER JOIN SDSO_ShipmentAuthorize ON SDSO_ShipmentDetail.ShipmentAuthorizeCode = SDSO_ShipmentAuthorize.Code " +
-                        "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE (SDSO_Shipment.FormStatusCode Like '%Weighing%') AND SDSO_Shipment.Code = '" + txtShipmentCode.Text.PadLeft(8, '0') + "'"
+                        "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE (SDSO_Shipment.FormStatusCode IN ('Shp_FirstWeighing', 'Shp_SecondWeighing')) AND SDSO_Shipment.Code = '" + txtShipmentCode.Text.PadLeft(8, '0') + "'"
                                                             , _dbConnection))
                     {
                         DataTable shipmentDetailTable = new DataTable();

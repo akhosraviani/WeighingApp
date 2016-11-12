@@ -1439,7 +1439,7 @@
             this.ctmSetting1.Name = "ctmSetting1";
             this.ctmSetting1.Size = new System.Drawing.Size(178, 22);
             this.ctmSetting1.Tag = "1";
-            this.ctmSetting1.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting1;
+            this.ctmSetting1.Text = global::AshaWeighing.Properties.Settings.Default.Setting1;
             this.ctmSetting1.Click += new System.EventHandler(this.contextMenu_Click);
             // 
             // ctmSetting2
@@ -1448,7 +1448,7 @@
             this.ctmSetting2.Name = "ctmSetting2";
             this.ctmSetting2.Size = new System.Drawing.Size(178, 22);
             this.ctmSetting2.Tag = "2";
-            this.ctmSetting2.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting2;
+            this.ctmSetting2.Text = global::AshaWeighing.Properties.Settings.Default.Setting2;
             this.ctmSetting2.Click += new System.EventHandler(this.contextMenu_Click);
             // 
             // ctmSetting3
@@ -1457,7 +1457,7 @@
             this.ctmSetting3.Name = "ctmSetting3";
             this.ctmSetting3.Size = new System.Drawing.Size(178, 22);
             this.ctmSetting3.Tag = "3";
-            this.ctmSetting3.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting3;
+            this.ctmSetting3.Text = global::AshaWeighing.Properties.Settings.Default.Setting3;
             this.ctmSetting3.Click += new System.EventHandler(this.contextMenu_Click);
             // 
             // ctmSetting4
@@ -1466,7 +1466,7 @@
             this.ctmSetting4.Name = "ctmSetting4";
             this.ctmSetting4.Size = new System.Drawing.Size(178, 22);
             this.ctmSetting4.Tag = "4";
-            this.ctmSetting4.Text = global::_03_Onvif_Network_Video_Recorder.Properties.Settings.Default.Setting4;
+            this.ctmSetting4.Text = global::AshaWeighing.Properties.Settings.Default.Setting4;
             this.ctmSetting4.Click += new System.EventHandler(this.contextMenu_Click);
             // 
             // button4
