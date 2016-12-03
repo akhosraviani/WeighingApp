@@ -35,22 +35,24 @@ namespace _03_Onvif_Network_Video_Recorder
         private DataTable _shipmentTable;
         private bool _negativeWeight = false;
         private Bitmap loadedBitmap;
+        private Dictionary<string, string> configs;
         public WeighingForm()
         {
             InitializeComponent();
             this.Load += WeighingForm_Load;
             this.FormClosing += WeighingForm_FormClosing;
 
-            Initialize();
+            InitializeConfigurations();
+            InitializeFontAndCamera();
         }
 
         private void requestFrame(int requestNumber)
         {
-            string cameraUrl = _connectionStringList[requestNumber];
+            string cameraUrl = Globals.CameraAddress[requestNumber];
             try
             {
                 var request = System.Net.HttpWebRequest.Create(cameraUrl);
-                request.Credentials = new NetworkCredential("root", "49091");
+                request.Credentials = new NetworkCredential(Globals.CameraUsername[requestNumber], Globals.CameraPassword[requestNumber]);
                 request.Proxy = null;
                 request.BeginGetResponse(new AsyncCallback(finishRequestFrame), request);
             }
@@ -71,37 +73,49 @@ namespace _03_Onvif_Network_Video_Recorder
                 {
                     if (frame != null)
                     {
-                        if (response.ResponseUri.OriginalString == _connectionStringList[0])
+                        if (response.ResponseUri.OriginalString == Globals.CameraAddress[0])
                         {
                             imgCamera1.Image = (Bitmap)frame.Clone();
                             imgCamera1.Image.Tag = "Camera1-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
                                 DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                            _indicatorList[0].Text = "فعال";
-                            _indicatorList[0].ForeColor = Color.Green;
+                            InvokeGuiThread(() =>
+                            {
+                                _indicatorList[0].Text = "فعال";
+                                _indicatorList[0].ForeColor = Color.Green;
+                            });
                         }
-                        else if (response.ResponseUri.OriginalString == _connectionStringList[1])
+                        else if (response.ResponseUri.OriginalString == Globals.CameraAddress[1])
                         {
                             imgCamera2.Image = (Bitmap)frame.Clone();
                             imgCamera2.Image.Tag = "Camera2-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
                                 DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                            _indicatorList[1].Text = "فعال";
-                            _indicatorList[1].ForeColor = Color.Green;
+                            InvokeGuiThread(() =>
+                            {
+                                _indicatorList[1].Text = "فعال";
+                                _indicatorList[1].ForeColor = Color.Green;
+                            });
                         }
-                        else if (response.ResponseUri.OriginalString == _connectionStringList[2])
+                        else if (response.ResponseUri.OriginalString == Globals.CameraAddress[2])
                         {
                             imgCamera3.Image = (Bitmap)frame.Clone();
                             imgCamera3.Image.Tag = "Camera3-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
                                 DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                            _indicatorList[2].Text = "فعال";
-                            _indicatorList[2].ForeColor = Color.Green;
+                            InvokeGuiThread(() =>
+                            {
+                                _indicatorList[2].Text = "فعال";
+                                _indicatorList[2].ForeColor = Color.Green;
+                            });
                         }
-                        else if (response.ResponseUri.OriginalString == _connectionStringList[3])
+                        else if (response.ResponseUri.OriginalString == Globals.CameraAddress[3])
                         {
                             imgCamera4.Image = (Bitmap)frame.Clone();
                             imgCamera4.Image.Tag = "Camera4-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
                                 DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                            _indicatorList[3].Text = "فعال";
-                            _indicatorList[3].ForeColor = Color.Green;
+                            InvokeGuiThread(() =>
+                            {
+                                _indicatorList[3].Text = "فعال";
+                                _indicatorList[3].ForeColor = Color.Green;
+                            });
                         }
                     }
                 }
@@ -117,7 +131,50 @@ namespace _03_Onvif_Network_Video_Recorder
             DisconnectDatabase();
         }
 
-        private void Initialize()
+        private void InitializeConfigurations()
+        {
+            var connection =
+                System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
+            if (_dbConnection == null)
+                _dbConnection = new SqlConnection(connection);
+            if (_dbConnection.State != ConnectionState.Open)
+            {
+                try
+                {
+                    _dbConnection.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT Code, Title FROM WMLog_Configuration "
+                                                            , _dbConnection))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable conf = new DataTable();
+                        da.Fill(conf);
+                        configs = new Dictionary<string, string>();
+                        ToolStripMenuItem[] items = new ToolStripMenuItem[conf.Rows.Count];
+
+                        for (int i = 0; i < conf.Rows.Count; i++)
+                        {
+                            configs.Add(conf.Rows[i].Field<string>("Code"), conf.Rows[i].Field<string>("Title"));
+
+                            items[i] = new ToolStripMenuItem();
+                            items[i].Name = "dynamicItem" + i.ToString();
+                            items[i].Tag = conf.Rows[i].Field<string>("Code");
+                            items[i].Text = conf.Rows[i].Field<string>("Title");
+                            items[i].Click += new EventHandler(contextMenu_Click);
+                        }
+
+                        ctmConfig.DropDownItems.AddRange(items);
+                    }
+
+                }
+                catch (Exception)
+                {
+
+                }
+                Globals.GetConfigurationDetails(Settings.Default.SelectedConfiguration);
+            }
+        }
+
+        private void InitializeFontAndCamera()
         {
             cameraIndicator1.Parent = groupBox8;
             cameraIndicator1.Location = new Point(6, 1);
@@ -164,51 +221,31 @@ namespace _03_Onvif_Network_Video_Recorder
 
             foreach (ToolStripMenuItem item in ctmConfig.DropDownItems)
             {
-                if (Convert.ToInt32(item.Tag) != Settings.Default.SelectedSetting)
+                if (((string)item.Tag) != Settings.Default.SelectedConfiguration)
                     item.Checked = false;
                 else
                     item.Checked = true;
             }
 
-            _connectionStringList = new List<string>();
             _indicatorList = new List<Label>();
             _shipmentTable = new DataTable();
             CreateIndicators();
-            CreateConnectionStrings();
             CreateSerialPort();
         }
 
         private void CreateSerialPort()
         {
             _serialPort = new SerialPort();
-            _serialPort.BaudRate = 2400;
-            _serialPort.DataBits = 8;
-            _serialPort.Parity = Parity.None;
-            _serialPort.Handshake = Handshake.None;
-            _serialPort.StopBits = StopBits.One;
+            _serialPort.PortName = Globals.WeighingMachineSerialPort;  
+            _serialPort.BaudRate = Globals.SerialPorBaudRate;
+            _serialPort.DataBits = Globals.SerialPortDataBits;
+            _serialPort.Parity = Globals.SerialPortParity;
+            _serialPort.Handshake = Globals.SerialPortHandshake;
+            _serialPort.StopBits = Globals.SerialPortStopBits;
             _serialPort.RtsEnable = true;
             _serialPort.Encoding = Encoding.ASCII;
             _serialPort.DataReceived +=
-                new SerialDataReceivedEventHandler(_serialPort_DataReceived);
-
-            switch (Settings.Default.SelectedSetting)
-            {
-                case 1:
-                    _serialPort.PortName = Settings.Default.BascolPort1;
-                    break;
-
-                case 2:
-                    _serialPort.PortName = Settings.Default.BascolPort2;
-                    break;
-
-                case 3:
-                    _serialPort.PortName = Settings.Default.BascolPort3;
-                    break;
-
-                case 4:
-                    _serialPort.PortName = Settings.Default.BascolPort4;
-                    break;
-            }            
+                new SerialDataReceivedEventHandler(_serialPort_DataReceived);        
         }
 
         public void ShowNegativeWeightMessageBox()
@@ -396,21 +433,7 @@ namespace _03_Onvif_Network_Video_Recorder
 
         private string GetMachine()
         {
-            switch (Settings.Default.SelectedSetting)
-            {
-                case 1:
-                    return Settings.Default.MachineCode1;
-
-                case 2:
-                    return Settings.Default.MachineCode2;
-
-                case 3:
-                    return Settings.Default.MachineCode3;
-
-                case 4:
-                    return Settings.Default.MachineCode4;
-            };
-            return Settings.Default.MachineCode1;
+            return Globals.WeighingMachineCode;
         }
 
         private void CreateIndicators()
@@ -440,46 +463,6 @@ namespace _03_Onvif_Network_Video_Recorder
             DateTime d = DateTime.Parse(GregorianDate);
             PersianCalendar pc = new PersianCalendar();
             return string.Format("{0:0000}/{1:00}/{2:00}", pc.GetYear(d), pc.GetMonth(d), pc.GetDayOfMonth(d));
-        }
-
-        private void CreateConnectionStrings()
-        {
-            _connectionStringList.Clear();
-            switch (Settings.Default.SelectedSetting)
-            {
-                case 1:
-                    _connectionStringList.Add(Settings.Default.CameraIP11);
-                    _connectionStringList.Add(Settings.Default.CameraIP12);
-                    _connectionStringList.Add(Settings.Default.CameraIP13);
-                    _connectionStringList.Add(Settings.Default.CameraIP14);
-                    break;
-
-                case 2:
-                    _connectionStringList.Add(Settings.Default.CameraIP21);
-                    _connectionStringList.Add(Settings.Default.CameraIP22);
-                    _connectionStringList.Add(Settings.Default.CameraIP23);
-                    _connectionStringList.Add(Settings.Default.CameraIP24);
-                    break;
-
-                case 3:
-                    _connectionStringList.Add(Settings.Default.CameraIP31);
-                    _connectionStringList.Add(Settings.Default.CameraIP32);
-                    _connectionStringList.Add(Settings.Default.CameraIP33);
-                    _connectionStringList.Add(Settings.Default.CameraIP34);
-                    break;
-
-                case 4:
-                    _connectionStringList.Add(Settings.Default.CameraIP41);
-                    _connectionStringList.Add(Settings.Default.CameraIP42);
-                    _connectionStringList.Add(Settings.Default.CameraIP43);
-                    _connectionStringList.Add(Settings.Default.CameraIP44);
-                    break;
-            }
-        }
-
-        private void ConnectIpCam()
-        {
-            
         }
 
         private void ConnectDatabase()
@@ -517,13 +500,19 @@ namespace _03_Onvif_Network_Video_Recorder
                 try
                 {
                     _serialPort.Open();
-                    WeighingMachineIndicator.Text = "فعال";
-                    WeighingMachineIndicator.ForeColor = Color.Green;
+                    InvokeGuiThread(() =>
+                    {
+                        WeighingMachineIndicator.Text = "فعال";
+                        WeighingMachineIndicator.ForeColor = Color.Green;
+                    });
                 }
                 catch (Exception)
                 {
-                    WeighingMachineIndicator.Text = "غیرفعال";
-                    WeighingMachineIndicator.ForeColor = Color.Red;
+                    InvokeGuiThread(() =>
+                    {
+                        WeighingMachineIndicator.Text = "غیرفعال";
+                        WeighingMachineIndicator.ForeColor = Color.Red;
+                    });
                 }
             }
         }
@@ -546,11 +535,6 @@ namespace _03_Onvif_Network_Video_Recorder
                 WeighingMachineIndicator.Text = "غیرفعال";
                 WeighingMachineIndicator.ForeColor = Color.Red;
             }
-        }
-
-        private void DisconnectIpCam()
-        {
-
         }
 
         public byte[] imageToByteArray(System.Drawing.Image imageIn)
@@ -993,17 +977,14 @@ namespace _03_Onvif_Network_Video_Recorder
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            System.Threading.Thread thread0 = new System.Threading.Thread(ConnectIpCam);
             System.Threading.Thread thread1 = new System.Threading.Thread(ConnectDatabase);
             System.Threading.Thread thread2 = new System.Threading.Thread(ConnectWeighingMachine);
-            thread0.Start();
             thread1.Start();
             thread2.Start();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            DisconnectIpCam();
             DisconnectWeighingMachine();
             DisconnectDatabase();
         }
@@ -1038,7 +1019,7 @@ namespace _03_Onvif_Network_Video_Recorder
             if (menuItem != null)
             {
                 menuItem.Checked = true;
-                Settings.Default.SelectedSetting = Convert.ToInt32(menuItem.Tag);
+                Settings.Default.SelectedConfiguration = (string)menuItem.Tag;
                 Settings.Default.Save();
 
                 var parentMenu = ((ToolStripDropDownMenu)(((ToolStripMenuItem)sender).Owner));
@@ -1051,14 +1032,12 @@ namespace _03_Onvif_Network_Video_Recorder
                 }
             }
 
-            DisconnectIpCam();
+            Globals.GetConfigurationDetails(Settings.Default.SelectedConfiguration);
+
             DisconnectWeighingMachine();
-            CreateConnectionStrings();
             CreateSerialPort();
 
-            System.Threading.Thread thread0 = new System.Threading.Thread(ConnectIpCam);
             System.Threading.Thread thread2 = new System.Threading.Thread(ConnectWeighingMachine);
-            thread0.Start();
             thread2.Start();
         }
 
