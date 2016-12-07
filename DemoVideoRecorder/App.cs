@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Threading;
 using System.Drawing.Text;
 using AshaWeighing.Properties;
 
-namespace _03_Onvif_Network_Video_Recorder
+namespace AshaWeighing
 {
     public partial class App : Form
     {

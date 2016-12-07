@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO.Ports;
 using System.Linq;
-using System.Text;
 
-namespace _03_Onvif_Network_Video_Recorder
+namespace AshaWeighing
 {
     public static class Globals
     {
         public static string UserCode = "";
+        public static string UserName = "";
         public static string PersonnelCode = "";
 
         public static string[] CameraAddress = new string[4];
@@ -18,6 +17,7 @@ namespace _03_Onvif_Network_Video_Recorder
         public static string[] CameraPassword = new string[4];
         public static string WeighingMachineSerialPort = "";
         public static string WeighingMachineCode = "";
+        public static string WeighingMachineTitle = "";
         public static int SerialPorBaudRate = 2400;
         public static int SerialPortDataBits = 8;
         public static Parity SerialPortParity = Parity.None;

@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
-namespace _03_Onvif_Network_Video_Recorder
+namespace AshaWeighing
 {
     public partial class LoginForm : Form
     {
@@ -91,7 +88,7 @@ namespace _03_Onvif_Network_Video_Recorder
                 using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.
                                                              ConnectionStrings["AshaDbContext"].ConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("SELECT a.Code, b.PersonnelCode FROM SIScr_User AS a INNER JOIN HREA_Personnel as b ON a.Code = b.UserCode " +
+                    using (SqlCommand cmd = new SqlCommand("SELECT a.Code, b.PersonnelCode, b.Title FROM SIScr_User AS a INNER JOIN HREA_Personnel as b ON a.Code = b.UserCode " +
                                                            " WHERE a.Title = '" + txtUsername.Text + "' AND a.Password = '" + pwd + "'"
                                                             , con))
                     {
@@ -103,6 +100,7 @@ namespace _03_Onvif_Network_Video_Recorder
                         {
                             Globals.UserCode = dt.Rows[0].ItemArray[0].ToString();
                             Globals.PersonnelCode = dt.Rows[0].ItemArray[1].ToString();
+                            Globals.UserName = dt.Rows[0].ItemArray[2].ToString();
                             this.DialogResult = System.Windows.Forms.DialogResult.OK;
                             this.Close();
                         }

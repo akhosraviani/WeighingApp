@@ -1,4 +1,4 @@
-﻿namespace _03_Onvif_Network_Video_Recorder
+﻿namespace AshaWeighing
 {
     partial class CameraViewer
     {
