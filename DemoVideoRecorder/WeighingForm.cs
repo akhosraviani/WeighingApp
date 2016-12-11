@@ -32,7 +32,7 @@ namespace AshaWeighing
         private string _weighingOrderCode = string.Empty;
         private DataTable _WeighingOrderDetail;
         private string _shipmentState = "Shp_FirstWeighing";
-        private DataTable _shipmentTable;
+        private DataTable _WeighingOrderTable;
         private bool _negativeWeight = false;
         private Dictionary<string, string> _configs;
         private List<WeighingOrderType> _weighingTypes;
@@ -215,7 +215,7 @@ namespace AshaWeighing
             InitializeFontAndCamera();
 
             _indicatorList = new List<Label>();
-            _shipmentTable = new DataTable();
+            _WeighingOrderTable = new DataTable();
             CreateIndicators();
             ConnectDatabase();
             InitializeConfigurations();
@@ -310,7 +310,7 @@ namespace AshaWeighing
               {
                     _negativeWeight = false;
                     btnSaveData.Enabled = true;
-                    btnGetStableData.Enabled = false;
+                    btnGetStableData.Enabled = true;
               }
             });
           thread.Start();
@@ -596,6 +596,7 @@ namespace AshaWeighing
                 calcWaitingCars();
                 btnGetStableData.Text = "فعال سازی دریافت اطلاعات";
                 sevenSegmentWeight.ForeColor = Color.Green;
+                btnSaveData.Enabled = true;
             }
             else
             {
@@ -605,14 +606,15 @@ namespace AshaWeighing
                 imgCamera4.Image = null;
                 btnGetStableData.Text = "تثبیت وزن و دریافت تصاویر";
                 sevenSegmentWeight.ForeColor = Color.Red;
+                btnSaveData.Enabled = false;
             }
             _isStable = !_isStable;
         }
         private void btnSaveData_Click(object sender, EventArgs e)
         {
-            if (_shipmentTable.Rows.Count <= 0)
+            if (_weighingOrderCode == null)
             {
-                MessageBox.Show("این محموله در وضعیت توزین قرار ندارد", "خطا", MessageBoxButtons.OK,
+                MessageBox.Show("شناسه توزین مشخص نشده است. لطفا شناسه توزین را جستجو نمایید.", "خطا", MessageBoxButtons.OK,
                 MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -628,7 +630,7 @@ namespace AshaWeighing
                 {
                     sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, FirstWeighingMachineCode=@FirstMachine " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
-                    sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
+                    sqlCommand.Parameters.AddWithValue("@ShipmentCode", _WeighingOrderTable.Rows[0].ItemArray[20].ToString());
                     sqlCommand.Parameters.AddWithValue("@TruckWeight", sevenSegmentWeight.Text);
                     sqlCommand.Parameters.AddWithValue("@FirstMachine", Globals.WeighingMachineCode);
                     sqlCommand.ExecuteNonQuery();
@@ -647,7 +649,7 @@ namespace AshaWeighing
                     sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
 
                     // set parameter values
-                    sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
+                    sqlCommand.Parameters["@shipmentCode"].Value = _WeighingOrderTable.Rows[0].ItemArray[20].ToString();
                     sqlCommand.Parameters["@StatusCode"].Value = "Shp_FirstWeighing";
                     sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Loading";
                     sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
@@ -685,7 +687,7 @@ namespace AshaWeighing
 
                             sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
                                                                 "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                            sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
+                            sqlCommand.Parameters.AddWithValue("@MainGuid", _WeighingOrderTable.Rows[0].ItemArray[6].ToString());
                             sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
                             sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
                             sqlCommand.ExecuteNonQuery();
@@ -708,7 +710,7 @@ namespace AshaWeighing
 
                     sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, SecondWeighingMachineCode=@SecondMachine " +
                                 "WHERE Code = @ShipmentCode", _dbConnection);
-                    sqlCommand.Parameters.AddWithValue("@ShipmentCode", _shipmentTable.Rows[0].ItemArray[20].ToString());
+                    sqlCommand.Parameters.AddWithValue("@ShipmentCode", _WeighingOrderTable.Rows[0].ItemArray[20].ToString());
                     sqlCommand.Parameters.AddWithValue("@NetWeight", lblNetWeight.Text);
                     //sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
                     sqlCommand.Parameters.AddWithValue("@SecondMachine", Globals.WeighingMachineCode);
@@ -728,7 +730,7 @@ namespace AshaWeighing
                     sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
 
                     // set parameter values
-                    sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
+                    sqlCommand.Parameters["@shipmentCode"].Value = _WeighingOrderTable.Rows[0].ItemArray[20].ToString();
                     sqlCommand.Parameters["@StatusCode"].Value = "Shp_SecondWeighing";
                     sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Issue";
                     sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
@@ -772,7 +774,7 @@ namespace AshaWeighing
 
                                 sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
                                                                     "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                                sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
+                                sqlCommand.Parameters.AddWithValue("@MainGuid", _WeighingOrderTable.Rows[0].ItemArray[6].ToString());
                                 sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
                                 sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
                                 sqlCommand.ExecuteNonQuery();
@@ -802,7 +804,7 @@ namespace AshaWeighing
                                 sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
 
                                 // set parameter values
-                                sqlCommand.Parameters["@shipmentCode"].Value = _shipmentTable.Rows[0].ItemArray[20].ToString();
+                                sqlCommand.Parameters["@shipmentCode"].Value = _WeighingOrderTable.Rows[0].ItemArray[20].ToString();
                                 sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
                                 sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
                                 sqlCommand.Parameters["@ReturnMessage"].Value = "";
@@ -835,7 +837,7 @@ namespace AshaWeighing
 
                                         sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
                                                                             "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                                        sqlCommand.Parameters.AddWithValue("@MainGuid", _shipmentTable.Rows[0].ItemArray[6].ToString());
+                                        sqlCommand.Parameters.AddWithValue("@MainGuid", _WeighingOrderTable.Rows[0].ItemArray[6].ToString());
                                         sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
                                         sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
                                         sqlCommand.ExecuteNonQuery();
@@ -871,12 +873,9 @@ namespace AshaWeighing
 
         private void ClearFields()
         {
+            _weighingOrderCode = null;
             _shipmentState = "Shp_FirstWeighing";
-            lblBillOfLading.Text = "---";
-            lblCar.Text = "---";
-            lblAddress.Text = "---";
-            lblDriver.Text = "---";
-            lblDriverLicence.Text = "---";
+            
             lblDestination.Text = "---";
             lblSaler.Text = "---";
             lblSender.Text = "---";
@@ -886,7 +885,7 @@ namespace AshaWeighing
             lblLoadedBranches.Text = "0";
             lblNetWeight.Text = "0";
             lblDiscrepency.Text = "0";
-            _shipmentTable.Clear();
+            _WeighingOrderTable.Clear();
             dgShipmentDetail.DataSource = null;
             imgCamera1.Image = null;
             imgCamera2.Image = null;
@@ -903,80 +902,66 @@ namespace AshaWeighing
             {
                 if (_dbConnection.State == ConnectionState.Open)
                 {
-                    using (SqlCommand cmd = new SqlCommand("SELECT        SDSO_Shipment.Title AS ShipmentTitle, SDSO_Shipment.TransportCode, SDSO_Customer.Title AS Destination, WMLog_Vehicle.CarrierNumber, " +
-                                                           "                     WMLog_Driver.Title AS DriverTitle, WMLog_Driver.LicenseNumber, SDSO_Shipment.Guid, SDSO_Shipment.FormStatusCode AS ShipmentStatus, " +
-                                                           "                     contact1.Title AS TransportCompany, SDSO_Shipment.DestinationPoint AS City, SDSO_Shipment.TruckWeight, SDSO_Shipment.LoadedTruckWeight, " +
-                                                           "                     SDSO_Shipment.NetWeight, SDSO_Shipment.EstimatedWeight, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 10) AS EndDate, LEFT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 10) AS StartDate, " +
-                                                           "                     RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.EndTime), 8) AS EndTime, RIGHT(dbo.MiladiToShamsi(SDSO_Shipment.StartTime), 8) AS StartTime, " +
-                                                           "                     FirstWeighingMachineCode, SecondWeighingMachineCode, SDSO_Shipment.Code, SDSO_Shipment.EstimatedWeight, sdso_customer.CustomerCode, SDSO_Shipment.DeliverToAddress " +
-                                                           " FROM		  SDSO_Shipment LEFT OUTER JOIN SDSO_Customer " +
-		                                                   "         ON	SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode LEFT OUTER JOIN WMLog_Vehicle " +
-		                                                   "         ON	SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN WMLog_Driver " +
-		                                                   "         ON	SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WFFC_Contact AS contact1 " +
-		                                                   "         ON	SDSO_Shipment.TransportCompanyCode = contact1.Code LEFT OUTER JOIN WFFC_Contact AS contact2 " +
-		                                                   "        ON	SDSO_Customer.CustomerCode = contact2.code LEFT OUTER JOIN SISys_Location " +
-                                                           "         ON	contact2.GeograghyLocationCode = SISys_Location.Code " +
-                                                           " WHERE        (SDSO_Shipment.FormStatusCode IN ('Shp_FirstWeighing', 'Shp_SecondWeighing')) AND SDSO_Shipment.Code = '" + txtWeighingOrderCode.Text.PadLeft(8, '0') + "'"
-                                                            , _dbConnection))
+                    using (SqlCommand cmd = new SqlCommand("SELECT Code, Title FROM WMLog_WeighingOrder where "
+                                    + "WeighingTypeCode = '" + cmbWeighingTypes.SelectedValue 
+                                    + "' and FormStatusCode='Wgh_Weighing' and "
+                                    + "(POShipmentCode='" + txtWeighingOrderCode.Text 
+                                    + "' OR SOShipmentCode='" + txtWeighingOrderCode.Text + "' "
+                                    + "OR InvTransactionCode='" + txtWeighingOrderCode.Text 
+                                    + "' OR Reference='" + txtWeighingOrderCode.Text + "')"
+                                    , _dbConnection))
                     {
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        _shipmentTable.Clear();
-                        da.Fill(_shipmentTable);
-                        if (_shipmentTable.Rows.Count > 0)
+                        _WeighingOrderTable.Clear();
+                        da.Fill(_WeighingOrderTable);
+                        if (_WeighingOrderTable.Rows.Count > 1)
                         {
-                            lblSender.Text = _shipmentTable.Rows[0].ItemArray[8].ToString();
-                            lblSaler.Text = _shipmentTable.Rows[0].ItemArray[2].ToString();
-                            lblBillOfLading.Text = _shipmentTable.Rows[0].ItemArray[1].ToString();
-                            lblDestination.Text = _shipmentTable.Rows[0].ItemArray[9].ToString();
-                            lblCar.Text = _shipmentTable.Rows[0].ItemArray[3].ToString();
-                            lblDriver.Text = _shipmentTable.Rows[0].ItemArray[4].ToString();
-                            lblDriverLicence.Text = _shipmentTable.Rows[0].ItemArray[5].ToString();
-                            lblAddress.Text = _shipmentTable.Rows[0].ItemArray[23].ToString();
-                            sevenSegmentWeight.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[10]);
-                            //txtWeight2.Text = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[11]);
-                            //txtDate1.Text = _shipmentTable.Rows[0].ItemArray[15].ToString();
-                            //txtDate2.Text = _shipmentTable.Rows[0].ItemArray[14].ToString();
-                            //txtTime1.Text = _shipmentTable.Rows[0].ItemArray[17].ToString();
-                            //txtTime2.Text = _shipmentTable.Rows[0].ItemArray[16].ToString();
-                            lblWeighingResponsible.Text = _shipmentTable.Rows[0].ItemArray[18].ToString();
-                            //txtWeighingResponsible2.Text = _shipmentTable.Rows[0].ItemArray[19].ToString();
-                            _shipmentState = _shipmentTable.Rows[0].ItemArray[7].ToString();
+                            MessageBox.Show("بیش از یک شناسه توزین باز برای این کد وجود دارد. لطفاً با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
+                        }
+                        if (_WeighingOrderTable.Rows.Count == 1)
+                        {
+                            _weighingOrderCode = _WeighingOrderTable.Rows[0].Field<string>("Code");
                         }
                         else
                         {
-                            lblDriver.Text = "---";
-                            lblBillOfLading.Text = "---";
-                            lblAddress.Text = "---";
-                            lblCar.Text = "---";
-                            lblDriverLicence.Text = "---";
+                            ClearFields();
+                            MessageBox.Show("شناسه توزین باز با کد مذکور در سیستم وجود ندارد. لطفاً با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
                         }
                     }
 
                     calcWaitingCars();
 
-                    using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], SDSO_ShipmentDetail.ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل], CONVERT(DECIMAL(10,0), RemainedQuantity) as [باقیمانده مجوز] FROM SDSO_Shipment " +
-                        "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
-                        "INNER JOIN SDSO_ShipmentAuthorize ON SDSO_ShipmentDetail.ShipmentAuthorizeCode = SDSO_ShipmentAuthorize.Code " +
-                        "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE (SDSO_Shipment.FormStatusCode IN ('Shp_FirstWeighing', 'Shp_SecondWeighing')) AND SDSO_Shipment.Code = '" + txtWeighingOrderCode.Text.PadLeft(8, '0') + "'"
-                                                            , _dbConnection))
-                    {
-                        DataTable shipmentDetailTable = new DataTable();
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        da.Fill(shipmentDetailTable);
-                        if (shipmentDetailTable.Rows.Count > 0)
-                        {
-                            dgShipmentDetail.DataSource = shipmentDetailTable;
+                    //using (SqlCommand cmd = new SqlCommand("SELECT  Sequence as ردیف, PartSerialCode as [بارکد شمش], SDSO_ShipmentDetail.ProductCode as [کد کالا], WMInv_Part.Title as [نام کالا], ShipmentAuthorizeCode as [مجوز حمل], CONVERT(DECIMAL(10,0), RemainedQuantity) as [باقیمانده مجوز] FROM SDSO_Shipment " +
+                    //    "INNER JOIN SDSO_ShipmentDetail ON SDSO_Shipment.Code = SDSO_ShipmentDetail.ShipmentCode " +
+                    //    "INNER JOIN SDSO_ShipmentAuthorize ON SDSO_ShipmentDetail.ShipmentAuthorizeCode = SDSO_ShipmentAuthorize.Code " +
+                    //    "INNER JOIN WMInv_Part ON SDSO_ShipmentDetail.ProductCode = WMInv_Part.Code WHERE (SDSO_Shipment.FormStatusCode IN ('Shp_FirstWeighing', 'Shp_SecondWeighing')) AND SDSO_Shipment.Code = '" + txtWeighingOrderCode.Text.PadLeft(8, '0') + "'"
+                    //                                        , _dbConnection))
+                    //{
+                    //    DataTable shipmentDetailTable = new DataTable();
+                    //    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    //    da.Fill(shipmentDetailTable);
+                    //    if (shipmentDetailTable.Rows.Count > 0)
+                    //    {
+                    //        dgShipmentDetail.DataSource = shipmentDetailTable;
 
-                            var results = shipmentDetailTable.AsEnumerable().Count();
-                            lblLoadedBranches.Text = string.Format("{0:0.###}", results);
-                        }
-                        else
-                        {
-                            dgShipmentDetail.DataSource = null;
-                        }
-                    }
+                    //        var results = shipmentDetailTable.AsEnumerable().Count();
+                    //        lblLoadedBranches.Text = string.Format("{0:0.###}", results);
+                    //    }
+                    //    else
+                    //    {
+                    //        dgShipmentDetail.DataSource = null;
+                    //    }
+                    //}
 
-                    using (SqlCommand cmd = new SqlCommand("SELECT * FROM WMLog_WeighingOrderDetail"
+                    using (SqlCommand cmd = new SqlCommand("SELECT WMLog_WeighingOrderDetail.OperationSequence AS [ردیف], WMLog_WeighingOperation.Title AS [توزین], "
+                                    + "SISys_FormStatus.Title AS[وضعیت], CONVERT(Decimal(10, 2), WMLog_WeighingOrderDetail.Weight) AS[وزن], dbo.MiladiTOShamsi(WeighingDateTime) AS[تاریخ توزین], "
+                                    + "HREA_Personnel.Title AS[توزینکار], MRMA_Machine.Title AS[باسکول] "
+                                    + "FROM WMLog_WeighingOrderDetail LEFT OUTER JOIN WMLog_WeighingOperation "
+                                    + "ON WMLog_WeighingOrderDetail.OperationCode = WMLog_WeighingOperation.Code LEFT OUTER JOIN SISys_FormStatus "
+                                    + "ON WMLog_WeighingOrderDetail.OperationStatusCode = SISys_FormStatus.Code LEFT OUTER JOIN MRMA_Machine "
+                                    + "ON WMLog_WeighingOrderDetail.MachineCode = MRMA_Machine.Code LEFT OUTER JOIN HREA_Personnel "
+                                    + "ON WMLog_WeighingOrderDetail.ResponsibleCode = HREA_Personnel.PersonnelCode "
+                                    + "WHERE WeighingOrderCode='" + _weighingOrderCode + "'"
                                                             , _dbConnection))
                     {
                         DataTable weighingOrderDetailTable = new DataTable();
@@ -1024,18 +1009,18 @@ namespace AshaWeighing
                          da.Fill(CarCount);
                          if (CarCount.Rows.Count > 0)
                          {
-                             lblWaitingMachines2.Text = CarCount.Rows[0].ItemArray[0].ToString();
+                             //lblWaitingMachines2.Text = CarCount.Rows[0].ItemArray[0].ToString();
                          }
                          else
                          {
-                             lblWaitingMachines2.Text = "---";
+                             //lblWaitingMachines2.Text = "---";
                          }
                      }
                  }
              }
             catch(Exception)
              {
-                 lblWaitingMachines2.Text = "---";
+                 //lblWaitingMachines2.Text = "---";
              }
         }
         private void btnConnect_Click(object sender, EventArgs e)
