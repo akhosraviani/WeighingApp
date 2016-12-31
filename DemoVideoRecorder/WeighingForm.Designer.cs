@@ -82,6 +82,7 @@
             this.lblLoadedBranches = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.sevenSegmentWeight = new DmitryBrant.CustomControls.SevenSegmentArray();
             this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
             this.weighingBridgeIndicator = new System.Windows.Forms.Label();
             this.lblWeighingBridgeCode = new System.Windows.Forms.Label();
@@ -92,7 +93,6 @@
             this.lblCurrentTime = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctmConfig = new System.Windows.Forms.ToolStripMenuItem();
-            this.sevenSegmentWeight = new DmitryBrant.CustomControls.SevenSegmentArray();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -206,6 +206,7 @@
             this.txtWeighingOrderCode.Name = "txtWeighingOrderCode";
             this.txtWeighingOrderCode.Size = new System.Drawing.Size(188, 20);
             this.txtWeighingOrderCode.TabIndex = 1;
+            this.txtWeighingOrderCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtWeighingOrderCode_KeyDown);
             // 
             // btnClear
             // 
@@ -762,7 +763,7 @@
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(84, 16);
             this.label26.TabIndex = 5;
-            this.label26.Text = "وزن خالص بارگیری";
+            this.label26.Text = "وزن خالص";
             this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnGetStableData
@@ -827,15 +828,15 @@
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(84, 16);
             this.label34.TabIndex = 7;
-            this.label34.Text = "تعداد شاخه بارگیری شده";
+            this.label34.Text = "تعداد";
             this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 3;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel5.Controls.Add(this.sevenSegmentWeight, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel18, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel19, 2, 0);
@@ -848,6 +849,25 @@
             this.tableLayoutPanel5.Size = new System.Drawing.Size(486, 60);
             this.tableLayoutPanel5.TabIndex = 7;
             // 
+            // sevenSegmentWeight
+            // 
+            this.sevenSegmentWeight.ArrayCount = 5;
+            this.sevenSegmentWeight.ColorBackground = System.Drawing.Color.Black;
+            this.sevenSegmentWeight.ColorDark = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.sevenSegmentWeight.ColorLight = System.Drawing.Color.Red;
+            this.sevenSegmentWeight.DecimalShow = false;
+            this.sevenSegmentWeight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sevenSegmentWeight.ElementPadding = new System.Windows.Forms.Padding(3);
+            this.sevenSegmentWeight.ElementWidth = 10;
+            this.sevenSegmentWeight.ItalicFactor = 0F;
+            this.sevenSegmentWeight.Location = new System.Drawing.Point(200, 3);
+            this.sevenSegmentWeight.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.sevenSegmentWeight.Name = "sevenSegmentWeight";
+            this.sevenSegmentWeight.Size = new System.Drawing.Size(220, 57);
+            this.sevenSegmentWeight.TabIndex = 6;
+            this.sevenSegmentWeight.TabStop = false;
+            this.sevenSegmentWeight.Value = "0";
+            // 
             // tableLayoutPanel18
             // 
             this.tableLayoutPanel18.ColumnCount = 1;
@@ -855,12 +875,12 @@
             this.tableLayoutPanel18.Controls.Add(this.weighingBridgeIndicator, 0, 1);
             this.tableLayoutPanel18.Controls.Add(this.lblWeighingBridgeCode, 0, 0);
             this.tableLayoutPanel18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel18.Location = new System.Drawing.Point(339, 3);
+            this.tableLayoutPanel18.Location = new System.Drawing.Point(423, 3);
             this.tableLayoutPanel18.Name = "tableLayoutPanel18";
             this.tableLayoutPanel18.RowCount = 2;
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(144, 54);
+            this.tableLayoutPanel18.Size = new System.Drawing.Size(60, 54);
             this.tableLayoutPanel18.TabIndex = 4;
             // 
             // weighingBridgeIndicator
@@ -870,7 +890,7 @@
             this.weighingBridgeIndicator.ForeColor = System.Drawing.Color.Red;
             this.weighingBridgeIndicator.Location = new System.Drawing.Point(3, 27);
             this.weighingBridgeIndicator.Name = "weighingBridgeIndicator";
-            this.weighingBridgeIndicator.Size = new System.Drawing.Size(138, 27);
+            this.weighingBridgeIndicator.Size = new System.Drawing.Size(54, 27);
             this.weighingBridgeIndicator.TabIndex = 65;
             this.weighingBridgeIndicator.Text = "غیرفعال";
             this.weighingBridgeIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -881,7 +901,7 @@
             this.lblWeighingBridgeCode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblWeighingBridgeCode.Location = new System.Drawing.Point(3, 0);
             this.lblWeighingBridgeCode.Name = "lblWeighingBridgeCode";
-            this.lblWeighingBridgeCode.Size = new System.Drawing.Size(138, 27);
+            this.lblWeighingBridgeCode.Size = new System.Drawing.Size(54, 27);
             this.lblWeighingBridgeCode.TabIndex = 50;
             this.lblWeighingBridgeCode.Text = "باسکول ";
             this.lblWeighingBridgeCode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -899,7 +919,7 @@
             this.tableLayoutPanel19.RowCount = 2;
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel19.Size = new System.Drawing.Size(180, 60);
+            this.tableLayoutPanel19.Size = new System.Drawing.Size(200, 60);
             this.tableLayoutPanel19.TabIndex = 5;
             // 
             // lblWeighingResponsible
@@ -908,7 +928,7 @@
             this.lblWeighingResponsible.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblWeighingResponsible.Location = new System.Drawing.Point(3, 0);
             this.lblWeighingResponsible.Name = "lblWeighingResponsible";
-            this.lblWeighingResponsible.Size = new System.Drawing.Size(174, 36);
+            this.lblWeighingResponsible.Size = new System.Drawing.Size(194, 36);
             this.lblWeighingResponsible.TabIndex = 49;
             this.lblWeighingResponsible.Text = "توزین کار";
             this.lblWeighingResponsible.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -916,8 +936,8 @@
             // tableLayoutPanel20
             // 
             this.tableLayoutPanel20.ColumnCount = 2;
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.86468F));
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.13532F));
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.3282F));
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.67181F));
             this.tableLayoutPanel20.Controls.Add(this.lblCurrentDate, 0, 0);
             this.tableLayoutPanel20.Controls.Add(this.lblCurrentTime, 0, 0);
             this.tableLayoutPanel20.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -926,7 +946,7 @@
             this.tableLayoutPanel20.Name = "tableLayoutPanel20";
             this.tableLayoutPanel20.RowCount = 1;
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel20.Size = new System.Drawing.Size(180, 24);
+            this.tableLayoutPanel20.Size = new System.Drawing.Size(200, 24);
             this.tableLayoutPanel20.TabIndex = 0;
             // 
             // lblCurrentDate
@@ -936,7 +956,7 @@
             this.lblCurrentDate.Location = new System.Drawing.Point(2, 0);
             this.lblCurrentDate.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCurrentDate.Name = "lblCurrentDate";
-            this.lblCurrentDate.Size = new System.Drawing.Size(92, 24);
+            this.lblCurrentDate.Size = new System.Drawing.Size(102, 24);
             this.lblCurrentDate.TabIndex = 50;
             this.lblCurrentDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -944,10 +964,10 @@
             // 
             this.lblCurrentTime.AutoSize = true;
             this.lblCurrentTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCurrentTime.Location = new System.Drawing.Point(98, 0);
+            this.lblCurrentTime.Location = new System.Drawing.Point(108, 0);
             this.lblCurrentTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCurrentTime.Name = "lblCurrentTime";
-            this.lblCurrentTime.Size = new System.Drawing.Size(80, 24);
+            this.lblCurrentTime.Size = new System.Drawing.Size(90, 24);
             this.lblCurrentTime.TabIndex = 49;
             this.lblCurrentTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -964,25 +984,6 @@
             this.ctmConfig.Name = "ctmConfig";
             this.ctmConfig.Size = new System.Drawing.Size(117, 22);
             this.ctmConfig.Text = "تنظیمات";
-            // 
-            // sevenSegmentWeight
-            // 
-            this.sevenSegmentWeight.ArrayCount = 5;
-            this.sevenSegmentWeight.ColorBackground = System.Drawing.Color.Black;
-            this.sevenSegmentWeight.ColorDark = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.sevenSegmentWeight.ColorLight = System.Drawing.Color.Red;
-            this.sevenSegmentWeight.DecimalShow = false;
-            this.sevenSegmentWeight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sevenSegmentWeight.ElementPadding = new System.Windows.Forms.Padding(3);
-            this.sevenSegmentWeight.ElementWidth = 10;
-            this.sevenSegmentWeight.ItalicFactor = 0F;
-            this.sevenSegmentWeight.Location = new System.Drawing.Point(180, 3);
-            this.sevenSegmentWeight.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.sevenSegmentWeight.Name = "sevenSegmentWeight";
-            this.sevenSegmentWeight.Size = new System.Drawing.Size(156, 57);
-            this.sevenSegmentWeight.TabIndex = 6;
-            this.sevenSegmentWeight.TabStop = false;
-            this.sevenSegmentWeight.Value = "0";
             // 
             // WeighingForm
             // 

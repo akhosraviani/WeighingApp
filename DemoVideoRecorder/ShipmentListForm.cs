@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Text;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace AshaWeighing
@@ -24,18 +20,19 @@ namespace AshaWeighing
         private SqlConnection _dbConnector;
         private SqlCommand _dbCommand;
         private SqlDataAdapter _dbAdapter;
-        private DataTable _shipmentTable;
+        private DataTable _weighingOrderTable;
         public string shipmentCode;
         public ShipmentListForm()
         {
             InitializeComponent();
-            this.Load += ShipmentListForm_Load;
+            Load += ShipmentListForm_Load;
             Initialize();
         }
 
         void ShipmentListForm_Load(object sender, EventArgs e)
         {
-            this.Font = myFont;
+            Font = myFont;
+            doSearch("");
         }
 
         private void Initialize()
@@ -70,20 +67,19 @@ namespace AshaWeighing
                     _dbConnector.Open();
                 }
 
-                _dbCommand = new SqlCommand("SELECT CASE WHEN SDSO_Shipment.FormStatusCode='Shp_FirstWeighing' THEN 'توزین اولیه' WHEN SDSO_Shipment.FormStatusCode='Shp_SecondWeighing' THEN 'توزین ثانویه' END AS [وضعیت], " +
-                                                "SDSO_Shipment.Code AS [کد محموله], SDSO_Shipment.Title AS [عنوان محموله], SDSO_Customer.Title AS [گیرنده], WMLog_Vehicle.CarrierNumber AS [شماره ماشین], WMLog_Driver.Title AS [نام راننده], WMLog_Driver.LicenseNumber AS [شماره گواهینامه], SDSO_Shipment.Guid " +
-                                                "FROM SDSO_Shipment LEFT OUTER JOIN WMLog_Driver " +
-                                                "ON SDSO_Shipment.DriverCode = WMLog_Driver.DriverCode LEFT OUTER JOIN WMLog_Vehicle " +
-                                                "ON SDSO_Shipment.VehicleCode = WMLog_Vehicle.Code LEFT OUTER JOIN SDSO_Customer " +
-                                                "ON SDSO_Shipment.CustomerCode = SDSO_Customer.CustomerCode WHERE (SDSO_Shipment.FormStatusCode IN ('Shp_FirstWeighing', 'Shp_SecondWeighing') ) AND SDSO_Shipment.Code LIKE '%" + txtSearch.Text + "%'");
+                _dbCommand = new SqlCommand("SELECT Code as [کد توزین], Title as [عنوان], Field1 as [اطلاعات 1], Field2 as [اطلاعات 2], " +
+                                            "Field3 as [اطلاعات 3], Field4 as [اطلاعات 4], Field5 as [اطلاعات 5], Field6 as [اطلاعات 6], " + 
+                                            "Field7 as [اطلاعات 7], SOShipmentCode as [شماره حمل فروش], POShipmentCode as [شماره حمل خرید], " +
+                                            "InvTransactionCode as [شماره تراکنش انبار], Reference as [عطف به] FROM WMLog_WeighingOrder  " +
+                                            "WHERE FormStatusCode='Wgh_Weighing'");
                 _dbCommand.Connection = _dbConnector;
                 _dbAdapter = new SqlDataAdapter(_dbCommand);
-                _shipmentTable = new DataTable();
-                _dbAdapter.Fill(_shipmentTable);
+                _weighingOrderTable = new DataTable();
+                _dbAdapter.Fill(_weighingOrderTable);
 
-                if (_shipmentTable.Rows.Count > 0)
+                if (_weighingOrderTable.Rows.Count > 0)
                 {
-                    dataGridView1.DataSource = _shipmentTable;
+                    dataGridView1.DataSource = _weighingOrderTable;
                 }
 
                 dataGridView1.DefaultCellStyle.NullValue = "---";
@@ -119,9 +115,9 @@ namespace AshaWeighing
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            this.shipmentCode = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Close();
+            shipmentCode = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

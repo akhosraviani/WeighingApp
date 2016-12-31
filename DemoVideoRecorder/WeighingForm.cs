@@ -31,12 +31,15 @@ namespace AshaWeighing
         private SqlConnection _dbConnection;
         private string _weighingOrderCode = string.Empty;
         private DataTable _WeighingDetail = new DataTable();
-        private string _shipmentState = "Shp_FirstWeighing";
         private string _weighingDetailCriteria = string.Empty;
         private string _weighingMasterCriteria = string.Empty;
         private string _weighingStatusCriteria = string.Empty;
         private DataTable _WeighingOrderTable;
+        private DataTable _weighingOrderDetailTable;
         private bool _negativeWeight = false;
+        private double _emptyWeight = -1;
+        private double _estimatedWeight = -1;
+        private double _secondQuantity = -1;
         private Dictionary<string, string> _configs;
         private List<WeighingOrderType> _weighingTypes;
         private System.Windows.Forms.Timer tmr = new System.Windows.Forms.Timer();
@@ -398,29 +401,23 @@ namespace AshaWeighing
                         sevenSegmentWeight.ColorBackground = Color.Black;
                         sevenSegmentWeight.ColorLight = Color.Red;
                         sevenSegmentWeight.Value = intResult.ToString();
+
                     }
 
-                    //if (_shipmentState == "Shp_SecondWeighing")
-                    //{
-                    //    double weight1, weight2;
-                    //    if (double.TryParse(txtWeight1.Text, out weight1) && double.TryParse(txtWeight2.Text, out weight2))
-                    //    {
-                    //        lblNetWeightLoad.Text = string.Format("{0:0.###}", Math.Abs(weight2 - weight1));
+                    if (_weighingOrderDetailTable.Rows.Count > 0)
+                    {
+                        double weight1;
+                        if (double.TryParse(sevenSegmentWeight.Value, out weight1) && _emptyWeight > 0)
+                        {
+                            lblNetWeight.Text = string.Format("{0:0.###}", Math.Abs(_emptyWeight - weight1));
 
-                    //        double netWeight, estimatedWeight;
-                    //        if (double.TryParse(lblNetWeightLoad.Text, out netWeight) && double.TryParse(_shipmentTable.Rows[0].ItemArray[21].ToString(), out estimatedWeight))
-                    //        {
-                    //            lblDiscrepency.Text = string.Format("{0:0.###}", Math.Abs((estimatedWeight - netWeight) / estimatedWeight * 100));
-                    //        }
-                    //    }
-                    //}
-
-
-                    //if (_shipmentTable.Rows.Count > 0)
-                    //{
-                    //    sevenSegmentWeight.Value = string.Format("{0:0.###}", _shipmentTable.Rows[0].ItemArray[10]);
-                    //    lblWeighingResponsible.Text = _shipmentTable.Rows[0].ItemArray[18].ToString();
-                    //}
+                            double netWeight;
+                            if (double.TryParse(lblNetWeight.Text, out netWeight) && _estimatedWeight > 0)
+                            {
+                                lblDiscrepency.Text = string.Format("{0:0.###}", Math.Abs((_estimatedWeight - netWeight) / _estimatedWeight * 100));
+                            }
+                        }
+                    }
                 }
                 catch (Exception)
                 { }
@@ -631,95 +628,6 @@ namespace AshaWeighing
                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
                     == DialogResult.OK)
                 {
-                //    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET TruckWeight=@TruckWeight, FirstWeighingMachineCode=@FirstMachine " +
-                //                "WHERE Code = @ShipmentCode", _dbConnection);
-                //    sqlCommand.Parameters.AddWithValue("@ShipmentCode", _WeighingOrderTable.Rows[0].ItemArray[20].ToString());
-                //    sqlCommand.Parameters.AddWithValue("@TruckWeight", sevenSegmentWeight.Text);
-                //    sqlCommand.Parameters.AddWithValue("@FirstMachine", Globals.WeighingMachineCode);
-                //    sqlCommand.ExecuteNonQuery();
-                //    sqlCommand.Dispose();
-
-                //    sqlCommand = new SqlCommand("SDSO_001_ShipmentStatus", _dbConnection);
-                //    sqlCommand.CommandType = CommandType.StoredProcedure;
-
-                //    // set up the parameters
-                //    sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
-                //    sqlCommand.Parameters.Add("@StatusCode", SqlDbType.NVarChar, 64);
-                //    sqlCommand.Parameters.Add("@NewStatusCode", SqlDbType.NVarChar, 64);
-                //    sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
-                //    sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
-                //    sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
-                //    sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
-
-                //    // set parameter values
-                //    sqlCommand.Parameters["@shipmentCode"].Value = _WeighingOrderTable.Rows[0].ItemArray[20].ToString();
-                //    sqlCommand.Parameters["@StatusCode"].Value = "Shp_FirstWeighing";
-                //    sqlCommand.Parameters["@NewStatusCode"].Value = "Shp_Loading";
-                //    sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                //    sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
-                //    sqlCommand.Parameters["@ReturnMessage"].Value = "";
-                //    sqlCommand.Parameters["@ReturnValue"].Value = 1;
-
-                //    sqlCommand.ExecuteNonQuery();
-                //    string returnMessage = Convert.ToString(sqlCommand.Parameters["@ReturnMessage"].Value);
-                //    MessageBox.Show(returnMessage, "پیغام", MessageBoxButtons.OK,
-                //        MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                //    sqlCommand.Dispose();
-
-                //    foreach (var item in images)
-                //    {
-                //        if (item == null) continue;
-                //        var image = imageToByteArray(item);
-                //        var date = item.Tag;
-
-                //        if (image != null)
-                //        {
-                //            sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                //                                                       "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                //            sqlCommand.Parameters.AddWithValue("@date", date);
-                //            sqlCommand.Parameters.AddWithValue("@Image", image);
-                //            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                //            sqlCommand.ExecuteNonQuery();
-                //            sqlCommand.Dispose();
-
-                //            sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                //            SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                //            DataTable BinaryTable = new DataTable();
-                //            sqlAdapter.Fill(BinaryTable);
-                //            sqlCommand.Dispose();
-
-                //            sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                //                                                "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                //            sqlCommand.Parameters.AddWithValue("@MainGuid", _WeighingOrderTable.Rows[0].ItemArray[6].ToString());
-                //            sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                //            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                //            sqlCommand.ExecuteNonQuery();
-                //            sqlCommand.Dispose();
-                //        }
-                //    }
-
-                //    ClearFields();
-                //}
-                //else if ((_shipmentState == "Shp_SecondWeighing" || _shipmentState == "Shp_Loading") &&
-                //    MessageBox.Show("اطلاعات به دیسپچینگ ارسال خواهد شد. آیا مطمئن هستید؟", "تکمیل توزین", MessageBoxButtons.OKCancel,
-                //    MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-                //    == DialogResult.OK)
-                //{
-                //    double weight1, weight2;
-                //    //if (double.TryParse(txtWeight1.Text, out weight1) && double.TryParse(txtWeight2.Text, out weight2))
-                //    //{
-                //    //    lblNetWeightLoad.Text = string.Format("{0:0.###}", Math.Abs(weight2 - weight1));
-                //    //}
-
-                //    sqlCommand = new SqlCommand("UPDATE SDSO_Shipment SET LoadedTruckWeight=@LoadedTruckWeight, NetWeight=@NetWeight, SecondWeighingMachineCode=@SecondMachine " +
-                //                "WHERE Code = @ShipmentCode", _dbConnection);
-                //    sqlCommand.Parameters.AddWithValue("@ShipmentCode", _WeighingOrderTable.Rows[0].ItemArray[20].ToString());
-                //    sqlCommand.Parameters.AddWithValue("@NetWeight", lblNetWeight.Text);
-                //    //sqlCommand.Parameters.AddWithValue("@LoadedTruckWeight", txtWeight2.Text);
-                //    sqlCommand.Parameters.AddWithValue("@SecondMachine", Globals.WeighingMachineCode);
-                //    sqlCommand.ExecuteNonQuery();
-                //    sqlCommand.Dispose();
-
                     sqlCommand = new SqlCommand("WMLog_000_InsertWeighing", _dbConnection);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
 
@@ -741,10 +649,10 @@ namespace AshaWeighing
                     sqlCommand.Parameters["@WeighingOrderCode"].Value = _weighingOrderCode;
                     sqlCommand.Parameters["@WeighingTypeCode"].Value = cmbWeighingTypes.SelectedValue;
                     sqlCommand.Parameters["@Weight"].Value = Int32.Parse(sevenSegmentWeight.Value);
-                    sqlCommand.Parameters["@Image1"].Value = imageToByteArray(images[0]);
-                    sqlCommand.Parameters["@Image2"].Value = imageToByteArray(images[1]);
-                    sqlCommand.Parameters["@Image3"].Value = imageToByteArray(images[2]);
-                    sqlCommand.Parameters["@Image4"].Value = imageToByteArray(images[3]);
+                    sqlCommand.Parameters["@Image1"].Value = imageToByteArray(imgCamera1.Image);
+                    sqlCommand.Parameters["@Image2"].Value = imageToByteArray(imgCamera2.Image);
+                    sqlCommand.Parameters["@Image3"].Value = imageToByteArray(imgCamera3.Image);
+                    sqlCommand.Parameters["@Image4"].Value = imageToByteArray(imgCamera4.Image);
                     sqlCommand.Parameters["@MachineCode"].Value = Globals.WeighingMachineCode;
                     sqlCommand.Parameters["@ResponsibleCode"].Value = Globals.PersonnelCode;
                     sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
@@ -770,107 +678,6 @@ namespace AshaWeighing
                         sqlCommand.Dispose();
                     }
                     ClearFields();
-
-                    //    foreach (var item in images)
-                    //    {
-                    //        if (item == null) continue;
-                    //        var image = imageToByteArray(item);
-                    //        var date = item.Tag;
-
-                    //        if (image != null)
-                    //        {
-                    //            sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                    //                                                       "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                    //            sqlCommand.Parameters.AddWithValue("@date", date);
-                    //            sqlCommand.Parameters.AddWithValue("@Image", image);
-                    //            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                    //            sqlCommand.ExecuteNonQuery();
-                    //            sqlCommand.Dispose();
-
-                    //            sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                    //            SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                    //            DataTable BinaryTable = new DataTable();
-                    //            sqlAdapter.Fill(BinaryTable);
-                    //            sqlCommand.Dispose();
-
-                    //            sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                    //                                                "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                    //            sqlCommand.Parameters.AddWithValue("@MainGuid", _WeighingOrderTable.Rows[0].ItemArray[6].ToString());
-                    //            sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                    //            sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                    //            sqlCommand.ExecuteNonQuery();
-                    //            sqlCommand.Dispose();
-                    //        }
-                    //    }
-                    //    ClearFields();
-                    //}
-                    //else if (returnValue == 0)
-                    //{
-                    //    if (MessageBox.Show(returnMessage, "اخطار", MessageBoxButtons.OK,
-                    //        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == DialogResult.OK)
-                    //    {
-                    //        sqlCommand.Dispose();
-
-                    //        if (MessageBox.Show("آیا مغایرت وزنی تایید می شود؟", "پیغام", MessageBoxButtons.YesNo,
-                    //        MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                    //        {
-                    //            sqlCommand = new SqlCommand("SDSO_001_ShipmentWeightApprove", _dbConnection);
-                    //            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-                    //            // set up the parameters
-                    //            sqlCommand.Parameters.Add("@ShipmentCode", SqlDbType.NVarChar, 64);
-                    //            sqlCommand.Parameters.Add("@PositionCode", SqlDbType.NVarChar, 64);
-                    //            sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
-                    //            sqlCommand.Parameters.Add("@ReturnMessage", SqlDbType.NVarChar, 1024).Direction = ParameterDirection.Output;
-                    //            sqlCommand.Parameters.Add("@ReturnValue", SqlDbType.Int).Direction = ParameterDirection.Output;
-
-                    //            // set parameter values
-                    //            sqlCommand.Parameters["@shipmentCode"].Value = _WeighingOrderTable.Rows[0].ItemArray[20].ToString();
-                    //            sqlCommand.Parameters["@PositionCode"].Value = "Pos_999";
-                    //            sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
-                    //            sqlCommand.Parameters["@ReturnMessage"].Value = "";
-                    //            sqlCommand.Parameters["@ReturnValue"].Value = 1;
-
-                    //            sqlCommand.ExecuteNonQuery();
-                    //            sqlCommand.Dispose();
-
-                    //            foreach (var item in images)
-                    //            {
-                    //                if (item == null) continue;
-                    //                var image = imageToByteArray(item);
-                    //                var date = item.Tag;
-
-                    //                if (image != null)
-                    //                {
-                    //                    sqlCommand = new SqlCommand("INSERT INTO SIDev_Binary (BinaryTitle, BinaryPath, BinaryData, BinaryExt, BinarySize, CreatorID, AttachDate, Embedded, Guid)" +
-                    //                                                               "VALUES (@date, @date, @Image, '.jpg', @ImageSize, 1, GETDATE(), 1, NEWID())", _dbConnection);
-                    //                    sqlCommand.Parameters.AddWithValue("@date", date);
-                    //                    sqlCommand.Parameters.AddWithValue("@Image", image);
-                    //                    sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                    //                    sqlCommand.ExecuteNonQuery();
-                    //                    sqlCommand.Dispose();
-
-                    //                    sqlCommand = new SqlCommand("SELECT ID, Guid FROM SIDev_Binary WHERE BinaryTitle = '" + date + "'", _dbConnection);
-                    //                    SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCommand);
-                    //                    DataTable BinaryTable = new DataTable();
-                    //                    sqlAdapter.Fill(BinaryTable);
-                    //                    sqlCommand.Dispose();
-
-                    //                    sqlCommand = new SqlCommand("INSERT INTO SIDev_Attachment (MainSysEntityID, RelatedSysEntityID, MainItemGuid, RelatedItemGuid, AttachmentType)" +
-                    //                                                        "VALUES (2631, 2822, @MainGuid, @RelatedGuid, 2)", _dbConnection);
-                    //                    sqlCommand.Parameters.AddWithValue("@MainGuid", _WeighingOrderTable.Rows[0].ItemArray[6].ToString());
-                    //                    sqlCommand.Parameters.AddWithValue("@RelatedGuid", BinaryTable.Rows[0].ItemArray[1].ToString());
-                    //                    sqlCommand.Parameters.AddWithValue("@ImageSize", image.Length);
-                    //                    sqlCommand.ExecuteNonQuery();
-                    //                    sqlCommand.Dispose();
-                    //                }
-                    //            }
-                    //            ClearFields();
-                    //        }
-                    //    }
-                    //}
-                    //sqlCommand.Dispose(); 
-                    //ClearFields();
                 }
             }
             catch (InvalidOperationException ex)
@@ -891,10 +698,12 @@ namespace AshaWeighing
         private void ClearFields()
         {
             _weighingOrderCode = null;
-            _shipmentState = "Shp_FirstWeighing";
-            
-            //txtWeighingOrderCode.Text = "";
+
+            txtWeighingOrderCode.Text = "";
             //sevenSegmentWeight.Value = "0";
+            _isStable = false;
+            btnGetStableData.Enabled = true;
+            btnSaveData.Enabled = false;
             lblLoadedBranches.Text = "0";
             lblNetWeight.Text = "0";
             lblDiscrepency.Text = "0";
@@ -906,6 +715,8 @@ namespace AshaWeighing
             imgCamera2.Image = null;
             imgCamera3.Image = null;
             imgCamera4.Image = null;
+            _emptyWeight = -1;
+            _estimatedWeight = -1;
         }
 
         private void btnWeighingOrderSearch_Click(object sender, EventArgs e)
@@ -917,120 +728,148 @@ namespace AshaWeighing
             {
                 if (_dbConnection.State == ConnectionState.Open)
                 {
-                    using (SqlCommand cmd = new SqlCommand("SELECT Code, Title, WeighingTypeCode FROM WMLog_WeighingOrder where "
-                                    + "FormStatusCode='Wgh_Weighing' and "
-                                    + "(POShipmentCode='" + txtWeighingOrderCode.Text 
-                                    + "' OR SOShipmentCode='" + txtWeighingOrderCode.Text + "' "
-                                    + "OR InvTransactionCode='" + txtWeighingOrderCode.Text 
-                                    + "' OR Reference='" + txtWeighingOrderCode.Text
-                                    + "' OR Code='" + txtWeighingOrderCode.Text + "')"
-                                    , _dbConnection))
+                    if (!string.IsNullOrEmpty(txtWeighingOrderCode.Text))
                     {
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        _WeighingOrderTable.Clear();
-                        da.Fill(_WeighingOrderTable);
-                        if (_WeighingOrderTable.Rows.Count > 1)
+                        using (SqlCommand cmd = new SqlCommand("SELECT Code, Title, WeighingTypeCode FROM WMLog_WeighingOrder where "
+                                        + "FormStatusCode='Wgh_Weighing' and "
+                                        + "(POShipmentCode='" + txtWeighingOrderCode.Text
+                                        + "' OR SOShipmentCode='" + txtWeighingOrderCode.Text + "' "
+                                        + "OR InvTransactionCode='" + txtWeighingOrderCode.Text
+                                        + "' OR Reference='" + txtWeighingOrderCode.Text
+                                        + "' OR Code='" + txtWeighingOrderCode.Text + "')"
+                                        , _dbConnection))
                         {
-                            DataRow[] results = _WeighingOrderTable.Select("WeighingTypeCode='" +cmbWeighingTypes.SelectedValue+"'");
-                            if (results.Count() > 1)
-                                MessageBox.Show("بیش از یک شناسه توزین باز برای این کد وجود دارد. لطفاً با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            _WeighingOrderTable.Clear();
+                            da.Fill(_WeighingOrderTable);
+                            if (_WeighingOrderTable.Rows.Count > 1)
+                            {
+                                DataRow[] results = _WeighingOrderTable.Select("WeighingTypeCode='" + cmbWeighingTypes.SelectedValue + "'");
+                                if (results.Count() > 1)
+                                    MessageBox.Show("بیش از یک شناسه توزین باز برای این کد وجود دارد. لطفاً با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
+                                else
+                                    _weighingOrderCode = results[0].Field<string>("Code");
+                            }
+                            if (_WeighingOrderTable.Rows.Count == 1)
+                            {
+                                _weighingOrderCode = _WeighingOrderTable.Rows[0].Field<string>("Code");
+                                cmbWeighingTypes.SelectedValue = _WeighingOrderTable.Rows[0].Field<string>("WeighingTypeCode");
+                                cmbWeighingTypes_SelectedValueChanged(cmbWeighingTypes, new EventArgs());
+                            }
                             else
-                                _weighingOrderCode = results[0].Field<string>("Code");
+                            {
+                                MessageBox.Show("شناسه توزین باز با کد مذکور در سیستم وجود ندارد. لطفاً با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
+                            }
                         }
-                        if (_WeighingOrderTable.Rows.Count == 1)
-                        {
-                            _weighingOrderCode = _WeighingOrderTable.Rows[0].Field<string>("Code");
-                            cmbWeighingTypes.SelectedValue = _WeighingOrderTable.Rows[0].Field<string>("WeighingTypeCode");
-                            cmbWeighingTypes_SelectedValueChanged(cmbWeighingTypes, new EventArgs());
-                        }
-                        else
-                        {
-                            ClearFields();
-                            MessageBox.Show("شناسه توزین باز با کد مذکور در سیستم وجود ندارد. لطفاً با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
-                            return;
-                        }
-                    }
 
-                    using (SqlCommand cmd = new SqlCommand(_weighingMasterCriteria.Replace("@Code", _weighingOrderCode)
-                                    , _dbConnection))
-                    {
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        DataTable weighingFieldsTable = new DataTable();
-                        weighingFieldsTable.Clear();
-                        da.Fill(weighingFieldsTable);
-                        if (weighingFieldsTable.Rows.Count > 0)
+                        using (SqlCommand cmd = new SqlCommand(_weighingMasterCriteria.Replace("@Code", _weighingOrderCode)
+                                        , _dbConnection))
                         {
-                            dgWeighingData.DataSource = weighingFieldsTable;
-                            dgWeighingData.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                            dgWeighingData.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            DataTable weighingFieldsTable = new DataTable();
+                            weighingFieldsTable.Clear();
+                            da.Fill(weighingFieldsTable);
+                            if (weighingFieldsTable.Rows.Count > 0)
+                            {
+                                dgWeighingData.DataSource = weighingFieldsTable;
+                                dgWeighingData.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                                dgWeighingData.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                            }
+                            else
+                            {
+                                MessageBox.Show("دریافت اطلاعات تکمیلی توزین با خطا مواجه شد. لطفا با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
+                            }
                         }
-                        else
-                        {
-                            MessageBox.Show("دریافت اطلاعات تکمیلی توزین با خطا مواجه شد. لطفا با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
-                        }
-                    }
 
-                    using (SqlCommand cmd = new SqlCommand(_weighingDetailCriteria.Replace("@Code", _weighingOrderCode)
-                                    , _dbConnection))
-                    {
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        _WeighingDetail.Clear();
-                        da.Fill(_WeighingDetail);
-                        if (_WeighingDetail.Rows.Count > 0)
+                        using (SqlCommand cmd = new SqlCommand(_weighingDetailCriteria.Replace("@Code", _weighingOrderCode)
+                                        , _dbConnection))
                         {
-                            dgShipmentDetail.DataSource = _WeighingDetail;
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            _WeighingDetail.Clear();
+                            da.Fill(_WeighingDetail);
+                            if (_WeighingDetail.Rows.Count > 0)
+                            {
+                                dgShipmentDetail.DataSource = _WeighingDetail;
+                            }
                         }
-                    }
 
-                    using (SqlCommand cmd = new SqlCommand(_weighingStatusCriteria.Replace("@Code", _weighingOrderCode)
-                                    , _dbConnection))
-                    {
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        DataTable weighingStatusTable = new DataTable();
-                        weighingStatusTable.Clear();
-                        da.Fill(weighingStatusTable);
-                        if (weighingStatusTable.Rows.Count > 0)
+                        using (SqlCommand cmd = new SqlCommand("SELECT WMLog_WeighingOrderDetail.OperationSequence AS [ردیف], WMLog_WeighingOperation.Title AS [توزین], "
+                                        + "SISys_FormStatus.Title AS[وضعیت], CONVERT(Decimal(10, 0), WMLog_WeighingOrderDetail.Weight) AS[وزن], dbo.MiladiTOShamsi(WeighingDateTime) AS[تاریخ توزین], "
+                                        + "HREA_Personnel.Title AS[توزینکار], MRMA_Machine.Title AS[باسکول] "
+                                        + "FROM WMLog_WeighingOrderDetail LEFT OUTER JOIN WMLog_WeighingOperation "
+                                        + "ON WMLog_WeighingOrderDetail.OperationCode = WMLog_WeighingOperation.Code LEFT OUTER JOIN SISys_FormStatus "
+                                        + "ON WMLog_WeighingOrderDetail.OperationStatusCode = SISys_FormStatus.Code LEFT OUTER JOIN MRMA_Machine "
+                                        + "ON WMLog_WeighingOrderDetail.MachineCode = MRMA_Machine.Code LEFT OUTER JOIN HREA_Personnel "
+                                        + "ON WMLog_WeighingOrderDetail.ResponsibleCode = HREA_Personnel.PersonnelCode "
+                                        + "WHERE WeighingOrderCode='" + _weighingOrderCode + "'"
+                                                                , _dbConnection))
                         {
-                            dgWeighingStatus.DataSource = weighingStatusTable;
-                            dgWeighingStatus.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                            dgWeighingStatus.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                            _weighingOrderDetailTable = new DataTable();
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            da.Fill(_weighingOrderDetailTable);
+                            if (_weighingOrderDetailTable.Rows.Count > 0)
+                            {
+                                dgWeighingOrderDetail.DataSource = _weighingOrderDetailTable;
+
+                                var results = _weighingOrderDetailTable.AsEnumerable().Count();
+                            }
+                            else
+                            {
+                                dgWeighingOrderDetail.DataSource = null;
+                            }
                         }
-                    }
-
-                    using (SqlCommand cmd = new SqlCommand("SELECT WMLog_WeighingOrderDetail.OperationSequence AS [ردیف], WMLog_WeighingOperation.Title AS [توزین], "
-                                    + "SISys_FormStatus.Title AS[وضعیت], CONVERT(Decimal(10, 2), WMLog_WeighingOrderDetail.Weight) AS[وزن], dbo.MiladiTOShamsi(WeighingDateTime) AS[تاریخ توزین], "
-                                    + "HREA_Personnel.Title AS[توزینکار], MRMA_Machine.Title AS[باسکول] "
-                                    + "FROM WMLog_WeighingOrderDetail LEFT OUTER JOIN WMLog_WeighingOperation "
-                                    + "ON WMLog_WeighingOrderDetail.OperationCode = WMLog_WeighingOperation.Code LEFT OUTER JOIN SISys_FormStatus "
-                                    + "ON WMLog_WeighingOrderDetail.OperationStatusCode = SISys_FormStatus.Code LEFT OUTER JOIN MRMA_Machine "
-                                    + "ON WMLog_WeighingOrderDetail.MachineCode = MRMA_Machine.Code LEFT OUTER JOIN HREA_Personnel "
-                                    + "ON WMLog_WeighingOrderDetail.ResponsibleCode = HREA_Personnel.PersonnelCode "
-                                    + "WHERE WeighingOrderCode='" + _weighingOrderCode + "'"
-                                                            , _dbConnection))
-                    {
-                        DataTable weighingOrderDetailTable = new DataTable();
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        da.Fill(weighingOrderDetailTable);
-                        if (weighingOrderDetailTable.Rows.Count > 0)
+                        using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(WMLog_WeighingOrderDetail.Weight, 0) AS [Weight], "
+                                        + "ISNULL(WMLog_WeighingOrderDetail.EstimatedQuantity, 0) AS [EstimatedQuantity], "
+                                        + "ISNULL(WMLog_WeighingOrderDetail.SecondQuantity, 0) AS [SecondQuantity] "
+                                        + "FROM WMLog_WeighingOrderDetail "
+                                        + "WHERE WeighingOrderCode='" + _weighingOrderCode + "' AND OperationStatusCode='LogOpr_Completed' ORDER BY OperationSequence DESC"
+                                                                , _dbConnection))
                         {
-                            dgWeighingOrderDetail.DataSource = weighingOrderDetailTable;
-
-                            var results = weighingOrderDetailTable.AsEnumerable().Count();
-                        }
-                        else
-                        {
-                            dgWeighingOrderDetail.DataSource = null;
+                            DataTable WeightTable = new DataTable();
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            da.Fill(WeightTable);
+                            if (WeightTable.Rows.Count > 0)
+                            {
+                                _emptyWeight = decimal.ToDouble(WeightTable.Rows[0].Field<decimal>("Weight"));
+                                _estimatedWeight = decimal.ToDouble(WeightTable.Rows[0].Field<decimal>("EstimatedQuantity"));
+                                _secondQuantity = decimal.ToDouble(WeightTable.Rows[0].Field<decimal>("SecondQuantity"));
+                                lblLoadedBranches.Text = _secondQuantity.ToString();
+                            }
+                            else
+                            {
+                                _emptyWeight = -1;
+                                _estimatedWeight = -1;
+                                _secondQuantity = -1;
+                            }
                         }
                     }
                 }
             }
             catch (Exception exp)
             {
-                InvokeGuiThread(() =>
+                var t = exp;
+            }
+            
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(_weighingStatusCriteria
+                                    , _dbConnection))
                 {
-                    DatabaseIndicator.Text = "غیرفعال";
-                    DatabaseIndicator.ForeColor = Color.Red;
-                });
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable weighingStatusTable = new DataTable();
+                    weighingStatusTable.Clear();
+                    da.Fill(weighingStatusTable);
+                    if (weighingStatusTable.Rows.Count > 0)
+                    {
+                        dgWeighingStatus.DataSource = weighingStatusTable;
+                        dgWeighingStatus.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                        dgWeighingStatus.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                var j = exp;
             }
         }
 
@@ -1156,6 +995,14 @@ namespace AshaWeighing
         private void dgWeighingOrderDetail_SelectionChanged(object sender, EventArgs e)
         {
             dgWeighingOrderDetail.ClearSelection();
+        }
+
+        private void txtWeighingOrderCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnWeighingOrderSearch_Click(this, new EventArgs());
+            }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
