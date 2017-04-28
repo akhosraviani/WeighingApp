@@ -23,6 +23,7 @@ namespace AshaWeighing
         public static Parity SerialPortParity = Parity.None;
         public static Handshake SerialPortHandshake = Handshake.None;
         public static StopBits SerialPortStopBits = StopBits.One;
+        public static int Tolerance = 10;
 
         private static SqlConnection _dbConnection;
         
@@ -44,7 +45,7 @@ namespace AshaWeighing
                 }
             }
 
-            using (SqlCommand cmd = new SqlCommand("SELECT ConfigurationCode, Code, Title, Value FROM WMLog_ConfigurationDetail " +
+            using (SqlCommand cmd = new SqlCommand("SELECT ConfigurationCode, Code, Title, Value FROM SISys_SubSysConfigDetail " +
                                                     "WHERE ConfigurationCode='" + configCode + "'"
                                                     , _dbConnection))
             {
@@ -70,6 +71,7 @@ namespace AshaWeighing
                 SerialPortParity = ConvertToParity((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Parity")["Value"]);
                 SerialPortHandshake = ConvertToHandshake((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Handshake")["Value"]);
                 SerialPortStopBits = ConvertToStopBits((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "StopBits")["Value"]);
+                Tolerance = Convert.ToInt32(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Tolerance")["Value"]);
             }
         }
 

@@ -36,7 +36,7 @@
             this.MenuItem_ShipmentsList = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_wheighing = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_aboutUs = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -103,17 +103,17 @@
             // 
             // toolStripStatusLabel1
             // 
-            this.toolStripStatusLabel1.BackColor = System.Drawing.SystemColors.Control;
-            this.toolStripStatusLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            toolStripStatusLabel1.BackColor = System.Drawing.SystemColors.Control;
+            toolStripStatusLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
+            toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
+            toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 288);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -149,7 +149,7 @@
         private System.Windows.Forms.ToolStripMenuItem MenuItem_exit;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_tools;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_wheighing;
-        public System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        public static System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         public System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_aboutUs;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_ShipmentsList;

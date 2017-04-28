@@ -40,9 +40,43 @@ namespace AshaWeighing
         private double _emptyWeight = -1;
         private double _estimatedWeight = -1;
         private double _secondQuantity = -1;
+        private int _indicatorWeight = 0;
+        const int bufsize = 32 * 1024;
+
         private Dictionary<string, string> _configs;
         private List<WeighingOrderType> _weighingTypes;
         private System.Windows.Forms.Timer tmr = new System.Windows.Forms.Timer();
+        public bool IsStable
+        {
+            get { return _isStable; }
+            set
+            {
+                _isStable = value;
+                if(_isStable)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        requestFrame(i);
+                    }
+                    sevenSegmentWeight.Value = _indicatorWeight.ToString();
+                    btnGetStableData.Text = "فعال سازی دریافت اطلاعات";
+                    sevenSegmentWeight.ColorLight = Color.LightGreen;
+                    btnSaveData.Enabled = true;
+                }
+                else
+                {
+                    imgCamera1.Image = null;
+                    imgCamera2.Image = null;
+                    imgCamera3.Image = null;
+                    imgCamera4.Image = null;
+
+                    sevenSegmentWeight.Value = _indicatorWeight.ToString();
+                    btnGetStableData.Text = "تثبیت وزن و دریافت تصاویر";
+                    sevenSegmentWeight.ColorLight = Color.Red;
+                    btnSaveData.Enabled = false;
+                }
+            }
+        }
         public WeighingForm()
         {
             InitializeComponent();
@@ -52,17 +86,38 @@ namespace AshaWeighing
 
         private void requestFrame(int requestNumber)
         {
-            string cameraUrl = Globals.CameraAddress[requestNumber];
-            try
+            int counter = requestNumber;
+            InvokeGuiThread(() =>
             {
-                var request = HttpWebRequest.Create(cameraUrl);
-                request.Credentials = new NetworkCredential(Globals.CameraUsername[requestNumber], Globals.CameraPassword[requestNumber]);
-                request.Proxy = null;
-                request.BeginGetResponse(new AsyncCallback(finishRequestFrame), request);
+                _indicatorList[requestNumber].Text = "در حال اتصال";
+                _indicatorList[requestNumber].ForeColor = Color.Orange;
+            });
+
+            if (!string.IsNullOrEmpty(Globals.CameraAddress[requestNumber]))
+            {
+                string cameraUrl = Globals.CameraAddress[requestNumber];
+                try
+                {
+                    HttpWebRequest request = WebRequest.Create(cameraUrl) as HttpWebRequest;
+                    request.ProtocolVersion = HttpVersion.Version10;
+                    request.Method = WebRequestMethods.Http.Get;
+                    request.Credentials = new NetworkCredential(Globals.CameraUsername[requestNumber], Globals.CameraPassword[requestNumber]);
+                    request.Proxy = null;
+                    request.BeginGetResponse(new AsyncCallback(finishRequestFrame), request);
+                }
+                catch (UriFormatException exp)
+                {
+                    LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "requestFrame: " + exp.Message, Globals.UserCode);
+                    MessageBox.Show("تنظیمات دوربین " + (requestNumber + 1) + " صحیح نمیباشد. لطفا با مدیر سیستم تماس بگیرید");
+                }
             }
-            catch(UriFormatException exp)
+            else
             {
-                MessageBox.Show("تنظیمات دوربین " + (requestNumber+1) + " صحیح نمیباشد. لطفا با مدیر سیستم تماس بگیرید");
+                InvokeGuiThread(() =>
+                {
+                    _indicatorList[requestNumber].Text = "عدم اتصال";
+                    _indicatorList[requestNumber].ForeColor = Color.Blue;
+                });
             }
         }
 
@@ -71,62 +126,79 @@ namespace AshaWeighing
             try
             {
                 HttpWebResponse response = (result.AsyncState as HttpWebRequest).EndGetResponse(result) as HttpWebResponse;
-                Stream responseStream = response.GetResponseStream();
-                
-                using (Bitmap frame = new Bitmap(responseStream))
+                MemoryStream memoryStream = new MemoryStream();
+
+                using (Stream responseStream = response.GetResponseStream())
                 {
-                    if (frame != null)
+                    responseStream.CopyTo(memoryStream);
+
+                    using (Bitmap frame = new Bitmap(memoryStream))
                     {
-                        if (response.ResponseUri.OriginalString == Globals.CameraAddress[0])
+                        if (frame != null)
                         {
-                            imgCamera1.Image = (Bitmap)frame.Clone();
-                            imgCamera1.Image.Tag = "Camera1-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                                DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                            InvokeGuiThread(() =>
+                            if (response.ResponseUri.OriginalString == Globals.CameraAddress[0])
                             {
-                                _indicatorList[0].Text = "فعال";
-                                _indicatorList[0].ForeColor = Color.Green;
-                            });
-                        }
-                        else if (response.ResponseUri.OriginalString == Globals.CameraAddress[1])
-                        {
-                            imgCamera2.Image = (Bitmap)frame.Clone();
-                            imgCamera2.Image.Tag = "Camera2-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                                DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                            InvokeGuiThread(() =>
+                                imgCamera1.Image = (Bitmap)frame.Clone();
+                                imgCamera1.Image.Tag = "Camera1-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
+                                    DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
+                                InvokeGuiThread(() =>
+                                {
+                                    _indicatorList[0].Text = "فعال";
+                                    _indicatorList[0].ForeColor = Color.Green;
+                                });
+                            }
+                            else if (response.ResponseUri.OriginalString == Globals.CameraAddress[1])
                             {
-                                _indicatorList[1].Text = "فعال";
-                                _indicatorList[1].ForeColor = Color.Green;
-                            });
-                        }
-                        else if (response.ResponseUri.OriginalString == Globals.CameraAddress[2])
-                        {
-                            imgCamera3.Image = (Bitmap)frame.Clone();
-                            imgCamera3.Image.Tag = "Camera3-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                                DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                            InvokeGuiThread(() =>
+                                imgCamera2.Image = (Bitmap)frame.Clone();
+                                imgCamera2.Image.Tag = "Camera2-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
+                                    DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
+                                InvokeGuiThread(() =>
+                                {
+                                    _indicatorList[1].Text = "فعال";
+                                    _indicatorList[1].ForeColor = Color.Green;
+                                });
+                            }
+                            else if (response.ResponseUri.OriginalString == Globals.CameraAddress[2])
                             {
-                                _indicatorList[2].Text = "فعال";
-                                _indicatorList[2].ForeColor = Color.Green;
-                            });
-                        }
-                        else if (response.ResponseUri.OriginalString == Globals.CameraAddress[3])
-                        {
-                            imgCamera4.Image = (Bitmap)frame.Clone();
-                            imgCamera4.Image.Tag = "Camera4-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                                DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
-                            InvokeGuiThread(() =>
+                                imgCamera3.Image = (Bitmap)frame.Clone();
+                                imgCamera3.Image.Tag = "Camera3-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
+                                    DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
+                                InvokeGuiThread(() =>
+                                {
+                                    _indicatorList[2].Text = "فعال";
+                                    _indicatorList[2].ForeColor = Color.Green;
+                                });
+                            }
+                            else if (response.ResponseUri.OriginalString == Globals.CameraAddress[3])
                             {
-                                _indicatorList[3].Text = "فعال";
-                                _indicatorList[3].ForeColor = Color.Green;
-                            });
+                                imgCamera4.Image = (Bitmap)frame.Clone();
+                                imgCamera4.Image.Tag = "Camera4-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
+                                    DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
+                                InvokeGuiThread(() =>
+                                {
+                                    _indicatorList[3].Text = "فعال";
+                                    _indicatorList[3].ForeColor = Color.Green;
+                                });
+                            }
                         }
                     }
                 }
             }
-            catch(WebException exp)
+            catch(Exception exp)
             {
-
+                LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "finishRequestFrame: " + exp.Message, Globals.UserCode);
+                for (int i = 0; i < 4; i++)
+                {
+                    int counter = i;
+                    if (_indicatorList[counter].ForeColor == Color.Orange)
+                    {
+                        InvokeGuiThread(() =>
+                        {
+                            _indicatorList[counter].Text = "غیر فعال";
+                            _indicatorList[counter].ForeColor = Color.Red;
+                        });
+                    }
+                }
             }
         }
         void WeighingForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -139,7 +211,7 @@ namespace AshaWeighing
         {
             try
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT Code, Title FROM WMLog_Configuration WHERE FormStatusCode='Cfg_Active' "
+                using (SqlCommand cmd = new SqlCommand("SELECT Code, Title FROM SISys_SubSysConfig WHERE SubSystemCode='WMLog' AND FormStatusCode='Cfg_Active' "
                                                         , _dbConnection))
                 {
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -174,32 +246,32 @@ namespace AshaWeighing
         {
             cameraIndicator1.Parent = groupBox8;
             cameraIndicator1.Location = new Point(6, 1);
-            imgCamera1.MouseDoubleClick += new MouseEventHandler(this.PicBox_DoubleClick);
+            imgCamera1.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
 
             cameraIndicator2.Parent = groupBox7;
             cameraIndicator2.Location = new Point(6, 1);
-            imgCamera2.MouseDoubleClick += new MouseEventHandler(this.PicBox_DoubleClick);
+            imgCamera2.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
 
             cameraIndicator3.Parent = groupBox6;
             cameraIndicator3.Location = new Point(6, 1);
-            imgCamera3.MouseDoubleClick += new MouseEventHandler(this.PicBox_DoubleClick);
+            imgCamera3.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
 
             cameraIndicator4.Parent = groupBox5;
             cameraIndicator4.Location = new Point(6, 1);
-            imgCamera4.MouseDoubleClick += new MouseEventHandler(this.PicBox_DoubleClick);
+            imgCamera4.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
 
             byte[] fontData = AshaWeighing.Properties.Resources.IRANSans_FaNum_;
             IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
             System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
             uint dummy = 0;
-            fonts.AddMemoryFont(fontPtr, AshaWeighing.Properties.Resources.IRANSans_FaNum_.Length);
-            AddFontMemResourceEx(fontPtr, (uint)AshaWeighing.Properties.Resources.IRANSans_FaNum_.Length, IntPtr.Zero, ref dummy);
+            fonts.AddMemoryFont(fontPtr, Resources.IRANSans_FaNum_.Length);
+            AddFontMemResourceEx(fontPtr, (uint)Resources.IRANSans_FaNum_.Length, IntPtr.Zero, ref dummy);
             System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
 
             myFont = new Font(fonts.Families[0], 8.5F);
             myFontBig = new Font(fonts.Families[0], 14F);
 
-            this.Font = myFont;
+            Font = myFont;
             lblDiscrepency.Font = myFontBig;
             lblNetWeight.Font = myFontBig;
             lblLoadedBranches.Font = myFontBig;
@@ -228,7 +300,8 @@ namespace AshaWeighing
             InitializeConfigurations();
             CreateSerialPort();
             ConnectWeighingMachine();
-            ConnectCameras();
+            Thread thread3 = new Thread(ConnectCameras);
+            thread3.Start();
             GetWeighingTypes();
             foreach (ToolStripMenuItem item in ctmConfig.DropDownItems)
             {
@@ -275,8 +348,9 @@ namespace AshaWeighing
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LogHelper.Log(LogTarget.Database, _weighingOrderCode, "Error", "GetWeighingTypes: " + ex.Message, Globals.UserCode);
                 InvokeGuiThread(() =>
                 {
                     DatabaseIndicator.Text = "غیرفعال";
@@ -304,15 +378,16 @@ namespace AshaWeighing
             _serialPort.RtsEnable = true;
             _serialPort.Encoding = Encoding.ASCII;
             _serialPort.DataReceived +=
-                new SerialDataReceivedEventHandler(_serialPort_DataReceived);        
+                new SerialDataReceivedEventHandler(_serialPort_DataReceived);   
         }
 
         public void ShowNegativeWeightMessageBox()
         {
-          var thread = new Thread(
+            LogHelper.Log(LogTarget.Database, "Warning", _weighingOrderCode, "ShowNegativeWeightMessageBox: Negative weight detected.", Globals.UserCode);
+            var thread = new Thread(
             () =>
             {
-              if(MessageBox.Show("وزن باسکول منفی می باشد! لطفا دستگاه را بررسی نمایید") == System.Windows.Forms.DialogResult.OK)
+              if(MessageBox.Show("وزن باسکول منفی می باشد! لطفا دستگاه را بررسی نمایید") == DialogResult.OK)
               {
                     _negativeWeight = false;
                     btnSaveData.Enabled = true;
@@ -323,105 +398,120 @@ namespace AshaWeighing
         }
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (!_isStable)
+            byte[] v = new byte[8];
+            int intResult = 0;
+            int tryCount = 0;
+
+            if (_serialPort.BytesToRead <= 0)
             {
-                byte[] v = new byte[8];
-                int intResult = 0;
-                int tryCount = 0;
 
-                if (_serialPort.BytesToRead <= 0)
+            }
+            else
+            {
+                while (_serialPort.BytesToRead > 0 && tryCount < 10)
                 {
+                    var output = _serialPort.Read(v, 0, 7);
 
-                }
-                else
-                {
-                    while (_serialPort.BytesToRead > 0 && tryCount < 10)
+                    if (output == 7)
                     {
-                        var output = _serialPort.Read(v, 0, 7);
-
-                        if (output == 7)
+                        try
                         {
-                            try
-                            {
-                                StringBuilder hex = new StringBuilder(2);
-                                hex.AppendFormat("{0:x2}", v[0]);
+                            StringBuilder hex = new StringBuilder(2);
+                            hex.AppendFormat("{0:x2}", v[0]);
 
-                                if (hex.ToString().ToLower().Equals("bb"))
+                            if (hex.ToString().ToLower().Equals("bb"))
+                            {
+                                hex.Clear();
+                                hex.AppendFormat("{0:x2}", v[1]);
+
+                                if (hex.ToString().ToLower().Equals("e0"))
                                 {
-                                    hex.Clear();
-                                    hex.AppendFormat("{0:x2}", v[1]);
-
-                                    if (hex.ToString().ToLower().Equals("e0"))
-                                    {
-                                        intResult = -10 * Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 2, 6));
-                                        tryCount = 10;
-                                    }
-                                    else
-                                    {
-                                        intResult = Int32.Parse(System.Text.Encoding.ASCII.GetString(v, 1, 6));
-                                        tryCount = 10;
-                                    }
+                                    intResult = -10 * int.Parse(Encoding.ASCII.GetString(v, 2, 6));
+                                    tryCount = 10;
                                 }
+                                else
+                                {
+                                    intResult = int.Parse(Encoding.ASCII.GetString(v, 1, 6));
+                                    tryCount = 10;
+                                }
+                            }
 
 
-                            }
-                            catch (FormatException)
-                            {
-                                tryCount++;
-                            }
                         }
-                        else
+                        catch (FormatException)
+                        {
                             tryCount++;
+                        }
                     }
+                    else
+                        tryCount++;
                 }
+            }
 
-                try
+            try
+            {
+                if (intResult < -10)
                 {
-                    if (intResult < -10)
+                    _indicatorWeight = intResult;
+                    sevenSegmentWeight.Value = intResult.ToString();
+
+                    if (sevenSegmentWeight.ColorBackground != Color.Red || sevenSegmentWeight.ColorLight != Color.Yellow)
                     {
-                        sevenSegmentWeight.Value = intResult.ToString();
-
-                        if (sevenSegmentWeight.ColorBackground != Color.Red || sevenSegmentWeight.ColorLight != Color.Yellow)
-                        {
-                            sevenSegmentWeight.ColorBackground = Color.Red;
-                            sevenSegmentWeight.ColorLight = Color.Yellow;
-                        }
-
-                        if (_negativeWeight == false)
-                        {
-                            _negativeWeight = true;
-                            btnSaveData.Enabled = false;
-                            btnGetStableData.Enabled = false;
-                            ShowNegativeWeightMessageBox();
-                        }
-
+                        sevenSegmentWeight.ColorBackground = Color.Red;
+                        sevenSegmentWeight.ColorLight = Color.Yellow;
                     }
-                    else if (intResult >= 0)
+
+                    if (_negativeWeight == false)
+                    {
+                        _negativeWeight = true;
+                        btnSaveData.Enabled = false;
+                        btnGetStableData.Enabled = false;
+                        ShowNegativeWeightMessageBox();
+                    }
+
+                }
+                else if (intResult >= 0)
+                {
+                    _indicatorWeight = intResult;
+
+                    if (IsStable && Math.Abs(int.Parse(sevenSegmentWeight.Value) - _indicatorWeight) == 0)
+                    {
+                        sevenSegmentWeight.ColorBackground = Color.Black;
+                        sevenSegmentWeight.ColorLight = Color.Green;
+                    }
+                    else if (IsStable && Globals.Tolerance > 0 && Math.Abs(int.Parse(sevenSegmentWeight.Value) - _indicatorWeight) <= Globals.Tolerance)
+                    {
+                        sevenSegmentWeight.ColorBackground = Color.Black;
+                        sevenSegmentWeight.ColorLight = Color.Yellow;
+                    }
+                    else
                     {
                         sevenSegmentWeight.ColorBackground = Color.Black;
                         sevenSegmentWeight.ColorLight = Color.Red;
-                        sevenSegmentWeight.Value = intResult.ToString();
-
+                        IsStable = false;
+                        sevenSegmentWeight.Value = _indicatorWeight.ToString();
                     }
+                }
 
-                    if (_weighingOrderDetailTable.Rows.Count > 0)
+                
+
+                if (_weighingOrderDetailTable.Rows.Count > 0)
+                {
+                    double weight1;
+                    if (double.TryParse(sevenSegmentWeight.Value, out weight1) && _emptyWeight > 0)
                     {
-                        double weight1;
-                        if (double.TryParse(sevenSegmentWeight.Value, out weight1) && _emptyWeight > 0)
-                        {
-                            lblNetWeight.Text = string.Format("{0:0.###}", Math.Abs(_emptyWeight - weight1));
+                        lblNetWeight.Text = string.Format("{0:0.###}", Math.Abs(_emptyWeight - weight1));
 
-                            double netWeight;
-                            if (double.TryParse(lblNetWeight.Text, out netWeight) && _estimatedWeight > 0)
-                            {
-                                lblDiscrepency.Text = string.Format("{0:0.###}", Math.Abs((_estimatedWeight - netWeight) / _estimatedWeight * 100));
-                            }
+                        double netWeight;
+                        if (double.TryParse(lblNetWeight.Text, out netWeight) && _estimatedWeight > 0)
+                        {
+                            lblDiscrepency.Text = string.Format("{0:0.###}", Math.Abs((_estimatedWeight - netWeight) / _estimatedWeight * 100));
                         }
                     }
                 }
-                catch (Exception)
-                { }
             }
+            catch (Exception)
+            { }
         }
 
         private string GetMachine()
@@ -461,39 +551,52 @@ namespace AshaWeighing
         {
             for (int i = 0; i < 4; i++)
             {
-                string cameraUrl = Globals.CameraAddress[i];
-                HttpWebResponse response = null;
-                var request = (HttpWebRequest)WebRequest.Create(cameraUrl);
-                request.Credentials = new NetworkCredential(Globals.CameraUsername[i], Globals.CameraPassword[i]);
-                request.Proxy = null;
-                request.Method = "HEAD";
+                var counter = i;
 
-                try
+                InvokeGuiThread(() =>
                 {
-                    response = (HttpWebResponse)request.GetResponse();
-                    var counter = i;
-                    InvokeGuiThread(() =>
-                    {
-                        _indicatorList[counter].Text = "فعال";
-                        _indicatorList[counter].ForeColor = Color.Green;
-                    });
-                }
-                catch (WebException ex)
+                    _indicatorList[counter].Text = "در حال اتصال";
+                    _indicatorList[counter].ForeColor = Color.Orange;
+                });
+
+                if (!string.IsNullOrEmpty(Globals.CameraAddress[i]))
                 {
-                    var counter = i;
-                    /* A WebException will be thrown if the status of the response is not `200 OK` */
-                    InvokeGuiThread(() =>
+                    string cameraUrl = Globals.CameraAddress[i];
+                    HttpWebResponse response = null;
+                    var request = (HttpWebRequest)WebRequest.Create(cameraUrl);
+                    request.Credentials = new NetworkCredential(Globals.CameraUsername[i], Globals.CameraPassword[i]);
+                    request.Proxy = null;
+                    request.Method = "HEAD";
+
+                    try
                     {
-                        _indicatorList[counter].Text = "غیرفعال";
-                        _indicatorList[counter].ForeColor = Color.Red;
-                    });
-                }
-                finally
-                {
-                    // Don't forget to close your response.
-                    if (response != null)
+                        response = (HttpWebResponse)request.GetResponse();
+                        InvokeGuiThread(() =>
+                        {
+                            _indicatorList[counter].Text = "فعال";
+                            _indicatorList[counter].ForeColor = Color.Green;
+                        });
+                    }
+                    catch (WebException ex)
                     {
-                        response.Close();
+                        if (_indicatorList[counter].ForeColor == Color.Orange)
+                        {
+                            LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "ConnectCamera: " + ex.Message, Globals.UserCode);
+                            /* A WebException will be thrown if the status of the response is not `200 OK` */
+                            InvokeGuiThread(() =>
+                            {
+                                _indicatorList[counter].Text = "غیر فعال";
+                                _indicatorList[counter].ForeColor = Color.Red;
+                            });
+                        }
+                    }
+                    finally
+                    {
+                        // Don't forget to close your response.
+                        if (response != null)
+                        {
+                            response.Close();
+                        }
                     }
                 }
             }
@@ -515,8 +618,9 @@ namespace AshaWeighing
                             DatabaseIndicator.ForeColor = Color.Green;
                         });
                 }
-                catch (Exception)
+                catch (Exception exp)
                 {
+                    LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "ConnectDatabase: " + exp.Message, Globals.UserCode);
                     InvokeGuiThread(() =>
                         {
                             DatabaseIndicator.Text = "غیرفعال";
@@ -539,8 +643,9 @@ namespace AshaWeighing
                         weighingBridgeIndicator.ForeColor = Color.Green;
                     });
                 }
-                catch (Exception)
+                catch (Exception exp)
                 {
+                    LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "ConnectWeighingMachine: " + exp.Message, Globals.UserCode);
                     InvokeGuiThread(() =>
                     {
                         weighingBridgeIndicator.Text = "غیرفعال";
@@ -571,6 +676,7 @@ namespace AshaWeighing
             if (_serialPort.IsOpen)
             {
                 _serialPort.Close();
+                sevenSegmentWeight.Value = "0";
                 weighingBridgeIndicator.Text = "غیرفعال";
                 weighingBridgeIndicator.ForeColor = Color.Red;
             }
@@ -587,32 +693,12 @@ namespace AshaWeighing
 
         private void btnGetStableData_Click(object sender, EventArgs e)
         {
-            if (!_isStable)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    requestFrame(i);
-                }
-                btnGetStableData.Text = "فعال سازی دریافت اطلاعات";
-                sevenSegmentWeight.ColorLight = Color.LightGreen;
-                btnSaveData.Enabled = true;
-                tmr.Tick -= tmr_Tick;
-            }
-            else
-            {
-                imgCamera1.Image = null;
-                imgCamera2.Image = null;
-                imgCamera3.Image = null;
-                imgCamera4.Image = null;
-                btnGetStableData.Text = "تثبیت وزن و دریافت تصاویر";
-                sevenSegmentWeight.ColorLight = Color.Red;
-                btnSaveData.Enabled = false;
-                tmr.Tick += tmr_Tick;
-            }
-            _isStable = !_isStable;
+            IsStable = !IsStable;
+            LogHelper.Log(LogTarget.Database, "Event", _weighingOrderCode, "btnGetStableData_Click: Pressed.", Globals.UserCode);
         }
         private void btnSaveData_Click(object sender, EventArgs e)
         {
+            LogHelper.Log(LogTarget.Database, "Event", _weighingOrderCode, "btnSaveData_Click: Pressed.", Globals.UserCode);
             if (_weighingOrderCode == null)
             {
                 MessageBox.Show("شناسه توزین مشخص نشده است. لطفا شناسه توزین را جستجو نمایید.", "خطا", MessageBoxButtons.OK,
@@ -648,7 +734,7 @@ namespace AshaWeighing
                     // set parameter values
                     sqlCommand.Parameters["@WeighingOrderCode"].Value = _weighingOrderCode;
                     sqlCommand.Parameters["@WeighingTypeCode"].Value = cmbWeighingTypes.SelectedValue;
-                    sqlCommand.Parameters["@Weight"].Value = Int32.Parse(sevenSegmentWeight.Value);
+                    sqlCommand.Parameters["@Weight"].Value = int.Parse(sevenSegmentWeight.Value);
                     sqlCommand.Parameters["@Image1"].Value = imageToByteArray(imgCamera1.Image);
                     sqlCommand.Parameters["@Image2"].Value = imageToByteArray(imgCamera2.Image);
                     sqlCommand.Parameters["@Image3"].Value = imageToByteArray(imgCamera3.Image);
@@ -663,7 +749,11 @@ namespace AshaWeighing
                     string returnMessage = Convert.ToString(sqlCommand.Parameters["@ReturnMessage"].Value);
                     int returnValue = Convert.ToInt32(sqlCommand.Parameters["@ReturnValue"].Value);
 
-
+                    LogHelper.Log(LogTarget.Database, "Database", _weighingOrderCode, "btnSaveData_Click: Weighing data saved. " +
+                                "WeighingOrderCode=" + _weighingOrderCode +
+                                ", CreatorCode=" + Globals.UserName + 
+                                ", SavedWeight=" + sevenSegmentWeight.Value +
+                                ", IndicatorWeight=" + _indicatorWeight, Globals.UserCode);
 
                     if (returnValue == 1)
                     {
@@ -682,6 +772,7 @@ namespace AshaWeighing
             }
             catch (InvalidOperationException ex)
             {
+                LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "btnGetStableData_Click: " + ex.Message, Globals.UserCode);
                 InvokeGuiThread(() =>
                 {
                     DatabaseIndicator.Text = "غیرفعال";
@@ -691,6 +782,7 @@ namespace AshaWeighing
             }
             catch(SqlException exp)
             {
+                LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "btnGetStableData_Click: " + exp.Message, Globals.UserCode);
                 MessageBox.Show(exp.Message, "SQL Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -701,7 +793,7 @@ namespace AshaWeighing
 
             txtWeighingOrderCode.Text = "";
             //sevenSegmentWeight.Value = "0";
-            _isStable = false;
+            IsStable = false;
             btnGetStableData.Enabled = true;
             btnSaveData.Enabled = false;
             lblLoadedBranches.Text = "0";
@@ -721,6 +813,7 @@ namespace AshaWeighing
 
         private void btnWeighingOrderSearch_Click(object sender, EventArgs e)
         {
+            LogHelper.Log(LogTarget.Database, "Event", _weighingOrderCode, "btnWeighingOrderSearch_Click: Pressed.", Globals.UserCode);
             if (_dbConnection == null || _dbConnection.State != ConnectionState.Open)
                 ConnectDatabase();
 
@@ -875,10 +968,13 @@ namespace AshaWeighing
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            LogHelper.Log(LogTarget.Database, "Event", _weighingOrderCode, "btnConnect_Click: Pressed.", Globals.UserCode);
             Thread thread1 = new Thread(ConnectDatabase);
             Thread thread2 = new Thread(ConnectWeighingMachine);
+            Thread thread3 = new Thread(ConnectCameras);
             thread1.Start();
             thread2.Start();
+            thread3.Start();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -904,15 +1000,20 @@ namespace AshaWeighing
 
         private void btnOpenWeighingList_Click(object sender, EventArgs e)
         {
+            LogHelper.Log(LogTarget.Database, "Event", _weighingOrderCode, "btnOpenWeighingList_Click: Pressed.", Globals.UserCode);
             ShipmentListForm shipments = new ShipmentListForm();
-            if(shipments.ShowDialog() == DialogResult.OK)
+            shipments.OrderType = (string)cmbWeighingTypes.SelectedValue;
+            if (shipments.ShowDialog() == DialogResult.OK)
             {
-                this.txtWeighingOrderCode.Text = shipments.shipmentCode;
+                cmbWeighingTypes.SelectedValue = shipments.OrderType;
+                txtWeighingOrderCode.Text = shipments.shipmentCode;
             }
         }
 
         private void contextMenu_Click(object sender, EventArgs e)
         {
+            App.toolStripStatusLabel1.Text = "بررسی اتصال دستگاه ها...";
+            Cursor.Current = Cursors.WaitCursor;
             var menuItem = sender as ToolStripMenuItem;
             if (menuItem != null)
             {
@@ -934,13 +1035,17 @@ namespace AshaWeighing
                 }
             }
 
+            ClearFields();
             Globals.GetConfigurationDetails(Settings.Default.SelectedConfiguration);
-
             DisconnectWeighingMachine();
             CreateSerialPort();
+            Thread thread3 = new Thread(ConnectCameras);
+            thread3.Start();
 
-            System.Threading.Thread thread2 = new System.Threading.Thread(ConnectWeighingMachine);
+            Thread thread2 = new Thread(ConnectWeighingMachine);
             thread2.Start();
+            Cursor.Current = Cursors.Default;
+            App.toolStripStatusLabel1.Text = "";
         }
 
         private void cmbWeighingTypes_SelectedValueChanged(object sender, EventArgs e)
@@ -974,6 +1079,7 @@ namespace AshaWeighing
             }
             catch (Exception exp)
             {
+                LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "cmbWeighingTypes_SelectedValueChanged: " + exp.Message, Globals.UserCode);
                 InvokeGuiThread(() =>
                 {
                     DatabaseIndicator.Text = "غیرفعال";
@@ -1007,6 +1113,7 @@ namespace AshaWeighing
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            LogHelper.Log(LogTarget.Database, "Event", _weighingOrderCode, "btnClear_Click: Pressed.", Globals.UserCode);
             ClearFields();
         }
     }
