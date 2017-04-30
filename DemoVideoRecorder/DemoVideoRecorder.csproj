@@ -91,6 +91,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore">
       <Private>True</Private>
     </Reference>
@@ -178,6 +179,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="SettingMenuConfig.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SevenSegment.cs">
       <SubType>UserControl</SubType>
@@ -237,6 +239,7 @@
     <None Include="App.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

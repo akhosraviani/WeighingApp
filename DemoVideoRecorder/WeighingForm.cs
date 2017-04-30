@@ -211,29 +211,89 @@ namespace AshaWeighing
         {
             try
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT Code, Title FROM SISys_SubSysConfig WHERE SubSystemCode='WMLog' AND FormStatusCode='Cfg_Active' "
+                using (SqlCommand cmd = new SqlCommand("SELECT SISys_SubSysConfig.Code, SISys_SubSysConfig.Title FROM SISys_SubSysConfig JOIN SISys_SubSysConfigDetail " +
+                                                       "ON SISys_SubSysConfig.Code = SISys_SubSysConfigDetail.ConfigurationCode " +
+                                                       "WHERE SubSystemCode='WMLog' AND FormStatusCode='Cfg_Active' and Value='Visible' "
                                                         , _dbConnection))
                 {
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable conf = new DataTable();
                     da.Fill(conf);
-                    _configs = new Dictionary<string, string>();
-                    ToolStripMenuItem[] items = new ToolStripMenuItem[conf.Rows.Count];
 
-                    for (int i = 0; i < conf.Rows.Count; i++)
+                    if (conf.Rows.Count > 0)
                     {
-                        _configs.Add(conf.Rows[i].Field<string>("Code"), conf.Rows[i].Field<string>("Title"));
+                        _configs = new Dictionary<string, string>();
+                        ToolStripMenuItem[] items = new ToolStripMenuItem[conf.Rows.Count];
 
-                        items[i] = new ToolStripMenuItem();
-                        items[i].Name = "dynamicItem" + i.ToString();
-                        items[i].Tag = conf.Rows[i].Field<string>("Code");
-                        items[i].Text = conf.Rows[i].Field<string>("Title");
-                        items[i].Click += new EventHandler(contextMenu_Click);
+                        for (int i = 0; i < conf.Rows.Count; i++)
+                        {
+                            _configs.Add(conf.Rows[i].Field<string>("Code"), conf.Rows[i].Field<string>("Title"));
+
+                            items[i] = new ToolStripMenuItem();
+                            items[i].Name = "dynamicItem" + i.ToString();
+                            items[i].Tag = conf.Rows[i].Field<string>("Code");
+                            items[i].Text = conf.Rows[i].Field<string>("Title");
+                            items[i].Click += new EventHandler(contextMenu_Click);
+                        }
+
+                        ctmConfig.DropDownItems.AddRange(items);
                     }
+                    else
+                    {
+                        if (MessageBox.Show("تنظیمات کامپیوتر شما در سیستم ثبت نشده است. آیا می‌خواهید تنظیمات پیش فرض برای شما ثبت شود؟", "راه اندازی تنظیمات",
+                            MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.OK)
+                        {
+                            var macAddr =
+                            (
+                                from nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
+                                where nic.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up
+                                select nic.GetPhysicalAddress().ToString()
+                            ).FirstOrDefault();
 
-                    ctmConfig.DropDownItems.AddRange(items);
+                            string input = Microsoft.VisualBasic.Interaction.InputBox("تنظیمات به نام چه کامپیوتری ثبت شود؟", "ثبت تنظیمات", "تنظیمات در کامپیوتر " + macAddr);
+                            using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO SISys_SubSysConfigDetail(ConfigurationCode, Code, Title, Value, CreatorCode, CreationDate) " +
+                                                    "VALUES (@ConfigurationCode, @Code, @Title, @Value, @CreatorCode, @CreationDate)", _dbConnection))
+                            {
+
+                                // set up the parameters
+                                sqlCommand.Parameters.Add("@ConfigurationCode", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@Code", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@Title", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@Value", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
+                                sqlCommand.Parameters.Add("@CreationDate", SqlDbType.DateTime);
+
+
+                                using (SqlCommand cmd2 = new SqlCommand("SELECT Code, Title FROM SISys_SubSysConfig WHERE SubSystemCode='WMLog' AND FormStatusCode='Cfg_Active'"
+                                                                , _dbConnection))
+                                {
+                                    da = new SqlDataAdapter(cmd2);
+                                    conf = new DataTable();
+                                    da.Fill(conf);
+                                    ToolStripMenuItem[] items = new ToolStripMenuItem[conf.Rows.Count];
+
+                                    for (int i = 0; i < conf.Rows.Count; i++)
+                                    {
+                                        // set parameter values
+                                        sqlCommand.Parameters["@ConfigurationCode"].Value = conf.Rows[i].Field<string>("Code");
+                                        sqlCommand.Parameters["@Code"].Value = macAddr;
+                                        sqlCommand.Parameters["@Title"].Value = input;
+                                        sqlCommand.Parameters["@Value"].Value = "Visible";
+                                        sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
+                                        sqlCommand.Parameters["@CreationDate"].Value = DateTime.Now;
+
+                                        sqlCommand.ExecuteNonQuery();
+
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("لطفاً جهت ثبت تنظیمات با مدیر سیستم تماس بگیرید.", "راه اندازی تنظیمات", MessageBoxButtons.OK);
+                        }
+                    }
                 }
-
             }
             catch (Exception)
             {
@@ -505,7 +565,7 @@ namespace AshaWeighing
                         double netWeight;
                         if (double.TryParse(lblNetWeight.Text, out netWeight) && _estimatedWeight > 0)
                         {
-                            lblDiscrepency.Text = string.Format("{0:0.###}", Math.Abs((_estimatedWeight - netWeight) / _estimatedWeight * 100));
+                            lblDiscrepency.Text = string.Format("{0:0.###}", (_estimatedWeight - netWeight) / _estimatedWeight * 100);
                         }
                     }
                 }
@@ -603,10 +663,8 @@ namespace AshaWeighing
         }
         private void ConnectDatabase()
         {
-            var connection =
-                System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
             if (_dbConnection == null)
-                _dbConnection = new SqlConnection(connection);
+                _dbConnection = new SqlConnection(Globals.ConnectionString);
             if (_dbConnection.State != ConnectionState.Open)
             {
                 try
@@ -772,7 +830,7 @@ namespace AshaWeighing
             }
             catch (InvalidOperationException ex)
             {
-                LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "btnGetStableData_Click: " + ex.Message, Globals.UserCode);
+                LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "btnSaveData_Click: " + ex.Message, Globals.UserCode);
                 InvokeGuiThread(() =>
                 {
                     DatabaseIndicator.Text = "غیرفعال";
@@ -782,7 +840,7 @@ namespace AshaWeighing
             }
             catch(SqlException exp)
             {
-                LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "btnGetStableData_Click: " + exp.Message, Globals.UserCode);
+                LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "btnSaveData_Click: " + exp.Message, Globals.UserCode);
                 MessageBox.Show(exp.Message, "SQL Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

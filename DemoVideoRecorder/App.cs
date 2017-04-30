@@ -165,5 +165,11 @@ namespace AshaWeighing
             AboutBox about = new AboutBox();
             about.ShowDialog();
         }
+
+        private void MenuItem_Config_Click_1(object sender, EventArgs e)
+        {
+            Configuration config = new Configuration();
+            config.ShowDialog();
+        }
     }
 }

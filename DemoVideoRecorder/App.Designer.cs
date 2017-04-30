@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(App));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.MenuItem_file = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_Config = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_exit = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_tools = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_ShipmentsList = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,10 +60,18 @@
             // MenuItem_file
             // 
             this.MenuItem_file.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_Config,
             this.MenuItem_exit});
             this.MenuItem_file.Name = "MenuItem_file";
             this.MenuItem_file.Size = new System.Drawing.Size(80, 20);
             this.MenuItem_file.Text = "اطلاعات پایه";
+            // 
+            // MenuItem_Config
+            // 
+            this.MenuItem_Config.Name = "MenuItem_Config";
+            this.MenuItem_Config.Size = new System.Drawing.Size(152, 22);
+            this.MenuItem_Config.Text = "تنظیمات";
+            this.MenuItem_Config.Click += new System.EventHandler(this.MenuItem_Config_Click_1);
             // 
             // MenuItem_exit
             // 
@@ -149,9 +158,10 @@
         private System.Windows.Forms.ToolStripMenuItem MenuItem_exit;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_tools;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_wheighing;
-        public static System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         public System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_aboutUs;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_ShipmentsList;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Config;
+        public static System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

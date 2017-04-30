@@ -14,5 +14,8 @@
     <Setting Name="SelectedConfiguration" Type="System.String" Scope="User">
       <Value Profile="(Default)">Conf_In60Tons</Value>
     </Setting>
+    <Setting Name="ConfigStatus" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -11,7 +11,7 @@ namespace AshaWeighing
         public static string UserCode = "";
         public static string UserName = "";
         public static string PersonnelCode = "";
-
+        public static string ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
         public static string[] CameraAddress = new string[4];
         public static string[] CameraUsername = new string[4];
         public static string[] CameraPassword = new string[4];
