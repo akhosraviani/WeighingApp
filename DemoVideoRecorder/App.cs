@@ -3,6 +3,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Text;
 using AshaWeighing.Properties;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
 
 namespace AshaWeighing
 {
@@ -13,7 +16,7 @@ namespace AshaWeighing
             IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
 
         private PrivateFontCollection fonts = new PrivateFontCollection();
-
+        private SqlConnection _dbConnection;
         Font myFont;
         public App()
         {
@@ -64,6 +67,7 @@ namespace AshaWeighing
         }
         void App_Load(object sender, EventArgs e)
         {
+            checkSettings();
             this.Font = myFont;
             menuStrip1.Font = myFont;
             // Set window state
@@ -80,6 +84,98 @@ namespace AshaWeighing
             {
                 this.Size = Settings.Default.AppWindowSize;
             }
+        }
+
+        private void checkSettings()
+        {
+            try
+            {
+                var macAddr =
+                                (
+                                    from nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
+                                    where nic.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up
+                                    select nic.GetPhysicalAddress().ToString()
+                                ).FirstOrDefault();
+
+                if (_dbConnection == null)
+                    _dbConnection = new SqlConnection(Globals.ConnectionString);
+                if (_dbConnection.State != ConnectionState.Open)
+                {
+                    _dbConnection.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT a.Code, a.Title FROM SISys_SubSysConfig  as a JOIN SISys_SubSysConfigDetail as b " +
+                                                   "ON a.Code = b.ConfigurationCode " +
+                                                   "WHERE a.SubSystemCode='WMLog' AND a.FormStatusCode='Cfg_Active' and b.Value='Visible' and b.Code='" + macAddr + "'"
+                                                    , _dbConnection))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable conf = new DataTable();
+                        da.Fill(conf);
+
+                        if (conf.Rows.Count <= 0)
+                        {
+                            if (MessageBox.Show("تنظیمات کامپیوتر شما در سیستم ثبت نشده است. آیا می‌خواهید تنظیمات پیش فرض برای شما ثبت شود؟", "راه اندازی تنظیمات",
+                                MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.OK)
+                            {
+                                AddSettingForm addSetting = new AddSettingForm();
+                                addSetting.Text = "تنظیمات کامپیوتر " + macAddr;
+
+                                if (addSetting.ShowDialog() == DialogResult.OK)
+                                {
+                                    string input = addSetting.Text;
+                                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO SISys_SubSysConfigDetail(ConfigurationCode, Code, Title, Value, CreatorCode, CreationDate) " +
+                                                            "VALUES (@ConfigurationCode, @Code, @Title, @Value, @CreatorCode, @CreationDate)", _dbConnection))
+                                    {
+                                        // set up the parameters
+                                        sqlCommand.Parameters.Add("@ConfigurationCode", SqlDbType.NVarChar, 64);
+                                        sqlCommand.Parameters.Add("@Code", SqlDbType.NVarChar, 64);
+                                        sqlCommand.Parameters.Add("@Title", SqlDbType.NVarChar, 64);
+                                        sqlCommand.Parameters.Add("@Value", SqlDbType.NVarChar, 64);
+                                        sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
+                                        sqlCommand.Parameters.Add("@CreationDate", SqlDbType.DateTime);
+
+
+                                        using (SqlCommand cmd2 = new SqlCommand("SELECT Code, Title FROM SISys_SubSysConfig WHERE SubSystemCode='WMLog' AND FormStatusCode='Cfg_Active'"
+                                                                        , _dbConnection))
+                                        {
+                                            da = new SqlDataAdapter(cmd2);
+                                            conf = new DataTable();
+                                            da.Fill(conf);
+                                            ToolStripMenuItem[] items = new ToolStripMenuItem[conf.Rows.Count];
+
+                                            for (int i = 0; i < conf.Rows.Count; i++)
+                                            {
+                                                // set parameter values
+                                                sqlCommand.Parameters["@ConfigurationCode"].Value = conf.Rows[i].Field<string>("Code");
+                                                sqlCommand.Parameters["@Code"].Value = macAddr;
+                                                sqlCommand.Parameters["@Title"].Value = input;
+                                                sqlCommand.Parameters["@Value"].Value = "Visible";
+                                                sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
+                                                sqlCommand.Parameters["@CreationDate"].Value = DateTime.Now;
+
+                                                sqlCommand.ExecuteNonQuery();
+
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("لطفاً جهت ثبت تنظیمات با مدیر سیستم تماس بگیرید.", "راه اندازی تنظیمات", MessageBoxButtons.OK);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("لطفاً جهت ثبت تنظیمات با مدیر سیستم تماس بگیرید.", "راه اندازی تنظیمات", MessageBoxButtons.OK);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "راه اندازی تنظیمات", MessageBoxButtons.OK);
+            }
+            Globals.GetConfigurationDetails(Settings.Default.SelectedConfiguration);
         }
 
         private void MenuItem_exit_Click(object sender, EventArgs e)

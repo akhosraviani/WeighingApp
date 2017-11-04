@@ -75,10 +75,11 @@ namespace AshaWeighing
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            DoLogin();
+            if (DoLogin())
+                Close();
         }
 
-        private void DoLogin()
+        private bool DoLogin()
         {
             try
             {
@@ -102,7 +103,7 @@ namespace AshaWeighing
                             Globals.PersonnelCode = dt.Rows[0].ItemArray[1].ToString();
                             Globals.UserName = dt.Rows[0].ItemArray[2].ToString();
                             this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                            this.Close();
+                            return true;
                         }
                         else
                         {
@@ -110,6 +111,7 @@ namespace AshaWeighing
                                 MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1);
                             txtUsername.Focus();
                             txtUsername.SelectAll();
+                            return false;
                         }
                     }
                 }
@@ -120,6 +122,7 @@ namespace AshaWeighing
                                 MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1);
                 txtUsername.Focus();
                 txtUsername.SelectAll();
+                return false;
             }
             finally
             {
@@ -130,7 +133,8 @@ namespace AshaWeighing
         private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                DoLogin();
+                if(DoLogin())
+                    Close();
         }
     }
 }

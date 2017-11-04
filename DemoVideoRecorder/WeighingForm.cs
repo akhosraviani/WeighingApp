@@ -25,6 +25,7 @@ namespace AshaWeighing
         private PrivateFontCollection fonts = new PrivateFontCollection();
 
         private bool _isStable = false;
+        private bool _isWeighingBridgeActive = false;
         private Font myFont, myFontBig;
         private List<Label> _indicatorList;
         private SerialPort _serialPort;
@@ -52,16 +53,25 @@ namespace AshaWeighing
             set
             {
                 _isStable = value;
-                if(_isStable)
+                if (_isStable)
                 {
-                    for (int i = 0; i < 4; i++)
+                    if (_isWeighingBridgeActive)
                     {
-                        requestFrame(i);
+                        for (int i = 0; i < 4; i++)
+                        {
+                            requestFrame(i);
+                        }
+                        sevenSegmentWeight.Value = _indicatorWeight.ToString();
+                        btnGetStableData.Text = "فعال سازی دریافت اطلاعات";
+                        sevenSegmentWeight.ColorLight = Color.LightGreen;
+                        btnSaveData.Enabled = true;
                     }
-                    sevenSegmentWeight.Value = _indicatorWeight.ToString();
-                    btnGetStableData.Text = "فعال سازی دریافت اطلاعات";
-                    sevenSegmentWeight.ColorLight = Color.LightGreen;
-                    btnSaveData.Enabled = true;
+                    else
+                    {
+                        MessageBox.Show("به علت عدم برقراری ارتباط با باسکول، امکان تثبیت توزین وجود ندارد. لطفا با مدیر سیستم تماس بگیرید", "اخطار", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                        _isStable = false;
+                    }
                 }
                 else
                 {
@@ -211,9 +221,15 @@ namespace AshaWeighing
         {
             try
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT SISys_SubSysConfig.Code, SISys_SubSysConfig.Title FROM SISys_SubSysConfig JOIN SISys_SubSysConfigDetail " +
-                                                       "ON SISys_SubSysConfig.Code = SISys_SubSysConfigDetail.ConfigurationCode " +
-                                                       "WHERE SubSystemCode='WMLog' AND FormStatusCode='Cfg_Active' and Value='Visible' "
+                var macAddr =
+                        (
+                            from nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
+                            where nic.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up
+                            select nic.GetPhysicalAddress().ToString()
+                        ).FirstOrDefault();
+                using (SqlCommand cmd = new SqlCommand("SELECT a.Code, a.Title FROM SISys_SubSysConfig as a JOIN SISys_SubSysConfigDetail as b " +
+                                                       "ON a.Code = b.ConfigurationCode " +
+                                                       "WHERE a.SubSystemCode='WMLog' AND a.FormStatusCode='Cfg_Active' and b.Value='Visible' and b.Code='" + macAddr + "'"
                                                         , _dbConnection))
                 {
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -243,49 +259,53 @@ namespace AshaWeighing
                         if (MessageBox.Show("تنظیمات کامپیوتر شما در سیستم ثبت نشده است. آیا می‌خواهید تنظیمات پیش فرض برای شما ثبت شود؟", "راه اندازی تنظیمات",
                             MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.OK)
                         {
-                            var macAddr =
-                            (
-                                from nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
-                                where nic.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up
-                                select nic.GetPhysicalAddress().ToString()
-                            ).FirstOrDefault();
 
-                            string input = Microsoft.VisualBasic.Interaction.InputBox("تنظیمات به نام چه کامپیوتری ثبت شود؟", "ثبت تنظیمات", "تنظیمات در کامپیوتر " + macAddr);
-                            using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO SISys_SubSysConfigDetail(ConfigurationCode, Code, Title, Value, CreatorCode, CreationDate) " +
-                                                    "VALUES (@ConfigurationCode, @Code, @Title, @Value, @CreatorCode, @CreationDate)", _dbConnection))
+
+                            AddSettingForm addSetting = new AddSettingForm();
+                            addSetting.Text = "تنظیمات کامپیوتر " + macAddr;
+
+                            if (addSetting.ShowDialog() == DialogResult.OK)
                             {
-
-                                // set up the parameters
-                                sqlCommand.Parameters.Add("@ConfigurationCode", SqlDbType.NVarChar, 64);
-                                sqlCommand.Parameters.Add("@Code", SqlDbType.NVarChar, 64);
-                                sqlCommand.Parameters.Add("@Title", SqlDbType.NVarChar, 64);
-                                sqlCommand.Parameters.Add("@Value", SqlDbType.NVarChar, 64);
-                                sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
-                                sqlCommand.Parameters.Add("@CreationDate", SqlDbType.DateTime);
-
-
-                                using (SqlCommand cmd2 = new SqlCommand("SELECT Code, Title FROM SISys_SubSysConfig WHERE SubSystemCode='WMLog' AND FormStatusCode='Cfg_Active'"
-                                                                , _dbConnection))
+                                string input = addSetting.Text;
+                                using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO SISys_SubSysConfigDetail(ConfigurationCode, Code, Title, Value, CreatorCode, CreationDate) " +
+                                                        "VALUES (@ConfigurationCode, @Code, @Title, @Value, @CreatorCode, @CreationDate)", _dbConnection))
                                 {
-                                    da = new SqlDataAdapter(cmd2);
-                                    conf = new DataTable();
-                                    da.Fill(conf);
-                                    ToolStripMenuItem[] items = new ToolStripMenuItem[conf.Rows.Count];
+                                    // set up the parameters
+                                    sqlCommand.Parameters.Add("@ConfigurationCode", SqlDbType.NVarChar, 64);
+                                    sqlCommand.Parameters.Add("@Code", SqlDbType.NVarChar, 64);
+                                    sqlCommand.Parameters.Add("@Title", SqlDbType.NVarChar, 64);
+                                    sqlCommand.Parameters.Add("@Value", SqlDbType.NVarChar, 64);
+                                    sqlCommand.Parameters.Add("@CreatorCode", SqlDbType.NVarChar, 64);
+                                    sqlCommand.Parameters.Add("@CreationDate", SqlDbType.DateTime);
 
-                                    for (int i = 0; i < conf.Rows.Count; i++)
+
+                                    using (SqlCommand cmd2 = new SqlCommand("SELECT Code, Title FROM SISys_SubSysConfig WHERE SubSystemCode='WMLog' AND FormStatusCode='Cfg_Active'"
+                                                                    , _dbConnection))
                                     {
-                                        // set parameter values
-                                        sqlCommand.Parameters["@ConfigurationCode"].Value = conf.Rows[i].Field<string>("Code");
-                                        sqlCommand.Parameters["@Code"].Value = macAddr;
-                                        sqlCommand.Parameters["@Title"].Value = input;
-                                        sqlCommand.Parameters["@Value"].Value = "Visible";
-                                        sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
-                                        sqlCommand.Parameters["@CreationDate"].Value = DateTime.Now;
+                                        da = new SqlDataAdapter(cmd2);
+                                        conf = new DataTable();
+                                        da.Fill(conf);
+                                        ToolStripMenuItem[] items = new ToolStripMenuItem[conf.Rows.Count];
 
-                                        sqlCommand.ExecuteNonQuery();
+                                        for (int i = 0; i < conf.Rows.Count; i++)
+                                        {
+                                            // set parameter values
+                                            sqlCommand.Parameters["@ConfigurationCode"].Value = conf.Rows[i].Field<string>("Code");
+                                            sqlCommand.Parameters["@Code"].Value = macAddr;
+                                            sqlCommand.Parameters["@Title"].Value = input;
+                                            sqlCommand.Parameters["@Value"].Value = "Visible";
+                                            sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
+                                            sqlCommand.Parameters["@CreationDate"].Value = DateTime.Now;
 
+                                            sqlCommand.ExecuteNonQuery();
+
+                                        }
                                     }
                                 }
+                            }
+                            else
+                            {
+                                MessageBox.Show("لطفاً جهت ثبت تنظیمات با مدیر سیستم تماس بگیرید.", "راه اندازی تنظیمات", MessageBoxButtons.OK);
                             }
                         }
                         else
@@ -320,7 +340,7 @@ namespace AshaWeighing
             cameraIndicator4.Location = new Point(6, 1);
             imgCamera4.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
 
-            byte[] fontData = AshaWeighing.Properties.Resources.IRANSans_FaNum_;
+            byte[] fontData = Resources.IRANSans_FaNum_;
             IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
             System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
             uint dummy = 0;
@@ -659,6 +679,14 @@ namespace AshaWeighing
                         }
                     }
                 }
+                else
+                {
+                    InvokeGuiThread(() =>
+                    {
+                        _indicatorList[counter].Text = "عدم اتصال";
+                        _indicatorList[counter].ForeColor = Color.Blue;
+                    });
+                }
             }
         }
         private void ConnectDatabase()
@@ -695,6 +723,7 @@ namespace AshaWeighing
                 try
                 {
                     _serialPort.Open();
+                    _isWeighingBridgeActive = true;
                     InvokeGuiThread(() =>
                     {
                         weighingBridgeIndicator.Text = "فعال";
@@ -704,6 +733,7 @@ namespace AshaWeighing
                 catch (Exception exp)
                 {
                     LogHelper.Log(LogTarget.Database, "Error", _weighingOrderCode, "ConnectWeighingMachine: " + exp.Message, Globals.UserCode);
+                    _isWeighingBridgeActive = false;
                     InvokeGuiThread(() =>
                     {
                         weighingBridgeIndicator.Text = "غیرفعال";
@@ -713,6 +743,7 @@ namespace AshaWeighing
             }
             else
             {
+                _isWeighingBridgeActive = false;
                 InvokeGuiThread(() =>
                 {
                     weighingBridgeIndicator.Text = "غیرفعال";
@@ -737,16 +768,20 @@ namespace AshaWeighing
                 sevenSegmentWeight.Value = "0";
                 weighingBridgeIndicator.Text = "غیرفعال";
                 weighingBridgeIndicator.ForeColor = Color.Red;
+                _isWeighingBridgeActive = false;
             }
         }
 
         public byte[] imageToByteArray(System.Drawing.Image imageIn)
         {
-            using (var ms = new System.IO.MemoryStream())
-            {
-                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                return ms.ToArray();
-            }
+            if (imageIn != null)
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    return ms.ToArray();
+                }
+            else
+                return null;
         }
 
         private void btnGetStableData_Click(object sender, EventArgs e)
@@ -793,10 +828,10 @@ namespace AshaWeighing
                     sqlCommand.Parameters["@WeighingOrderCode"].Value = _weighingOrderCode;
                     sqlCommand.Parameters["@WeighingTypeCode"].Value = cmbWeighingTypes.SelectedValue;
                     sqlCommand.Parameters["@Weight"].Value = int.Parse(sevenSegmentWeight.Value);
-                    sqlCommand.Parameters["@Image1"].Value = imageToByteArray(imgCamera1.Image);
-                    sqlCommand.Parameters["@Image2"].Value = imageToByteArray(imgCamera2.Image);
-                    sqlCommand.Parameters["@Image3"].Value = imageToByteArray(imgCamera3.Image);
-                    sqlCommand.Parameters["@Image4"].Value = imageToByteArray(imgCamera4.Image);
+                    sqlCommand.Parameters["@Image1"].Value = (object)imageToByteArray(imgCamera1.Image) ?? DBNull.Value;
+                    sqlCommand.Parameters["@Image2"].Value = (object)imageToByteArray(imgCamera2.Image) ?? DBNull.Value;
+                    sqlCommand.Parameters["@Image3"].Value = (object)imageToByteArray(imgCamera3.Image) ?? DBNull.Value;
+                    sqlCommand.Parameters["@Image4"].Value = (object)imageToByteArray(imgCamera4.Image) ?? DBNull.Value;
                     sqlCommand.Parameters["@MachineCode"].Value = Globals.WeighingMachineCode;
                     sqlCommand.Parameters["@ResponsibleCode"].Value = Globals.PersonnelCode;
                     sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
@@ -952,7 +987,7 @@ namespace AshaWeighing
                                         + "ON WMLog_WeighingOrderDetail.OperationStatusCode = SISys_FormStatus.Code LEFT OUTER JOIN MRMA_Machine "
                                         + "ON WMLog_WeighingOrderDetail.MachineCode = MRMA_Machine.Code LEFT OUTER JOIN HREA_Personnel "
                                         + "ON WMLog_WeighingOrderDetail.ResponsibleCode = HREA_Personnel.PersonnelCode "
-                                        + "WHERE WeighingOrderCode='" + _weighingOrderCode + "'"
+                                        + "WHERE WeighingOrderCode='" + _weighingOrderCode + "' Order By WMLog_WeighingOrderDetail.OperationSequence DESC"
                                                                 , _dbConnection))
                         {
                             _weighingOrderDetailTable = new DataTable();

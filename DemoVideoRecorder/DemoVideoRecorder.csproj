@@ -24,7 +24,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>5.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>5.1.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -138,6 +138,12 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddSettingForm.Designer.cs">
+      <DependentUpon>AddSettingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="App.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,7 +185,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="SettingMenuConfig.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SevenSegment.cs">
       <SubType>UserControl</SubType>
@@ -208,6 +213,9 @@
     <Compile Include="WeighingOrderType.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddSettingForm.resx">
+      <DependentUpon>AddSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App.resx">
       <DependentUpon>App.cs</DependentUpon>
@@ -238,6 +246,7 @@
   <ItemGroup>
     <None Include="App.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

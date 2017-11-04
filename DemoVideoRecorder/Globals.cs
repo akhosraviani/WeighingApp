@@ -29,10 +29,8 @@ namespace AshaWeighing
         
         public static void GetConfigurationDetails(string configCode)
         {
-            var connection =
-                System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
             if (_dbConnection == null)
-                _dbConnection = new SqlConnection(connection);
+                _dbConnection = new SqlConnection(ConnectionString);
             if (_dbConnection.State != ConnectionState.Open)
             {
                 try
@@ -52,10 +50,10 @@ namespace AshaWeighing
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable conf = new DataTable();
                 da.Fill(conf);
-                CameraAddress[0] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1")["Value"];
-                CameraAddress[1] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2")["Value"];
-                CameraAddress[2] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3")["Value"];
-                CameraAddress[3] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera4")["Value"];
+                CameraAddress[0] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1")["Value"]);
+                CameraAddress[1] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2")["Value"]);
+                CameraAddress[2] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3")["Value"]);
+                CameraAddress[3] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera4")["Value"]);
                 CameraUsername[0] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1Username")["Value"];
                 CameraUsername[1] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2Username")["Value"];
                 CameraUsername[2] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3Username")["Value"];

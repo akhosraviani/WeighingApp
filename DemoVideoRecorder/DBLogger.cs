@@ -7,9 +7,6 @@ namespace AshaWeighing
     public class DBLogger : LogBase
 
     {
-
-        string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
-
         public override void Log(string type, string weighingOrderCode, string message, string userID)
 
         {
@@ -17,7 +14,7 @@ namespace AshaWeighing
             lock (lockObj)
 
             {
-                var dbConnection = new SqlConnection(connectionString);
+                var dbConnection = new SqlConnection(Globals.ConnectionString);
                 if (dbConnection.State != ConnectionState.Open)
                 {
                     try

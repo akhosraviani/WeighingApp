@@ -78,10 +78,8 @@ namespace AshaWeighing
         }
         private void ConnectDatabase()
         {
-            var connection =
-                System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
             if (_dbConnection == null)
-                _dbConnection = new SqlConnection(connection);
+                _dbConnection = new SqlConnection(Globals.ConnectionString);
             if (_dbConnection.State != ConnectionState.Open)
             {
                 try
@@ -136,10 +134,8 @@ namespace AshaWeighing
         {
             try
             {
-                var connection =
-                    System.Configuration.ConfigurationManager.ConnectionStrings["AshaDbContext"].ConnectionString;
                 if (_dbConnection == null)
-                    _dbConnection = new SqlConnection(connection);
+                    _dbConnection = new SqlConnection(Globals.ConnectionString);
                 if (_dbConnection.State != ConnectionState.Open)
                 {
                     _dbConnection.Open();
