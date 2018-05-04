@@ -93,6 +93,8 @@
             this.lblCurrentTime = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctmConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cmbOperationCode = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -272,18 +274,21 @@
             // 
             // tableLayoutPanel12
             // 
-            this.tableLayoutPanel12.ColumnCount = 5;
+            this.tableLayoutPanel12.ColumnCount = 7;
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel12.Controls.Add(this.cmbOperationCode, 3, 0);
             this.tableLayoutPanel12.Controls.Add(this.label3, 0, 0);
             this.tableLayoutPanel12.Controls.Add(this.cmbWeighingTypes, 1, 0);
-            this.tableLayoutPanel12.Controls.Add(this.btnConnect, 4, 0);
-            this.tableLayoutPanel12.Controls.Add(this.DatabaseIndicator, 3, 0);
-            this.tableLayoutPanel12.Controls.Add(this.label5, 2, 0);
+            this.tableLayoutPanel12.Controls.Add(this.btnConnect, 6, 0);
+            this.tableLayoutPanel12.Controls.Add(this.DatabaseIndicator, 5, 0);
+            this.tableLayoutPanel12.Controls.Add(this.label5, 4, 0);
+            this.tableLayoutPanel12.Controls.Add(this.label2, 2, 0);
             this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel12.Location = new System.Drawing.Point(0, 3);
             this.tableLayoutPanel12.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
@@ -310,9 +315,9 @@
             this.cmbWeighingTypes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbWeighingTypes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
             this.cmbWeighingTypes.FormattingEnabled = true;
-            this.cmbWeighingTypes.Location = new System.Drawing.Point(222, 3);
+            this.cmbWeighingTypes.Location = new System.Drawing.Point(356, 3);
             this.cmbWeighingTypes.Name = "cmbWeighingTypes";
-            this.cmbWeighingTypes.Size = new System.Drawing.Size(188, 21);
+            this.cmbWeighingTypes.Size = new System.Drawing.Size(54, 21);
             this.cmbWeighingTypes.TabIndex = 5;
             this.cmbWeighingTypes.SelectedValueChanged += new System.EventHandler(this.cmbWeighingTypes_SelectedValueChanged);
             // 
@@ -321,7 +326,7 @@
             this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnConnect.Location = new System.Drawing.Point(3, 3);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(67, 20);
+            this.btnConnect.Size = new System.Drawing.Size(68, 20);
             this.btnConnect.TabIndex = 6;
             this.btnConnect.Text = "اتصال";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -332,7 +337,7 @@
             this.DatabaseIndicator.AutoSize = true;
             this.DatabaseIndicator.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DatabaseIndicator.ForeColor = System.Drawing.Color.Red;
-            this.DatabaseIndicator.Location = new System.Drawing.Point(76, 0);
+            this.DatabaseIndicator.Location = new System.Drawing.Point(77, 0);
             this.DatabaseIndicator.Name = "DatabaseIndicator";
             this.DatabaseIndicator.Size = new System.Drawing.Size(67, 27);
             this.DatabaseIndicator.TabIndex = 66;
@@ -343,7 +348,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(149, 0);
+            this.label5.Location = new System.Drawing.Point(150, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(67, 27);
             this.label5.TabIndex = 67;
@@ -985,6 +990,27 @@
             this.ctmConfig.Size = new System.Drawing.Size(117, 22);
             this.ctmConfig.Text = "تنظیمات";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Location = new System.Drawing.Point(283, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(67, 27);
+            this.label2.TabIndex = 68;
+            this.label2.Text = "مرحله توزین:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // cmbOperationCode
+            // 
+            this.cmbOperationCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbOperationCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+            this.cmbOperationCode.FormattingEnabled = true;
+            this.cmbOperationCode.Location = new System.Drawing.Point(223, 3);
+            this.cmbOperationCode.Name = "cmbOperationCode";
+            this.cmbOperationCode.Size = new System.Drawing.Size(54, 21);
+            this.cmbOperationCode.TabIndex = 69;
+            // 
             // WeighingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1111,5 +1137,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dgWeighingStatus;
         private System.Windows.Forms.DataGridView dgWeighingData;
+        private System.Windows.Forms.ComboBox cmbOperationCode;
+        private System.Windows.Forms.Label label2;
     }
 }

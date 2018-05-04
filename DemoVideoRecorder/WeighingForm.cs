@@ -46,6 +46,7 @@ namespace AshaWeighing
 
         private Dictionary<string, string> _configs;
         private List<WeighingOrderType> _weighingTypes;
+        private List<OperationCode> _operationCodes;
         private System.Windows.Forms.Timer tmr = new System.Windows.Forms.Timer();
         public bool IsStable
         {
@@ -383,6 +384,7 @@ namespace AshaWeighing
             Thread thread3 = new Thread(ConnectCameras);
             thread3.Start();
             GetWeighingTypes();
+            GetOperationCodes();
             foreach (ToolStripMenuItem item in ctmConfig.DropDownItems)
             {
                 if (((string)item.Tag) != Settings.Default.SelectedConfiguration)
@@ -431,6 +433,48 @@ namespace AshaWeighing
             catch (Exception ex)
             {
                 LogHelper.Log(LogTarget.Database, _weighingOrderCode, "Error", "GetWeighingTypes: " + ex.Message, Globals.UserCode);
+                InvokeGuiThread(() =>
+                {
+                    DatabaseIndicator.Text = "غیرفعال";
+                    DatabaseIndicator.ForeColor = Color.Red;
+                });
+            }
+        }
+
+        private void GetOperationCodes()
+        {
+            if (_dbConnection == null || _dbConnection.State != ConnectionState.Open)
+                ConnectDatabase();
+            try
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    using (SqlCommand cmd = new SqlCommand("SELECT Code, Title FROM WMLog_WeighingOperation"
+                                                            , _dbConnection))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable OperationCodeTable = new DataTable();
+                        da.Fill(OperationCodeTable);
+                        _operationCodes = new List<OperationCode>();
+                        for (int i = 0; i < OperationCodeTable.Rows.Count; i++)
+                        {
+                            _operationCodes.Add(new OperationCode()
+                            {
+                                Name = OperationCodeTable.Rows[i].Field<string>("Title"),
+                                Value = OperationCodeTable.Rows[i].Field<string>("Code")
+                            });
+                        }
+
+                        cmbOperationCode.DataSource = _operationCodes;
+                        cmbOperationCode.DisplayMember = "Name";
+                        cmbOperationCode.ValueMember = "Value";
+                        cmbOperationCode.DropDownStyle = ComboBoxStyle.DropDownList;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(LogTarget.Database, _weighingOrderCode, "Error", "GetOperationCodes: " + ex.Message, Globals.UserCode);
                 InvokeGuiThread(() =>
                 {
                     DatabaseIndicator.Text = "غیرفعال";
@@ -813,6 +857,7 @@ namespace AshaWeighing
                     // set up the parameters
                     sqlCommand.Parameters.Add("@WeighingOrderCode", SqlDbType.NVarChar, 64);
                     sqlCommand.Parameters.Add("@WeighingTypeCode", SqlDbType.NVarChar, 64);
+                    sqlCommand.Parameters.Add("@OperationCode", SqlDbType.NVarChar, 64);
                     sqlCommand.Parameters.Add("@Weight", SqlDbType.Int);
                     sqlCommand.Parameters.Add("@Image1", SqlDbType.Binary);
                     sqlCommand.Parameters.Add("@Image2", SqlDbType.Binary);
@@ -827,6 +872,7 @@ namespace AshaWeighing
                     // set parameter values
                     sqlCommand.Parameters["@WeighingOrderCode"].Value = _weighingOrderCode;
                     sqlCommand.Parameters["@WeighingTypeCode"].Value = cmbWeighingTypes.SelectedValue;
+                    sqlCommand.Parameters["@OperationCode"].Value = cmbOperationCode.SelectedValue;
                     sqlCommand.Parameters["@Weight"].Value = int.Parse(sevenSegmentWeight.Value);
                     sqlCommand.Parameters["@Image1"].Value = (object)imageToByteArray(imgCamera1.Image) ?? DBNull.Value;
                     sqlCommand.Parameters["@Image2"].Value = (object)imageToByteArray(imgCamera2.Image) ?? DBNull.Value;
@@ -945,6 +991,22 @@ namespace AshaWeighing
                             else
                             {
                                 MessageBox.Show("شناسه توزین باز با کد مذکور در سیستم وجود ندارد. لطفاً با مدیر سیستم تماس بگیرید.", "خطا در سیستم توزین");
+                            }
+                        }
+
+                        using (SqlCommand cmd = new SqlCommand("SELECT WMLog_WeighingOrderDetail.OperationCode FROM WMLog_WeighingOrderDetail "
+                                        + "WHERE WeighingOrderCode='" + _weighingOrderCode + "' AND OperationStatusCode='LogOpr_Weighing'"
+                                                                , _dbConnection))
+                        {
+                            DataTable weighingOperationTable = new DataTable();
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            da.Fill(weighingOperationTable);
+                            if (weighingOperationTable.Rows.Count > 0)
+                            {
+                                cmbOperationCode.SelectedValue = weighingOperationTable.Rows[0].Field<string>("OperationCode");
+                            }
+                            else
+                            {
                             }
                         }
 
