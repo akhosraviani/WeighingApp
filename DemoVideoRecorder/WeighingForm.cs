@@ -481,7 +481,7 @@ namespace AshaWeighing
             byte[] v = new byte[8];
             int intResult = 0;
             int tryCount = 0;
-
+            
             if (_serialPort.BytesToRead <= 0)
             {
 
@@ -490,32 +490,64 @@ namespace AshaWeighing
             {
                 while (_serialPort.BytesToRead > 0 && tryCount < 10)
                 {
+                    
                     var output = _serialPort.Read(v, 0, 7);
+
+
+                    //StringBuilder hex = new StringBuilder(2);
+                    //hex.AppendFormat("{0:x2}", v[0]);
+                    //txtWeighingOrderCode.Text = "-----S---- " + hex.ToString();
+
+                    //hex.Clear();
+                    //hex.AppendFormat("{0:x2}", v[1]);
+                    //txtWeighingOrderCode.Text += " " + hex.ToString();
+
+                    //hex.Clear();
+                    //hex.AppendFormat("{0:x2}", v[2]);
+                    //txtWeighingOrderCode.Text += " " + hex.ToString();
+
+                    //hex.Clear();
+                    //hex.AppendFormat("{0:x2}", v[3]);
+                    //txtWeighingOrderCode.Text += " " + hex.ToString();
+
+                    //hex.Clear();
+                    //hex.AppendFormat("{0:x2}", v[4]);
+                    //txtWeighingOrderCode.Text += " " + hex.ToString() + " ----E----";
+
+                    if ((v[0] & (1 << 8 - 1)) != 0 == true &&
+                              (v[1] & (1 << 8 - 1)) != 0 == false &&
+                              (v[2] & (1 << 8 - 1)) != 0 == false &&
+                              (v[3] & (1 << 8 - 1)) != 0 == false &&
+                              (v[4] & (1 << 8 - 1)) != 0 == false)
+                    {
+                        byte d0 = (byte)(((v[3] & 1) << 7) | v[4]);
+                        byte d1 = (byte)(((v[2] & 3) << 6) | (v[3] >> 1));
+                        byte d2 = (byte)(((v[1] & 7) << 5) | (v[2] >> 2));
+                        long value = ((d2 << 16) + (d1 << 8) + d0);
+
+                        //MessageBox.Show("" + value);
+                        intResult = Convert.ToInt32(value);
+                    }
 
                     if (output == 7)
                     {
+                        //MessageBox.Show("Output == 7");
                         try
                         {
-                            StringBuilder hex = new StringBuilder(2);
-                            hex.AppendFormat("{0:x2}", v[0]);
-
-                            if (hex.ToString().ToLower().Equals("bb"))
+                            MessageBox.Show("try");
+                            if ((v[0] & (1 << 8 - 1)) != 0 == true &&
+                              (v[1] & (1 << 8 - 1)) != 0 == false &&
+                              (v[2] & (1 << 8 - 1)) != 0 == false &&
+                              (v[3] & (1 << 8 - 1)) != 0 == false &&
+                              (v[4] & (1 << 8 - 1)) != 0 == false)
                             {
-                                hex.Clear();
-                                hex.AppendFormat("{0:x2}", v[1]);
+                                byte d0 = (byte)(((v[3] & 1) << 7) | v[4]);
+                                byte d1 = (byte)(((v[2] & 3) << 6) | (v[3] >> 1));
+                                byte d2 = (byte)(((v[1] & 7) << 5) | (v[2] >> 2));
+                                long value = ((d2 << 16) + (d1 << 8) + d0);
 
-                                if (hex.ToString().ToLower().Equals("e0"))
-                                {
-                                    intResult = -10 * int.Parse(Encoding.ASCII.GetString(v, 2, 6));
-                                    tryCount = 10;
-                                }
-                                else
-                                {
-                                    intResult = int.Parse(Encoding.ASCII.GetString(v, 1, 6));
-                                    tryCount = 10;
-                                }
+                                MessageBox.Show("" + value);
                             }
-
 
                         }
                         catch (FormatException)
