@@ -37,6 +37,7 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.cmbWeighingTypes = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.btnNewWeighing = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -58,9 +59,9 @@
             // 
             this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtSearch.Location = new System.Drawing.Point(155, 5);
+            this.txtSearch.Location = new System.Drawing.Point(287, 5);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(700, 20);
+            this.txtSearch.Size = new System.Drawing.Size(568, 20);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
@@ -68,9 +69,9 @@
             // btnSearch
             // 
             this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearch.Location = new System.Drawing.Point(3, 5);
+            this.btnSearch.Location = new System.Drawing.Point(145, 5);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(146, 20);
+            this.btnSearch.Size = new System.Drawing.Size(136, 20);
             this.btnSearch.TabIndex = 2;
             this.btnSearch.Text = "جستجو";
             this.btnSearch.UseVisualStyleBackColor = true;
@@ -94,13 +95,15 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnCount = 4;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 152F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 142F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 142F));
             this.tableLayoutPanel2.Controls.Add(this.txtSearch, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.btnSearch, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnNewWeighing, 3, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 30);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
@@ -166,6 +169,17 @@
             this.label2.Text = "نوع توزین:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnNewWeighing
+            // 
+            this.btnNewWeighing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNewWeighing.Location = new System.Drawing.Point(3, 5);
+            this.btnNewWeighing.Name = "btnNewWeighing";
+            this.btnNewWeighing.Size = new System.Drawing.Size(136, 20);
+            this.btnNewWeighing.TabIndex = 2;
+            this.btnNewWeighing.Text = "جدید";
+            this.btnNewWeighing.UseVisualStyleBackColor = true;
+            this.btnNewWeighing.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
             // ShipmentListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,5 +212,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cmbWeighingTypes;
+        private System.Windows.Forms.Button btnNewWeighing;
     }
 }

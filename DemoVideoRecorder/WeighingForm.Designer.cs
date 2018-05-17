@@ -35,17 +35,20 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtWeighingOrderCode = new System.Windows.Forms.TextBox();
-            this.btnClear = new System.Windows.Forms.Button();
             this.btnOpenWeighingList = new System.Windows.Forms.Button();
             this.btnWeighingOrderSearch = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.btnNewWeighing = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dgShipmentDetail = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
+            this.cmbOperationCode = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbWeighingTypes = new System.Windows.Forms.ComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.DatabaseIndicator = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dgWeighingStatus = new System.Windows.Forms.DataGridView();
@@ -93,8 +96,7 @@
             this.lblCurrentTime = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctmConfig = new System.Windows.Forms.ToolStripMenuItem();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cmbOperationCode = new System.Windows.Forms.ComboBox();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -167,18 +169,20 @@
             // 
             // tableLayoutPanel4
             // 
-            this.tableLayoutPanel4.ColumnCount = 5;
+            this.tableLayoutPanel4.ColumnCount = 6;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 74F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel4.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.txtWeighingOrderCode, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.btnClear, 4, 0);
             this.tableLayoutPanel4.Controls.Add(this.btnOpenWeighingList, 3, 0);
             this.tableLayoutPanel4.Controls.Add(this.btnWeighingOrderSearch, 2, 0);
+            this.tableLayoutPanel4.Controls.Add(this.btnClear, 5, 0);
+            this.tableLayoutPanel4.Controls.Add(this.btnNewWeighing, 4, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 30);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
@@ -204,29 +208,18 @@
             // 
             this.txtWeighingOrderCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtWeighingOrderCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtWeighingOrderCode.Location = new System.Drawing.Point(222, 5);
+            this.txtWeighingOrderCode.Location = new System.Drawing.Point(242, 5);
             this.txtWeighingOrderCode.Name = "txtWeighingOrderCode";
-            this.txtWeighingOrderCode.Size = new System.Drawing.Size(188, 20);
+            this.txtWeighingOrderCode.Size = new System.Drawing.Size(168, 20);
             this.txtWeighingOrderCode.TabIndex = 1;
             this.txtWeighingOrderCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtWeighingOrderCode_KeyDown);
-            // 
-            // btnClear
-            // 
-            this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(3, 5);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(67, 20);
-            this.btnClear.TabIndex = 5;
-            this.btnClear.Text = "پــاک";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // btnOpenWeighingList
             // 
             this.btnOpenWeighingList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOpenWeighingList.Location = new System.Drawing.Point(76, 5);
+            this.btnOpenWeighingList.Location = new System.Drawing.Point(127, 5);
             this.btnOpenWeighingList.Name = "btnOpenWeighingList";
-            this.btnOpenWeighingList.Size = new System.Drawing.Size(67, 20);
+            this.btnOpenWeighingList.Size = new System.Drawing.Size(36, 20);
             this.btnOpenWeighingList.TabIndex = 5;
             this.btnOpenWeighingList.Text = "...";
             this.btnOpenWeighingList.UseVisualStyleBackColor = true;
@@ -235,13 +228,34 @@
             // btnWeighingOrderSearch
             // 
             this.btnWeighingOrderSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnWeighingOrderSearch.Location = new System.Drawing.Point(149, 5);
+            this.btnWeighingOrderSearch.Location = new System.Drawing.Point(169, 5);
             this.btnWeighingOrderSearch.Name = "btnWeighingOrderSearch";
             this.btnWeighingOrderSearch.Size = new System.Drawing.Size(67, 20);
             this.btnWeighingOrderSearch.TabIndex = 4;
             this.btnWeighingOrderSearch.Text = "جستجو";
             this.btnWeighingOrderSearch.UseVisualStyleBackColor = true;
             this.btnWeighingOrderSearch.Click += new System.EventHandler(this.btnWeighingOrderSearch_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClear.Location = new System.Drawing.Point(3, 5);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(68, 20);
+            this.btnClear.TabIndex = 5;
+            this.btnClear.Text = "پــاک";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // btnNewWeighing
+            // 
+            this.btnNewWeighing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNewWeighing.Location = new System.Drawing.Point(77, 5);
+            this.btnNewWeighing.Name = "btnNewWeighing";
+            this.btnNewWeighing.Size = new System.Drawing.Size(44, 20);
+            this.btnNewWeighing.TabIndex = 5;
+            this.btnNewWeighing.Text = "جدید";
+            this.btnNewWeighing.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
@@ -281,7 +295,7 @@
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
             this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 74F));
             this.tableLayoutPanel12.Controls.Add(this.cmbOperationCode, 3, 0);
             this.tableLayoutPanel12.Controls.Add(this.label3, 0, 0);
             this.tableLayoutPanel12.Controls.Add(this.cmbWeighingTypes, 1, 0);
@@ -297,6 +311,16 @@
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel12.Size = new System.Drawing.Size(486, 27);
             this.tableLayoutPanel12.TabIndex = 7;
+            // 
+            // cmbOperationCode
+            // 
+            this.cmbOperationCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbOperationCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
+            this.cmbOperationCode.FormattingEnabled = true;
+            this.cmbOperationCode.Location = new System.Drawing.Point(223, 3);
+            this.cmbOperationCode.Name = "cmbOperationCode";
+            this.cmbOperationCode.Size = new System.Drawing.Size(54, 21);
+            this.cmbOperationCode.TabIndex = 69;
             // 
             // label3
             // 
@@ -354,6 +378,17 @@
             this.label5.TabIndex = 67;
             this.label5.Text = "پایگاه داده";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Location = new System.Drawing.Point(283, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(67, 27);
+            this.label2.TabIndex = 68;
+            this.label2.Text = "مرحله توزین:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel7
             // 
@@ -990,26 +1025,13 @@
             this.ctmConfig.Size = new System.Drawing.Size(117, 22);
             this.ctmConfig.Text = "تنظیمات";
             // 
-            // label2
+            // toolStrip1
             // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(283, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 27);
-            this.label2.TabIndex = 68;
-            this.label2.Text = "مرحله توزین:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // cmbOperationCode
-            // 
-            this.cmbOperationCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbOperationCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.cmbOperationCode.FormattingEnabled = true;
-            this.cmbOperationCode.Location = new System.Drawing.Point(223, 3);
-            this.cmbOperationCode.Name = "cmbOperationCode";
-            this.cmbOperationCode.Size = new System.Drawing.Size(54, 21);
-            this.cmbOperationCode.TabIndex = 69;
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(984, 25);
+            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.Text = "toolStrip1";
             // 
             // WeighingForm
             // 
@@ -1018,6 +1040,7 @@
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(984, 411);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WeighingForm";
@@ -1069,6 +1092,7 @@
             this.tableLayoutPanel20.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1139,5 +1163,7 @@
         private System.Windows.Forms.DataGridView dgWeighingData;
         private System.Windows.Forms.ComboBox cmbOperationCode;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnNewWeighing;
+        private System.Windows.Forms.ToolStrip toolStrip1;
     }
 }

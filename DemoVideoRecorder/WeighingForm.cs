@@ -1167,7 +1167,7 @@ namespace AshaWeighing
 
         private void contextMenu_Click(object sender, EventArgs e)
         {
-            App.toolStripStatusLabel1.Text = "بررسی اتصال دستگاه ها...";
+//            App.toolStripStatusLabel1.Text = "بررسی اتصال دستگاه ها...";
             Cursor.Current = Cursors.WaitCursor;
             var menuItem = sender as ToolStripMenuItem;
             if (menuItem != null)
@@ -1200,7 +1200,7 @@ namespace AshaWeighing
             Thread thread2 = new Thread(ConnectWeighingMachine);
             thread2.Start();
             Cursor.Current = Cursors.Default;
-            App.toolStripStatusLabel1.Text = "";
+            //App.toolStripStatusLabel1.Text = "";
         }
 
         private void cmbWeighingTypes_SelectedValueChanged(object sender, EventArgs e)

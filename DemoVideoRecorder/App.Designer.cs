@@ -35,8 +35,12 @@
             this.MenuItem_tools = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_ShipmentsList = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_wheighing = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_WeighingCreate = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_Reports = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_WeighingAuthorizeReport = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_WeighingSummaryReport = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_aboutUs = new System.Windows.Forms.ToolStripMenuItem();
-            toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -48,6 +52,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem_file,
             this.MenuItem_tools,
+            this.MenuItem_Reports,
             this.MenuItem_aboutUs});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -67,7 +72,7 @@
             // MenuItem_exit
             // 
             this.MenuItem_exit.Name = "MenuItem_exit";
-            this.MenuItem_exit.Size = new System.Drawing.Size(152, 22);
+            this.MenuItem_exit.Size = new System.Drawing.Size(99, 22);
             this.MenuItem_exit.Text = "خروج";
             this.MenuItem_exit.Click += new System.EventHandler(this.MenuItem_exit_Click);
             // 
@@ -75,7 +80,8 @@
             // 
             this.MenuItem_tools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem_ShipmentsList,
-            this.MenuItem_wheighing});
+            this.MenuItem_wheighing,
+            this.MenuItem_WeighingCreate});
             this.MenuItem_tools.Name = "MenuItem_tools";
             this.MenuItem_tools.Size = new System.Drawing.Size(48, 20);
             this.MenuItem_tools.Text = "ابزارها";
@@ -83,16 +89,44 @@
             // MenuItem_ShipmentsList
             // 
             this.MenuItem_ShipmentsList.Name = "MenuItem_ShipmentsList";
-            this.MenuItem_ShipmentsList.Size = new System.Drawing.Size(157, 22);
+            this.MenuItem_ShipmentsList.Size = new System.Drawing.Size(162, 22);
             this.MenuItem_ShipmentsList.Text = "لیست محموله ها";
             this.MenuItem_ShipmentsList.Click += new System.EventHandler(this.MenuItem_ShipmentsList_Click);
             // 
             // MenuItem_wheighing
             // 
             this.MenuItem_wheighing.Name = "MenuItem_wheighing";
-            this.MenuItem_wheighing.Size = new System.Drawing.Size(157, 22);
+            this.MenuItem_wheighing.Size = new System.Drawing.Size(162, 22);
             this.MenuItem_wheighing.Text = "توزین";
             this.MenuItem_wheighing.Click += new System.EventHandler(this.MenuItem_wheighing_Click);
+            // 
+            // MenuItem_WeighingCreate
+            // 
+            this.MenuItem_WeighingCreate.Name = "MenuItem_WeighingCreate";
+            this.MenuItem_WeighingCreate.Size = new System.Drawing.Size(162, 22);
+            this.MenuItem_WeighingCreate.Text = "ایجاد دستور توزین";
+            this.MenuItem_WeighingCreate.Click += new System.EventHandler(this.MenuItem_WeighingCreate_Click);
+            // 
+            // MenuItem_Reports
+            // 
+            this.MenuItem_Reports.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_WeighingAuthorizeReport,
+            this.MenuItem_WeighingSummaryReport});
+            this.MenuItem_Reports.Name = "MenuItem_Reports";
+            this.MenuItem_Reports.Size = new System.Drawing.Size(55, 20);
+            this.MenuItem_Reports.Text = "گزارشها";
+            // 
+            // MenuItem_WeighingAuthorizeReport
+            // 
+            this.MenuItem_WeighingAuthorizeReport.Name = "MenuItem_WeighingAuthorizeReport";
+            this.MenuItem_WeighingAuthorizeReport.Size = new System.Drawing.Size(173, 22);
+            this.MenuItem_WeighingAuthorizeReport.Text = "چاپ مجوز توزین";
+            // 
+            // MenuItem_WeighingSummaryReport
+            // 
+            this.MenuItem_WeighingSummaryReport.Name = "MenuItem_WeighingSummaryReport";
+            this.MenuItem_WeighingSummaryReport.Size = new System.Drawing.Size(173, 22);
+            this.MenuItem_WeighingSummaryReport.Text = "گزارش عملکرد توزین";
             // 
             // MenuItem_aboutUs
             // 
@@ -103,17 +137,17 @@
             // 
             // toolStripStatusLabel1
             // 
-            toolStripStatusLabel1.BackColor = System.Drawing.SystemColors.Control;
-            toolStripStatusLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
-            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
-            toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStripStatusLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
+            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            toolStripStatusLabel1});
+            this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 288);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -152,6 +186,10 @@
         public System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_aboutUs;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_ShipmentsList;
-        public static System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_WeighingCreate;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Reports;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_WeighingAuthorizeReport;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_WeighingSummaryReport;
+        public System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

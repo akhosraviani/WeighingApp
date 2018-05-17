@@ -267,5 +267,24 @@ namespace AshaWeighing
             Configuration config = new Configuration();
             config.ShowDialog();
         }
+
+        private void MenuItem_WeighingCreate_Click(object sender, EventArgs e)
+        {
+            toolStripStatusLabel1.Text = "راه اندازی توزین جدید...";
+            statusStrip1.Refresh();
+            Cursor.Current = Cursors.WaitCursor;
+
+            this.IsMdiContainer = true;
+            this.HScroll = false;
+            this.VScroll = false;
+            CreateWeighing CreateWeighingForm = new CreateWeighing();
+            //weighingForm.WindowState = FormWindowState.Maximized;
+            CreateWeighingForm.MdiParent = this;
+            CreateWeighingForm.Show();
+
+            toolStripStatusLabel1.Text = "";
+            statusStrip1.Refresh();
+            Cursor.Current = Cursors.Default;
+        }
     }
 }
