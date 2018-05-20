@@ -52,7 +52,7 @@ namespace AshaWeighing
             {
                 if (_dbConnection.State == ConnectionState.Open)
                 {
-                    using (SqlCommand cmd = new SqlCommand("Select Code, Title From WMLog_WeighingType"
+                    using (SqlCommand cmd = new SqlCommand("Select Top 100 Code, Title From WMLog_WeighingType"
                                                             , _dbConnection))
                     {
                         SqlDataReader reader;
@@ -67,7 +67,7 @@ namespace AshaWeighing
                         cmbWeighingTypes.DisplayMember = "Title";
                         cmbWeighingTypes.DataSource = dt;
                     }
-                    using (SqlCommand cmd = new SqlCommand("Select DriverCode, Title From WMLog_Driver"
+                    using (SqlCommand cmd = new SqlCommand("Select Top 100 DriverCode, Title From WMLog_Driver"
                                                             , _dbConnection))
                     {
                         SqlDataReader reader;
@@ -82,6 +82,102 @@ namespace AshaWeighing
                         cmbDriver.DisplayMember = "Title";
                         cmbDriver.DataSource = dt;
                     }
+                    using (SqlCommand cmd = new SqlCommand("Select Top 100 Code, Title From WMLog_Vehicle"
+                                                            , _dbConnection))
+                    {
+                        SqlDataReader reader;
+
+                        reader = cmd.ExecuteReader();
+                        DataTable dt = new DataTable();
+                        dt.Columns.Add("Code", typeof(string));
+                        dt.Columns.Add("Title", typeof(string));
+                        dt.Load(reader);
+
+                        cmbCarNo.ValueMember = "Code";
+                        cmbCarNo.DisplayMember = "Title";
+                        cmbCarNo.DataSource = dt;
+                    }
+                    using (SqlCommand cmd = new SqlCommand("Select Top 100 Code, Title From WMInv_Part"
+                                                            , _dbConnection))
+                    {
+                        SqlDataReader reader;
+
+                        reader = cmd.ExecuteReader();
+                        DataTable dt = new DataTable();
+                        dt.Columns.Add("Code", typeof(string));
+                        dt.Columns.Add("Title", typeof(string));
+                        dt.Load(reader);
+
+                        cmbPart.ValueMember = "Code";
+                        cmbPart.DisplayMember = "Title";
+                        cmbPart.DataSource = dt;
+                    }
+                    using (SqlCommand cmd = new SqlCommand("Select Top 100 Code, Title From WMInv_Inventory"
+                                                            , _dbConnection))
+                    {
+                        SqlDataReader reader;
+
+                        reader = cmd.ExecuteReader();
+                        DataTable dt = new DataTable();
+                        dt.Columns.Add("Code", typeof(string));
+                        dt.Columns.Add("Title", typeof(string));
+                        dt.Load(reader);
+
+                        cmbFromInventory.ValueMember = "Code";
+                        cmbFromInventory.DisplayMember = "Title";
+                        cmbFromInventory.DataSource = dt;
+                        cmbToInventory.ValueMember = "Code";
+                        cmbToInventory.DisplayMember = "Title";
+                        cmbToInventory.DataSource = dt;
+                    }
+                    using (SqlCommand cmd = new SqlCommand("Select Top 100 Code, LotCode From WMInv_InventoryLotStock"
+                                        , _dbConnection))
+                    {
+                        SqlDataReader reader;
+
+                        reader = cmd.ExecuteReader();
+                        DataTable dt = new DataTable();
+                        dt.Columns.Add("Code", typeof(string));
+                        dt.Columns.Add("LotCode", typeof(string));
+                        dt.Load(reader);
+
+                        cmbFromLotCode.ValueMember = "Code";
+                        cmbFromLotCode.DisplayMember = "LotCode";
+                        cmbFromLotCode.DataSource = dt;
+                        cmbToLotCode.ValueMember = "Code";
+                        cmbToLotCode.DisplayMember = "LotCode";
+                        cmbToLotCode.DataSource = dt;
+                    }
+                    using (SqlCommand cmd = new SqlCommand("Select Top 100 Code, Title From FiCC_CostCenter"
+                                                            , _dbConnection))
+                    {
+                        SqlDataReader reader;
+
+                        reader = cmd.ExecuteReader();
+                        DataTable dt = new DataTable();
+                        dt.Columns.Add("Code", typeof(string));
+                        dt.Columns.Add("Title", typeof(string));
+                        dt.Load(reader);
+
+                        cmbCostCenter.ValueMember = "Code";
+                        cmbCostCenter.DisplayMember = "Title";
+                        cmbCostCenter.DataSource = dt;
+                    }
+                    using (SqlCommand cmd = new SqlCommand("Select Top 100 Code, Title From FiGL_CostAccount"
+                                                            , _dbConnection))
+                    {
+                        SqlDataReader reader;
+
+                        reader = cmd.ExecuteReader();
+                        DataTable dt = new DataTable();
+                        dt.Columns.Add("Code", typeof(string));
+                        dt.Columns.Add("Title", typeof(string));
+                        dt.Load(reader);
+
+                        cmbAccountCode.ValueMember = "Code";
+                        cmbAccountCode.DisplayMember = "Title";
+                        cmbAccountCode.DataSource = dt;
+                    }
                 }
             }
             catch (Exception exp)
@@ -89,6 +185,25 @@ namespace AshaWeighing
             }
 
             _dbConnection.Close();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.Close();
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show("میخواهید ثبت انجام شود؟"
+                , "Confirm"
+                , MessageBoxButtons.YesNo
+                );
+            if (res == System.Windows.Forms.DialogResult.Yes)
+            {
+                // I have to cancel button click event here
+
+            }
         }
     }
 
