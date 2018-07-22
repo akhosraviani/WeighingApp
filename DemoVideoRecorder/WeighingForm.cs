@@ -1266,6 +1266,16 @@ namespace AshaWeighing
             }
         }
 
+        private void btnNewWeighing_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            CreateWeighing CreateWeighingForm = new CreateWeighing();
+            //weighingForm.WindowState = FormWindowState.Maximized;
+            CreateWeighingForm.Show();
+            Cursor.Current = Cursors.Default;
+        }
+
         private void btnClear_Click(object sender, EventArgs e)
         {
             LogHelper.Log(LogTarget.Database, "Event", _weighingOrderCode, "btnClear_Click: Pressed.", Globals.UserCode);

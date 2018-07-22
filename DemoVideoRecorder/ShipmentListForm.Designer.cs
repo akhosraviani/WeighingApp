@@ -33,11 +33,11 @@
             this.btnSearch = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnNewWeighing = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.cmbWeighingTypes = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnNewWeighing = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -91,6 +91,7 @@
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(954, 315);
             this.dataGridView1.TabIndex = 3;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             // 
             // tableLayoutPanel2
@@ -112,6 +113,17 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(960, 30);
             this.tableLayoutPanel2.TabIndex = 4;
+            // 
+            // btnNewWeighing
+            // 
+            this.btnNewWeighing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNewWeighing.Location = new System.Drawing.Point(3, 5);
+            this.btnNewWeighing.Name = "btnNewWeighing";
+            this.btnNewWeighing.Size = new System.Drawing.Size(136, 20);
+            this.btnNewWeighing.TabIndex = 2;
+            this.btnNewWeighing.Text = "جدید";
+            this.btnNewWeighing.UseVisualStyleBackColor = true;
+            this.btnNewWeighing.Click += new System.EventHandler(this.btnNewWeighing_Click);
             // 
             // tableLayoutPanel3
             // 
@@ -168,17 +180,6 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "نوع توزین:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnNewWeighing
-            // 
-            this.btnNewWeighing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNewWeighing.Location = new System.Drawing.Point(3, 5);
-            this.btnNewWeighing.Name = "btnNewWeighing";
-            this.btnNewWeighing.Size = new System.Drawing.Size(136, 20);
-            this.btnNewWeighing.TabIndex = 2;
-            this.btnNewWeighing.Text = "جدید";
-            this.btnNewWeighing.UseVisualStyleBackColor = true;
-            this.btnNewWeighing.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // ShipmentListForm
             // 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Windows.Forms;
@@ -150,6 +151,15 @@ namespace AshaWeighing
                 if (_weighingOrderTable.Rows.Count > 0)
                 {
                     dataGridView1.DataSource = _weighingOrderTable;
+                    if (!dataGridView1.Columns.Contains("btn"))
+                    {
+                        DataGridViewButtonColumn btn = new DataGridViewButtonColumn();
+                        dataGridView1.Columns.Add(btn);
+                        btn.HeaderText = "گزارش";
+                        btn.Text = "چاپ";
+                        btn.Name = "btn";
+                        btn.UseColumnTextForButtonValue = true;
+                    }
                 }
                 else
                 {
@@ -226,6 +236,30 @@ namespace AshaWeighing
             DialogResult = DialogResult.OK;
             Close();
         }
+
+        private void btnNewWeighing_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            CreateWeighing CreateWeighingForm = new CreateWeighing();
+            //weighingForm.WindowState = FormWindowState.Maximized;
+            CreateWeighingForm.Show();
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+                e.RowIndex >= 0)
+            {
+                ProcessStartInfo sInfo = new ProcessStartInfo("http://172.20.1.30/ReportServer/Pages/ReportViewer.aspx?/AshaMES_PASCO_V03/WMLog_WeighingOrderInfo&Code="+ senderGrid.Rows[e.RowIndex].Cells[1].Value.ToString());
+                Process.Start(sInfo); 
+            }
+        }
+
         public string SafeFarsiStr(string input)
         {
             return input.Replace("ی", "ی").Replace("ک", "ک");

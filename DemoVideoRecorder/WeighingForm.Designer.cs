@@ -96,7 +96,6 @@
             this.lblCurrentTime = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctmConfig = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -256,6 +255,7 @@
             this.btnNewWeighing.TabIndex = 5;
             this.btnNewWeighing.Text = "جدید";
             this.btnNewWeighing.UseVisualStyleBackColor = true;
+            this.btnNewWeighing.Click += new System.EventHandler(this.btnNewWeighing_Click);
             // 
             // groupBox3
             // 
@@ -1025,14 +1025,6 @@
             this.ctmConfig.Size = new System.Drawing.Size(117, 22);
             this.ctmConfig.Text = "تنظیمات";
             // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(984, 25);
-            this.toolStrip1.TabIndex = 2;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
             // WeighingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1040,7 +1032,6 @@
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(984, 411);
             this.ContextMenuStrip = this.contextMenuStrip1;
-            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WeighingForm";
@@ -1092,7 +1083,6 @@
             this.tableLayoutPanel20.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -1164,6 +1154,5 @@
         private System.Windows.Forms.ComboBox cmbOperationCode;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnNewWeighing;
-        private System.Windows.Forms.ToolStrip toolStrip1;
     }
 }

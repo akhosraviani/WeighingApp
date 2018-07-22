@@ -6,6 +6,7 @@ using AshaWeighing.Properties;
 using System.Data.SqlClient;
 using System.Data;
 using System.Linq;
+using System.Diagnostics;
 
 namespace AshaWeighing
 {
@@ -285,6 +286,18 @@ namespace AshaWeighing
             toolStripStatusLabel1.Text = "";
             statusStrip1.Refresh();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void MenuItem_WeighingAuthorizeReport_Click(object sender, EventArgs e)
+        {
+            ProcessStartInfo sInfo = new ProcessStartInfo("http://172.20.1.30/ReportServer/Pages/ReportViewer.aspx?/AshaMES_PASCO_V03/WMLog_WeighingOrderInfo");
+            Process.Start(sInfo);
+        }
+
+        private void MenuItem_WeighingSummaryReport_Click(object sender, EventArgs e)
+        {
+            ProcessStartInfo sInfo = new ProcessStartInfo("http://172.20.1.30/ReportServer/Pages/ReportViewer.aspx?/AshaMES_PASCO_V03/WMLog_WeighingOrderList");
+            Process.Start(sInfo);
         }
     }
 }

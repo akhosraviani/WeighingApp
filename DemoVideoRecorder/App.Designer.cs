@@ -121,12 +121,14 @@
             this.MenuItem_WeighingAuthorizeReport.Name = "MenuItem_WeighingAuthorizeReport";
             this.MenuItem_WeighingAuthorizeReport.Size = new System.Drawing.Size(173, 22);
             this.MenuItem_WeighingAuthorizeReport.Text = "چاپ مجوز توزین";
+            this.MenuItem_WeighingAuthorizeReport.Click += new System.EventHandler(this.MenuItem_WeighingAuthorizeReport_Click);
             // 
             // MenuItem_WeighingSummaryReport
             // 
             this.MenuItem_WeighingSummaryReport.Name = "MenuItem_WeighingSummaryReport";
             this.MenuItem_WeighingSummaryReport.Size = new System.Drawing.Size(173, 22);
             this.MenuItem_WeighingSummaryReport.Text = "گزارش عملکرد توزین";
+            this.MenuItem_WeighingSummaryReport.Click += new System.EventHandler(this.MenuItem_WeighingSummaryReport_Click);
             // 
             // MenuItem_aboutUs
             // 
