@@ -43,6 +43,7 @@ namespace AshaWeighing
         private double _secondQuantity = -1;
         private int _indicatorWeight = 0;
         const int bufsize = 32 * 1024;
+        private int previousResult = 0;
 
         private Dictionary<string, string> _configs;
         private List<WeighingOrderType> _weighingTypes;
@@ -75,11 +76,6 @@ namespace AshaWeighing
                 }
                 else
                 {
-                    imgCamera1.Image = null;
-                    imgCamera2.Image = null;
-                    imgCamera3.Image = null;
-                    imgCamera4.Image = null;
-
                     sevenSegmentWeight.Value = _indicatorWeight.ToString();
                     btnGetStableData.Text = "تثبیت وزن و دریافت تصاویر";
                     sevenSegmentWeight.ColorLight = Color.Red;
@@ -148,9 +144,6 @@ namespace AshaWeighing
                         {
                             if (response.ResponseUri.OriginalString == Globals.CameraAddress[0])
                             {
-                                imgCamera1.Image = (Bitmap)frame.Clone();
-                                imgCamera1.Image.Tag = "Camera1-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                                    DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
                                 InvokeGuiThread(() =>
                                 {
                                     _indicatorList[0].Text = "فعال";
@@ -159,9 +152,6 @@ namespace AshaWeighing
                             }
                             else if (response.ResponseUri.OriginalString == Globals.CameraAddress[1])
                             {
-                                imgCamera2.Image = (Bitmap)frame.Clone();
-                                imgCamera2.Image.Tag = "Camera2-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                                    DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
                                 InvokeGuiThread(() =>
                                 {
                                     _indicatorList[1].Text = "فعال";
@@ -170,9 +160,6 @@ namespace AshaWeighing
                             }
                             else if (response.ResponseUri.OriginalString == Globals.CameraAddress[2])
                             {
-                                imgCamera3.Image = (Bitmap)frame.Clone();
-                                imgCamera3.Image.Tag = "Camera3-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                                    DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
                                 InvokeGuiThread(() =>
                                 {
                                     _indicatorList[2].Text = "فعال";
@@ -181,9 +168,6 @@ namespace AshaWeighing
                             }
                             else if (response.ResponseUri.OriginalString == Globals.CameraAddress[3])
                             {
-                                imgCamera4.Image = (Bitmap)frame.Clone();
-                                imgCamera4.Image.Tag = "Camera4-" + DateTime.Now.Year + "y-" + DateTime.Now.Month + "m-" + DateTime.Now.Day + "d-" +
-                                    DateTime.Now.Hour + "h-" + DateTime.Now.Minute + "m-" + DateTime.Now.Second + "s.jpg";
                                 InvokeGuiThread(() =>
                                 {
                                     _indicatorList[3].Text = "فعال";
@@ -326,20 +310,16 @@ namespace AshaWeighing
         {
             cameraIndicator1.Parent = groupBox8;
             cameraIndicator1.Location = new Point(6, 1);
-            imgCamera1.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
 
             cameraIndicator2.Parent = groupBox7;
             cameraIndicator2.Location = new Point(6, 1);
-            imgCamera2.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
 
             cameraIndicator3.Parent = groupBox6;
             cameraIndicator3.Location = new Point(6, 1);
-            imgCamera3.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
 
             cameraIndicator4.Parent = groupBox5;
             cameraIndicator4.Location = new Point(6, 1);
-            imgCamera4.MouseDoubleClick += new MouseEventHandler(PicBox_DoubleClick);
-
+            
             byte[] fontData = Resources.IRANSans_FaNum_;
             IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
             System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
@@ -476,6 +456,16 @@ namespace AshaWeighing
             });
           thread.Start();
         }
+        private void AppendText(RichTextBox TextBox, string Text)
+        {
+            //Append the new text to the TextBox
+            TextBox.Text += Text;
+
+            //If the Frozen function isn't enabled then scroll to the bottom of the TextBox
+            TextBox.SelectionStart = TextBox.Text.Length;
+            TextBox.SelectionLength = 0;
+            TextBox.ScrollToCaret();
+        }
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             byte[] v = new byte[8];
@@ -484,7 +474,9 @@ namespace AshaWeighing
             
             if (_serialPort.BytesToRead <= 0)
             {
-
+                intResult = previousResult;
+                if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "BytesToRead <= 0; "); }));
+                else AppendText(log1, "BytesToRead <= 0; ");
             }
             else
             {
@@ -493,7 +485,8 @@ namespace AshaWeighing
                     
                     var output = _serialPort.Read(v, 0, 7);
 
-
+                    if (log2.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log2, Encoding.UTF8.GetString(v)); }));
+                    else AppendText(log2, Encoding.UTF8.GetString(v));
                     //StringBuilder hex = new StringBuilder(2);
                     //hex.AppendFormat("{0:x2}", v[0]);
                     //txtWeighingOrderCode.Text = "-----S---- " + hex.ToString();
@@ -525,8 +518,14 @@ namespace AshaWeighing
                         byte d2 = (byte)(((v[1] & 7) << 5) | (v[2] >> 2));
                         long value = ((d2 << 16) + (d1 << 8) + d0);
 
+                        if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "Conveting...; "); }));
+                        else AppendText(log1, "Conveting...; ");
+                        if (log3.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log3, value.ToString()); }));
+                        else AppendText(log3, value.ToString());
+
                         //MessageBox.Show("" + value);
                         intResult = Convert.ToInt32(value);
+                        previousResult = intResult;
                     }
 
                     if (output == 7)
@@ -534,7 +533,6 @@ namespace AshaWeighing
                         //MessageBox.Show("Output == 7");
                         try
                         {
-                            MessageBox.Show("try");
                             if ((v[0] & (1 << 8 - 1)) != 0 == true &&
                               (v[1] & (1 << 8 - 1)) != 0 == false &&
                               (v[2] & (1 << 8 - 1)) != 0 == false &&
@@ -546,7 +544,7 @@ namespace AshaWeighing
                                 byte d2 = (byte)(((v[1] & 7) << 5) | (v[2] >> 2));
                                 long value = ((d2 << 16) + (d1 << 8) + d0);
 
-                                MessageBox.Show("" + value);
+                                //MessageBox.Show("" + value);
                             }
 
                         }
@@ -564,6 +562,8 @@ namespace AshaWeighing
             {
                 if (intResult < -10)
                 {
+                    if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "Less than 10...; "); }));
+                    else AppendText(log1, "Less than 10...; ");
                     _indicatorWeight = intResult;
                     sevenSegmentWeight.Value = intResult.ToString();
 
@@ -584,6 +584,8 @@ namespace AshaWeighing
                 }
                 else if (intResult >= 0)
                 {
+                    if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "More than 10...; "); }));
+                    else AppendText(log1, "More than 10...; ");
                     _indicatorWeight = intResult;
 
                     if (IsStable && Math.Abs(int.Parse(sevenSegmentWeight.Value) - _indicatorWeight) == 0)
@@ -830,7 +832,6 @@ namespace AshaWeighing
                 MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            Image[] images = { imgCamera1.Image, imgCamera2.Image, imgCamera3.Image, imgCamera4.Image };
             SqlCommand sqlCommand;
 
             try
@@ -860,10 +861,10 @@ namespace AshaWeighing
                     sqlCommand.Parameters["@WeighingOrderCode"].Value = _weighingOrderCode;
                     sqlCommand.Parameters["@WeighingTypeCode"].Value = cmbWeighingTypes.SelectedValue;
                     sqlCommand.Parameters["@Weight"].Value = int.Parse(sevenSegmentWeight.Value);
-                    sqlCommand.Parameters["@Image1"].Value = (object)imageToByteArray(imgCamera1.Image) ?? DBNull.Value;
-                    sqlCommand.Parameters["@Image2"].Value = (object)imageToByteArray(imgCamera2.Image) ?? DBNull.Value;
-                    sqlCommand.Parameters["@Image3"].Value = (object)imageToByteArray(imgCamera3.Image) ?? DBNull.Value;
-                    sqlCommand.Parameters["@Image4"].Value = (object)imageToByteArray(imgCamera4.Image) ?? DBNull.Value;
+                    sqlCommand.Parameters["@Image1"].Value = DBNull.Value;
+                    sqlCommand.Parameters["@Image2"].Value = DBNull.Value;
+                    sqlCommand.Parameters["@Image3"].Value = DBNull.Value;
+                    sqlCommand.Parameters["@Image4"].Value = DBNull.Value;
                     sqlCommand.Parameters["@MachineCode"].Value = Globals.WeighingMachineCode;
                     sqlCommand.Parameters["@ResponsibleCode"].Value = Globals.PersonnelCode;
                     sqlCommand.Parameters["@CreatorCode"].Value = Globals.UserCode;
@@ -928,10 +929,6 @@ namespace AshaWeighing
             dgWeighingOrderDetail.DataSource = null;
             dgWeighingData.DataSource = null;
             dgShipmentDetail.DataSource = null;
-            imgCamera1.Image = null;
-            imgCamera2.Image = null;
-            imgCamera3.Image = null;
-            imgCamera4.Image = null;
             _emptyWeight = -1;
             _estimatedWeight = -1;
         }

@@ -55,18 +55,14 @@
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.cameraIndicator4 = new System.Windows.Forms.Label();
-            this.imgCamera4 = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.بزرگنماییToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.cameraIndicator3 = new System.Windows.Forms.Label();
-            this.imgCamera3 = new System.Windows.Forms.PictureBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.cameraIndicator2 = new System.Windows.Forms.Label();
-            this.imgCamera2 = new System.Windows.Forms.PictureBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.cameraIndicator1 = new System.Windows.Forms.Label();
-            this.imgCamera1 = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.dgWeighingOrderDetail = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -93,6 +89,10 @@
             this.lblCurrentTime = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctmConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.log1 = new System.Windows.Forms.RichTextBox();
+            this.log2 = new System.Windows.Forms.RichTextBox();
+            this.log3 = new System.Windows.Forms.RichTextBox();
+            this.log4 = new System.Windows.Forms.RichTextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -107,14 +107,10 @@
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCamera4)).BeginInit();
             this.contextMenuStrip2.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCamera3)).BeginInit();
             this.groupBox7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCamera2)).BeginInit();
             this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCamera1)).BeginInit();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgWeighingOrderDetail)).BeginInit();
             this.tableLayoutPanel6.SuspendLayout();
@@ -468,8 +464,8 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.log4);
             this.groupBox5.Controls.Add(this.cameraIndicator4);
-            this.groupBox5.Controls.Add(this.imgCamera4);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox5.Location = new System.Drawing.Point(0, 112);
             this.groupBox5.Margin = new System.Windows.Forms.Padding(0);
@@ -491,19 +487,6 @@
             this.cameraIndicator4.Text = "غیرفعال";
             this.cameraIndicator4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // imgCamera4
-            // 
-            this.imgCamera4.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.imgCamera4.ContextMenuStrip = this.contextMenuStrip2;
-            this.imgCamera4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imgCamera4.Location = new System.Drawing.Point(3, 15);
-            this.imgCamera4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.imgCamera4.Name = "imgCamera4";
-            this.imgCamera4.Size = new System.Drawing.Size(237, 95);
-            this.imgCamera4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.imgCamera4.TabIndex = 1;
-            this.imgCamera4.TabStop = false;
-            // 
             // contextMenuStrip2
             // 
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -521,8 +504,8 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.log3);
             this.groupBox6.Controls.Add(this.cameraIndicator3);
-            this.groupBox6.Controls.Add(this.imgCamera3);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox6.Location = new System.Drawing.Point(243, 112);
             this.groupBox6.Margin = new System.Windows.Forms.Padding(0);
@@ -544,23 +527,10 @@
             this.cameraIndicator3.Text = "غیرفعال";
             this.cameraIndicator3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // imgCamera3
-            // 
-            this.imgCamera3.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.imgCamera3.ContextMenuStrip = this.contextMenuStrip2;
-            this.imgCamera3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imgCamera3.Location = new System.Drawing.Point(3, 15);
-            this.imgCamera3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.imgCamera3.Name = "imgCamera3";
-            this.imgCamera3.Size = new System.Drawing.Size(237, 95);
-            this.imgCamera3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.imgCamera3.TabIndex = 1;
-            this.imgCamera3.TabStop = false;
-            // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.log2);
             this.groupBox7.Controls.Add(this.cameraIndicator2);
-            this.groupBox7.Controls.Add(this.imgCamera2);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox7.Location = new System.Drawing.Point(0, 0);
             this.groupBox7.Margin = new System.Windows.Forms.Padding(0);
@@ -582,23 +552,10 @@
             this.cameraIndicator2.Text = "غیرفعال";
             this.cameraIndicator2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // imgCamera2
-            // 
-            this.imgCamera2.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.imgCamera2.ContextMenuStrip = this.contextMenuStrip2;
-            this.imgCamera2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imgCamera2.Location = new System.Drawing.Point(3, 15);
-            this.imgCamera2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.imgCamera2.Name = "imgCamera2";
-            this.imgCamera2.Size = new System.Drawing.Size(237, 95);
-            this.imgCamera2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.imgCamera2.TabIndex = 1;
-            this.imgCamera2.TabStop = false;
-            // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.log1);
             this.groupBox8.Controls.Add(this.cameraIndicator1);
-            this.groupBox8.Controls.Add(this.imgCamera1);
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox8.Location = new System.Drawing.Point(243, 0);
             this.groupBox8.Margin = new System.Windows.Forms.Padding(0);
@@ -619,19 +576,6 @@
             this.cameraIndicator1.TabIndex = 64;
             this.cameraIndicator1.Text = "غیرفعال";
             this.cameraIndicator1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // imgCamera1
-            // 
-            this.imgCamera1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.imgCamera1.ContextMenuStrip = this.contextMenuStrip2;
-            this.imgCamera1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imgCamera1.Location = new System.Drawing.Point(3, 15);
-            this.imgCamera1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.imgCamera1.Name = "imgCamera1";
-            this.imgCamera1.Size = new System.Drawing.Size(237, 95);
-            this.imgCamera1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.imgCamera1.TabIndex = 0;
-            this.imgCamera1.TabStop = false;
             // 
             // groupBox4
             // 
@@ -985,6 +929,46 @@
             this.ctmConfig.Size = new System.Drawing.Size(117, 22);
             this.ctmConfig.Text = "تنظیمات";
             // 
+            // log1
+            // 
+            this.log1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.log1.Location = new System.Drawing.Point(3, 15);
+            this.log1.Name = "log1";
+            this.log1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.log1.Size = new System.Drawing.Size(237, 95);
+            this.log1.TabIndex = 65;
+            this.log1.Text = "";
+            // 
+            // log2
+            // 
+            this.log2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.log2.Location = new System.Drawing.Point(3, 15);
+            this.log2.Name = "log2";
+            this.log2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.log2.Size = new System.Drawing.Size(237, 95);
+            this.log2.TabIndex = 66;
+            this.log2.Text = "";
+            // 
+            // log3
+            // 
+            this.log3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.log3.Location = new System.Drawing.Point(3, 15);
+            this.log3.Name = "log3";
+            this.log3.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.log3.Size = new System.Drawing.Size(237, 95);
+            this.log3.TabIndex = 67;
+            this.log3.Text = "";
+            // 
+            // log4
+            // 
+            this.log4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.log4.Location = new System.Drawing.Point(3, 15);
+            this.log4.Name = "log4";
+            this.log4.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.log4.Size = new System.Drawing.Size(237, 95);
+            this.log4.TabIndex = 68;
+            this.log4.Text = "";
+            // 
             // WeighingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1014,17 +998,13 @@
             this.tableLayoutPanel11.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCamera4)).EndInit();
             this.contextMenuStrip2.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCamera3)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCamera2)).EndInit();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCamera1)).EndInit();
             this.groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgWeighingOrderDetail)).EndInit();
             this.tableLayoutPanel6.ResumeLayout(false);
@@ -1062,13 +1042,9 @@
         private System.Windows.Forms.Label lblLoadedBranches;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.PictureBox imgCamera4;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.PictureBox imgCamera3;
         private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.PictureBox imgCamera2;
         private System.Windows.Forms.GroupBox groupBox8;
-        private System.Windows.Forms.PictureBox imgCamera1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ctmConfig;
         private System.Windows.Forms.Label cameraIndicator1;
@@ -1111,5 +1087,9 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dgWeighingStatus;
         private System.Windows.Forms.DataGridView dgWeighingData;
+        private System.Windows.Forms.RichTextBox log4;
+        private System.Windows.Forms.RichTextBox log3;
+        private System.Windows.Forms.RichTextBox log2;
+        private System.Windows.Forms.RichTextBox log1;
     }
 }

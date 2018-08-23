@@ -50,26 +50,29 @@ namespace AshaWeighing
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable conf = new DataTable();
                 da.Fill(conf);
-                CameraAddress[0] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1")["Value"]);
-                CameraAddress[1] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2")["Value"]);
-                CameraAddress[2] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3")["Value"]);
-                CameraAddress[3] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera4")["Value"]);
-                CameraUsername[0] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1Username")["Value"];
-                CameraUsername[1] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2Username")["Value"];
-                CameraUsername[2] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3Username")["Value"];
-                CameraUsername[3] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera4Username")["Value"];
-                CameraPassword[0] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1Password")["Value"];
-                CameraPassword[1] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2Password")["Value"];
-                CameraPassword[2] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3Password")["Value"];
-                CameraPassword[3] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera4Password")["Value"];
-                WeighingMachineSerialPort = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "BascolPort")["Value"];
-                WeighingMachineCode = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "MachineCode")["Value"];
-                SerialPorBaudRate = Convert.ToInt32(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "BaudRate")["Value"]);
-                SerialPortDataBits = Convert.ToInt32(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "DataBits")["Value"]);
-                SerialPortParity = ConvertToParity((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Parity")["Value"]);
-                SerialPortHandshake = ConvertToHandshake((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Handshake")["Value"]);
-                SerialPortStopBits = ConvertToStopBits((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "StopBits")["Value"]);
-                Tolerance = Convert.ToInt32(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Tolerance")["Value"]);
+                if (conf.Rows.Count > 0)
+                {
+                    CameraAddress[0] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1")["Value"]);
+                    CameraAddress[1] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2")["Value"]);
+                    CameraAddress[2] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3")["Value"]);
+                    CameraAddress[3] = Convert.ToString(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera4")["Value"]);
+                    CameraUsername[0] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1Username")["Value"];
+                    CameraUsername[1] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2Username")["Value"];
+                    CameraUsername[2] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3Username")["Value"];
+                    CameraUsername[3] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera4Username")["Value"];
+                    CameraPassword[0] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera1Password")["Value"];
+                    CameraPassword[1] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera2Password")["Value"];
+                    CameraPassword[2] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera3Password")["Value"];
+                    CameraPassword[3] = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Camera4Password")["Value"];
+                    WeighingMachineSerialPort = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "BascolPort")["Value"];
+                    WeighingMachineCode = (string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "MachineCode")["Value"];
+                    SerialPorBaudRate = Convert.ToInt32(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "BaudRate")["Value"]);
+                    SerialPortDataBits = Convert.ToInt32(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "DataBits")["Value"]);
+                    SerialPortParity = ConvertToParity((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Parity")["Value"]);
+                    SerialPortHandshake = ConvertToHandshake((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Handshake")["Value"]);
+                    SerialPortStopBits = ConvertToStopBits((string)conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "StopBits")["Value"]);
+                    Tolerance = Convert.ToInt32(conf.AsEnumerable().SingleOrDefault(r => r.Field<string>("Code") == "Tolerance")["Value"]);
+                }
             }
         }
 
