@@ -475,8 +475,8 @@ namespace AshaWeighing
             if (_serialPort.BytesToRead <= 0)
             {
                 intResult = previousResult;
-                if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "BytesToRead <= 0; "); }));
-                else AppendText(log1, "BytesToRead <= 0; ");
+                //if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "BytesToRead <= 0; "); }));
+                //else AppendText(log1, "BytesToRead <= 0; ");
             }
             else
             {
@@ -485,8 +485,8 @@ namespace AshaWeighing
                     
                     var output = _serialPort.Read(v, 0, 7);
 
-                    if (log2.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log2, Encoding.UTF8.GetString(v)); }));
-                    else AppendText(log2, Encoding.UTF8.GetString(v));
+                    //if (log2.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log2, Encoding.UTF8.GetString(v)); }));
+                    //else AppendText(log2, Encoding.UTF8.GetString(v));
                     //StringBuilder hex = new StringBuilder(2);
                     //hex.AppendFormat("{0:x2}", v[0]);
                     //txtWeighingOrderCode.Text = "-----S---- " + hex.ToString();
@@ -518,10 +518,10 @@ namespace AshaWeighing
                         byte d2 = (byte)(((v[1] & 7) << 5) | (v[2] >> 2));
                         long value = ((d2 << 16) + (d1 << 8) + d0);
 
-                        if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "Conveting...; "); }));
-                        else AppendText(log1, "Conveting...; ");
-                        if (log3.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log3, value.ToString()); }));
-                        else AppendText(log3, value.ToString());
+                        //if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "Conveting...; "); }));
+                        //else AppendText(log1, "Conveting...; ");
+                        //if (log3.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log3, value.ToString()); }));
+                        //else AppendText(log3, value.ToString());
 
                         //MessageBox.Show("" + value);
                         intResult = Convert.ToInt32(value);
@@ -562,8 +562,8 @@ namespace AshaWeighing
             {
                 if (intResult < -10)
                 {
-                    if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "Less than 10...; "); }));
-                    else AppendText(log1, "Less than 10...; ");
+                    //if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "Less than 10...; "); }));
+                    //else AppendText(log1, "Less than 10...; ");
                     _indicatorWeight = intResult;
                     sevenSegmentWeight.Value = intResult.ToString();
 
@@ -584,8 +584,8 @@ namespace AshaWeighing
                 }
                 else if (intResult >= 0)
                 {
-                    if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "More than 10...; "); }));
-                    else AppendText(log1, "More than 10...; ");
+                    //if (log1.InvokeRequired) this.Invoke(new Action(delegate () { AppendText(log1, "More than 10...; "); }));
+                    //else AppendText(log1, "More than 10...; ");
                     _indicatorWeight = intResult;
 
                     if (IsStable && Math.Abs(int.Parse(sevenSegmentWeight.Value) - _indicatorWeight) == 0)
