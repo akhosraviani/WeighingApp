@@ -17,6 +17,7 @@ namespace AshaWeighing
         public static string[] CameraPassword = new string[4];
         public static string WeighingMachineSerialPort = "";
         public static string WeighingMachineCode = "";
+        public static string WeightDataStream = "";
         public static string WeighingMachineTitle = "";
         public static int SerialPorBaudRate = 2400;
         public static int SerialPortDataBits = 8;
@@ -26,7 +27,7 @@ namespace AshaWeighing
         public static int Tolerance = 10;
 
         private static SqlConnection _dbConnection;
-        
+
         public static void GetConfigurationDetails(string configCode)
         {
             if (_dbConnection == null)

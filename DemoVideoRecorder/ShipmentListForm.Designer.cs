@@ -58,9 +58,9 @@
             // 
             this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
-            this.txtSearch.Location = new System.Drawing.Point(155, 5);
+            this.txtSearch.Location = new System.Drawing.Point(155, 3);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(700, 20);
+            this.txtSearch.Size = new System.Drawing.Size(700, 24);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
@@ -149,9 +149,9 @@
             this.cmbWeighingTypes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbWeighingTypes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(225)))));
             this.cmbWeighingTypes.FormattingEnabled = true;
-            this.cmbWeighingTypes.Location = new System.Drawing.Point(611, 4);
+            this.cmbWeighingTypes.Location = new System.Drawing.Point(611, 3);
             this.cmbWeighingTypes.Name = "cmbWeighingTypes";
-            this.cmbWeighingTypes.Size = new System.Drawing.Size(244, 21);
+            this.cmbWeighingTypes.Size = new System.Drawing.Size(244, 25);
             this.cmbWeighingTypes.TabIndex = 6;
             this.cmbWeighingTypes.SelectedValueChanged += new System.EventHandler(this.cmbWeighingTypes_SelectedValueChanged);
             // 
@@ -168,7 +168,7 @@
             // 
             // ShipmentListForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(960, 381);
             this.Controls.Add(this.tableLayoutPanel3);
