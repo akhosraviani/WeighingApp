@@ -25,6 +25,7 @@ namespace AshaWeighing
         public static Handshake SerialPortHandshake = Handshake.None;
         public static StopBits SerialPortStopBits = StopBits.One;
         public static int Tolerance = 10;
+        public static LogWriter logWriter;
 
         private static SqlConnection _dbConnection;
 
